@@ -1,7 +1,12 @@
-import { Menu, Volume2, VolumeX, Moon, Sun } from "lucide-react";
+import { Menu, Volume2, VolumeX, Moon, Sun, Palette } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { useTheme } from "@/components/ThemeProvider";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { useTheme, ACCENT_COLORS } from "@/components/ThemeProvider";
 import { AI_MODELS } from "@shared/schema";
 
 interface ChatHeaderProps {
@@ -17,7 +22,7 @@ export function ChatHeader({
   onToggleVoice,
   onToggleSidebar,
 }: ChatHeaderProps) {
-  const { theme, toggleTheme } = useTheme();
+  const { theme, accentColor, toggleTheme, setAccentColor } = useTheme();
   
   const getModelName = (modelId: string): string => {
     for (const category of Object.values(AI_MODELS)) {
@@ -28,7 +33,7 @@ export function ChatHeader({
   };
 
   return (
-    <header className="px-4 md:px-6 py-3 md:py-4 border-b border-border bg-background/80 backdrop-blur-md sticky top-0 z-10">
+    <header className="px-4 md:px-6 py-3 md:py-4 border-b border-border bg-background/80 backdrop-blur-md sticky top-0 z-50">
       <div className="max-w-4xl mx-auto flex items-center justify-between gap-2">
         <div className="flex items-center gap-3 md:gap-4">
           <Button
@@ -41,9 +46,11 @@ export function ChatHeader({
             <Menu className="w-5 h-5" />
           </Button>
           
-          <h1 className="text-base md:text-lg font-bold text-foreground">BossAI</h1>
+          <h1 className="text-base md:text-lg font-bold bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent">
+            BossAI
+          </h1>
           
-          <Badge variant="default" className="text-xs" data-testid="badge-current-model">
+          <Badge variant="secondary" className="text-xs font-medium" data-testid="badge-current-model">
             {getModelName(currentModel)}
           </Badge>
         </div>
@@ -63,18 +70,55 @@ export function ChatHeader({
             )}
           </Button>
           
+          <Popover>
+            <PopoverTrigger asChild>
+              <Button
+                size="icon"
+                variant="ghost"
+                title="Change accent color"
+                data-testid="button-accent-color"
+              >
+                <Palette className="w-4 h-4 md:w-5 md:h-5" />
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent className="w-48 p-3" align="end">
+              <p className="text-sm font-medium mb-3 text-foreground">Accent Color</p>
+              <div className="flex flex-wrap gap-2">
+                {ACCENT_COLORS.map((color) => (
+                  <button
+                    key={color.id}
+                    onClick={() => setAccentColor(color.id as any)}
+                    aria-label={`Set accent color to ${color.name}`}
+                    aria-pressed={accentColor === color.id}
+                    className={`w-8 h-8 rounded-full border-2 transition-all ${
+                      accentColor === color.id 
+                        ? "border-foreground scale-110" 
+                        : "border-transparent hover:scale-105"
+                    }`}
+                    style={{ backgroundColor: color.color }}
+                    title={color.name}
+                    data-testid={`button-accent-${color.id}`}
+                  />
+                ))}
+              </div>
+            </PopoverContent>
+          </Popover>
+          
           <Button
             size="icon"
             variant="ghost"
             onClick={toggleTheme}
             title={theme === "dark" ? "Switch to light mode" : "Switch to dark mode"}
             data-testid="button-toggle-theme"
+            className="relative overflow-visible"
           >
-            {theme === "dark" ? (
-              <Sun className="w-4 h-4 md:w-5 md:h-5" />
-            ) : (
-              <Moon className="w-4 h-4 md:w-5 md:h-5" />
-            )}
+            <div className="relative">
+              {theme === "dark" ? (
+                <Sun className="w-4 h-4 md:w-5 md:h-5 text-amber-400" />
+              ) : (
+                <Moon className="w-4 h-4 md:w-5 md:h-5 text-indigo-500" />
+              )}
+            </div>
           </Button>
         </div>
       </div>

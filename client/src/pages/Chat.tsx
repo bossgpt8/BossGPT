@@ -1,6 +1,8 @@
-import { useEffect, useRef, useCallback } from "react";
+import { useEffect, useRef, useCallback, useState } from "react";
 import { nanoid } from "nanoid";
+import { ChevronDown } from "lucide-react";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { Button } from "@/components/ui/button";
 import { WelcomeScreen } from "@/components/chat/WelcomeScreen";
 import { MessageBubble } from "@/components/chat/MessageBubble";
 import { ChatInput } from "@/components/chat/ChatInput";
@@ -37,8 +39,22 @@ export default function Chat() {
 
   const { toast } = useToast();
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const scrollAreaRef = useRef<HTMLDivElement>(null);
   const recognitionRef = useRef<any>(null);
   const synthesisRef = useRef<SpeechSynthesis | null>(null);
+  const [showScrollButton, setShowScrollButton] = useState(false);
+
+  const scrollToBottom = useCallback(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, []);
+
+  const handleScroll = useCallback(() => {
+    if (scrollAreaRef.current) {
+      const { scrollTop, scrollHeight, clientHeight } = scrollAreaRef.current;
+      const isNearBottom = scrollHeight - scrollTop - clientHeight < 100;
+      setShowScrollButton(!isNearBottom && messages.length > 0);
+    }
+  }, [messages.length]);
 
   useEffect(() => {
     synthesisRef.current = window.speechSynthesis;
@@ -336,27 +352,45 @@ export default function Chat() {
           onToggleSidebar={() => setSidebarOpen(!sidebarOpen)}
         />
         
-        <ScrollArea className="flex-1">
-          <div className="max-w-4xl mx-auto px-4 md:px-6 py-4 md:py-6">
-            {messages.length === 0 ? (
-              <WelcomeScreen onSuggestionClick={(prompt) => handleSendMessage(prompt, [])} />
-            ) : (
-              <>
-                {messages.map((message) => (
-                  <MessageBubble
-                    key={message.id}
-                    message={message}
-                    isUser={message.role === "user"}
-                    onSpeak={voiceEnabled ? speakText : undefined}
-                    onRegenerate={message.role === "assistant" && message.id === messages[messages.length - 1]?.id ? handleRegenerate : undefined}
-                  />
-                ))}
-                {isGenerating && <TypingIndicator />}
-                <div ref={messagesEndRef} />
-              </>
-            )}
+        <div className="flex-1 relative overflow-hidden">
+          <div
+            ref={scrollAreaRef}
+            className="h-full overflow-y-auto"
+            onScroll={handleScroll}
+          >
+            <div className="max-w-4xl mx-auto px-4 md:px-6 py-4 md:py-6">
+              {messages.length === 0 ? (
+                <WelcomeScreen onSuggestionClick={(prompt) => handleSendMessage(prompt, [])} />
+              ) : (
+                <>
+                  {messages.map((message) => (
+                    <MessageBubble
+                      key={message.id}
+                      message={message}
+                      isUser={message.role === "user"}
+                      onSpeak={voiceEnabled ? speakText : undefined}
+                      onRegenerate={message.role === "assistant" && message.id === messages[messages.length - 1]?.id ? handleRegenerate : undefined}
+                    />
+                  ))}
+                  {isGenerating && <TypingIndicator />}
+                  <div ref={messagesEndRef} />
+                </>
+              )}
+            </div>
           </div>
-        </ScrollArea>
+          
+          {showScrollButton && (
+            <Button
+              size="icon"
+              variant="secondary"
+              className="absolute bottom-4 right-4 rounded-full shadow-lg z-10 animate-bounce"
+              onClick={scrollToBottom}
+              data-testid="button-scroll-down"
+            >
+              <ChevronDown className="w-5 h-5" />
+            </Button>
+          )}
+        </div>
         
         <ChatInput
           onSend={handleSendMessage}
