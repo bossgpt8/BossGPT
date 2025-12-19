@@ -7,6 +7,9 @@ const imageGenerationRequestSchema = z.object({
 });
 
 const HF_MODEL_MAP: Record<string, string> = {
+  'black-forest-labs/FLUX.1-schnell': 'black-forest-labs/FLUX.1-schnell',
+  'stabilityai/stable-diffusion-3-medium': 'stabilityai/stable-diffusion-3-medium',
+  'kandinsky-community/kandinsky-3': 'kandinsky-community/kandinsky-3',
   'Tongyi-MAI/Z-Image-Turbo': 'Tongyi-MAI/Z-Image-Turbo',
   'stabilityai/stable-diffusion-xl-base-1.0': 'stabilityai/stable-diffusion-xl-base-1.0',
 };
@@ -39,7 +42,25 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     const API_URL = `https://router.huggingface.co/hf-inference/models/${selectedHFModel}`;
     let parameters: Record<string, any> = {};
 
-    if (modelId === 'Tongyi-MAI/Z-Image-Turbo') {
+    if (modelId === 'black-forest-labs/FLUX.1-schnell') {
+      parameters = {
+        num_inference_steps: 4,
+        guidance_scale: 0.0,
+        negative_prompt: 'blurry, low quality, distorted',
+      };
+    } else if (modelId === 'stabilityai/stable-diffusion-3-medium') {
+      parameters = {
+        num_inference_steps: 40,
+        guidance_scale: 7.5,
+        negative_prompt: 'blurry, low quality, distorted, bad anatomy, bad text',
+      };
+    } else if (modelId === 'kandinsky-community/kandinsky-3') {
+      parameters = {
+        num_inference_steps: 25,
+        guidance_scale: 10.0,
+        negative_prompt: 'blurry, low quality, distorted',
+      };
+    } else if (modelId === 'Tongyi-MAI/Z-Image-Turbo') {
       parameters = {
         num_inference_steps: 9,
         guidance_scale: 0.0,

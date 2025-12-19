@@ -52,23 +52,22 @@ export type Conversation = typeof conversations.$inferSelect;
 export const AI_MODELS = {
   vision: [
     { id: "google/gemma-3-12b-it:free", name: "Gemma-12b", description: "Vision capable" },
-    { id: "google/gemma-3n-e2b-it:free", name: "Gemma-e2b", description: "Vision capable" },
+    { id: "qwen/qwen2.5-vl-7b-instruct:free", name: "Qwen-VL", description: "Vision capable" },
   ],
   text: [
-    { id: "amazon/nova-2-lite-v1:free", name: "Nova", description: "General tasks" },
-    { id: "openai/gpt-oss-20b:free", name: "OpenAI", description: "General tasks" },
-    { id: "meta-llama/llama-3.3-70b-instruct:free", name: "Llama", description: "General tasks" },
-    { id: "qwen/qwen3-235b-a22b:free", name: "Qwen", description: "General tasks" },
-    { id: "google/gemini-2.0-flash-exp:free", name: "Gemini", description: "General tasks" },
-    { id: "mistralai/mistral-7b-instruct:free", name: "Mistral", description: "General tasks" },
+    { id: "meta-llama/llama-3.1-405b-instruct:free", name: "Llama-405B", description: "Best quality" },
+    { id: "qwen/qwen3-4b:free", name: "Qwen3-4B", description: "Fast & efficient" },
+    { id: "google/gemma-3-12b-it:free", name: "Gemma-12b", description: "Balanced" },
+    { id: "google/gemma-3-4b-it:free", name: "Gemma-4b", description: "Lightweight" },
   ],
   image: [
+    { id: "black-forest-labs/FLUX.1-schnell", name: "FLUX.1-schnell", description: "Best quality" },
+    { id: "stabilityai/stable-diffusion-3-medium", name: "SD3-Medium", description: "High-quality" },
+    { id: "kandinsky-community/kandinsky-3", name: "Kandinsky-3", description: "Unique style" },
     { id: "Tongyi-MAI/Z-Image-Turbo", name: "Z-Image-Turbo", description: "Fast/Free" },
-    { id: "stabilityai/stable-diffusion-xl-base-1.0", name: "SDXL", description: "High-Quality/Free" },
   ],
   code: [
     { id: "qwen/qwen3-coder:free", name: "Qwen Coder", description: "Code generation" },
-    { id: "kwaipilot/kat-coder-pro:free", name: "KAT-Coder", description: "Code generation" },
   ],
 } as const;
 
