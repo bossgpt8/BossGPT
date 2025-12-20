@@ -35,7 +35,7 @@ export const conversations = pgTable("conversations", {
   userId: varchar("user_id", { length: 128 }),
   title: text("title").notNull().default("New Chat"),
   messages: jsonb("messages").$type<Message[]>().default([]),
-  model: text("model").default("meta-llama/llama-3.1-405b-instruct:free"),
+  model: text("model").default("meta-llama/llama-3.3-70b-instruct:free"),
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at").defaultNow(),
 });
@@ -57,6 +57,7 @@ export const AI_MODELS = {
     { id: "google/gemma-3n-12b-it:free", name: "Gemma-3n-12B", description: "Efficient vision" },
   ],
   text: [
+    { id: "meta-llama/llama-3.3-70b-instruct:free", name: "Llama 3.3 70B", description: "Smart and efficient" },
     { id: "meta-llama/llama-3.1-405b-instruct:free", name: "Llama 3.1 405B", description: "Most powerful - 128k context" },
     { id: "qwen/qwen3-4b:free", name: "Qwen3 4B", description: "Fast & efficient" },
     { id: "qwen/qwen2.5-72b-instruct:free", name: "Qwen2.5 72B", description: "High performance" },
