@@ -104,21 +104,3 @@ export const imageGenerationRequestSchema = z.object({
 });
 
 export type ImageGenerationRequest = z.infer<typeof imageGenerationRequestSchema>;
-
-// Smart commands
-export const SMART_COMMANDS = [
-  { patterns: ["turn on flashlight", "torch on", "flashlight on"], action: "flashlightOn" },
-  { patterns: ["turn off flashlight", "torch off", "flashlight off"], action: "flashlightOff" },
-  { patterns: ["open whatsapp"], action: "openWhatsApp" },
-  { patterns: ["open youtube"], action: "openYouTube" },
-  { patterns: ["open gmail", "open email"], action: "openGmail" },
-  { patterns: ["open instagram"], action: "openInstagram" },
-  { patterns: ["open twitter", "open x"], action: "openTwitter" },
-  { patterns: ["search google for"], action: "googleSearch" },
-  { patterns: ["search youtube for"], action: "youtubeSearch" },
-  { patterns: ["what time is it", "current time"], action: "tellTime" },
-  { patterns: ["what date is it", "current date"], action: "tellDate" },
-  { patterns: ["stop reading", "stop speaking"], action: "stopSpeaking" },
-  { patterns: ["who are you", "introduce yourself"], action: "introduce" },
-  { patterns: ["tell me a joke"], action: "tellJoke" },
-] as const;

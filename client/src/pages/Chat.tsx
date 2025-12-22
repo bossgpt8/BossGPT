@@ -13,7 +13,7 @@ import { ChatHeader } from "@/components/header/ChatHeader";
 import { AppSidebar } from "@/components/sidebar/AppSidebar";
 import { useChatStore } from "@/lib/store";
 import { useToast } from "@/hooks/use-toast";
-import { AI_MODELS, SMART_COMMANDS } from "@shared/schema";
+import { AI_MODELS } from "@shared/schema";
 import type { Message } from "@shared/schema";
 
 export default function Chat() {
