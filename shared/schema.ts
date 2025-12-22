@@ -35,7 +35,7 @@ export const conversations = pgTable("conversations", {
   userId: varchar("user_id", { length: 128 }),
   title: text("title").notNull().default("New Chat"),
   messages: jsonb("messages").$type<Message[]>().default([]),
-  model: text("model").default("deepseek/deepseek-v3:free"),
+  model: text("model").default("meta-llama/llama-3.3-70b-instruct:free"),
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at").defaultNow(),
 });
@@ -57,6 +57,8 @@ export const AI_MODELS = {
     { id: "google/gemma-3n-12b-it:free", name: "Gemma-3n-12B", description: "Efficient vision" },
   ],
   text: [
+    { id: "meta-llama/llama-3.3-70b-instruct:free", name: "Llama 3.3 70B", description: "Smart and efficient" },
+    { id: "meta-llama/llama-3.1-405b-instruct:free", name: "Llama 3.1 405B", description: "Most powerful" },
     { id: "deepseek/deepseek-r1:free", name: "DeepSeek R1", description: "Advanced reasoning - like OpenAI o1" },
     { id: "deepseek/deepseek-v3:free", name: "DeepSeek V3", description: "Powerful and fast" },
     { id: "meta-llama/llama-3.1-8b-instruct:free", name: "Llama 3.1 8B", description: "Reliable and stable" },
