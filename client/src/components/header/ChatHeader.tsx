@@ -1,4 +1,4 @@
-import { Menu, Volume2, VolumeX, Moon, Sun, Palette } from "lucide-react";
+import { Menu, Moon, Sun, Palette } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -8,6 +8,7 @@ import {
 } from "@/components/ui/popover";
 import { useTheme, ACCENT_COLORS } from "@/components/ThemeProvider";
 import { AI_MODELS } from "@shared/schema";
+import bossaiRobot from "@assets/bossai-robot.png";
 
 interface ChatHeaderProps {
   currentModel: string;
@@ -46,9 +47,12 @@ export function ChatHeader({
             <Menu className="w-5 h-5" />
           </Button>
           
-          <h1 className="text-base md:text-lg font-bold bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent">
-            BossAI
-          </h1>
+          <img 
+            src={bossaiRobot} 
+            alt="BossAI" 
+            className="h-8 md:h-9 w-auto"
+            data-testid="img-bossai-header"
+          />
           
           <Badge variant="secondary" className="text-xs font-medium" data-testid="badge-current-model">
             {getModelName(currentModel)}
