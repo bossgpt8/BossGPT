@@ -1,5 +1,6 @@
 import { Zap, Layers, Camera, Mic, ImageIcon, Code, Sparkles, BookOpen } from "lucide-react";
 import { Card } from "@/components/ui/card";
+import bossaiRobot from "@assets/bossai-robot.png";
 
 interface WelcomeScreenProps {
   onSuggestionClick: (prompt: string) => void;
@@ -44,12 +45,12 @@ export function WelcomeScreen({ onSuggestionClick }: WelcomeScreenProps) {
     <div className="flex items-center justify-center min-h-full p-6 md:p-8">
       <div className="text-center max-w-2xl w-full">
         <div className="relative w-20 h-20 md:w-24 md:h-24 mx-auto mb-6 md:mb-8">
-          <div 
-            className="w-full h-full bg-primary rounded-full flex items-center justify-center"
-            style={{ boxShadow: "0 0 60px rgba(255,255,255,0.2)" }}
-          >
-            <Zap className="w-10 h-10 md:w-12 md:h-12 text-primary-foreground" />
-          </div>
+          <img 
+            src={bossaiRobot} 
+            alt="BossAI Robot" 
+            className="w-full h-full object-contain drop-shadow-lg"
+            data-testid="img-bossai-robot"
+          />
         </div>
         
         <h2 
