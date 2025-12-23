@@ -128,65 +128,6 @@ export default function Chat() {
     synthesisRef.current.speak(utterance);
   }, []);
 
-  const handleSmartCommand = (input: string): string | null => {
-    const lowerInput = input.toLowerCase();
-    
-    for (const cmd of SMART_COMMANDS) {
-      for (const pattern of cmd.patterns) {
-        if (lowerInput.includes(pattern)) {
-          switch (cmd.action) {
-            case "tellTime":
-              return `The current time is ${new Date().toLocaleTimeString()}.`;
-            case "tellDate":
-              return `Today is ${new Date().toLocaleDateString("en-US", { weekday: "long", year: "numeric", month: "long", day: "numeric" })}.`;
-            case "introduce":
-              return "I'm BossAI, your intelligent assistant! I can help you with questions, analyze images, generate images, and even have voice conversations. I'm powered by multiple AI models to give you the best responses possible.";
-            case "tellJoke":
-              const jokes = [
-                "Why don't scientists trust atoms? Because they make up everything!",
-                "Why did the programmer quit his job? Because he didn't get arrays!",
-                "What do you call a bear with no teeth? A gummy bear!",
-              ];
-              return jokes[Math.floor(Math.random() * jokes.length)];
-            case "stopSpeaking":
-              synthesisRef.current?.cancel();
-              return "I've stopped speaking.";
-            case "openYouTube":
-              window.open("https://youtube.com", "_blank");
-              return "Opening YouTube for you!";
-            case "openWhatsApp":
-              window.open("https://web.whatsapp.com", "_blank");
-              return "Opening WhatsApp for you!";
-            case "openGmail":
-              window.open("https://mail.google.com", "_blank");
-              return "Opening Gmail for you!";
-            case "openInstagram":
-              window.open("https://instagram.com", "_blank");
-              return "Opening Instagram for you!";
-            case "openTwitter":
-              window.open("https://twitter.com", "_blank");
-              return "Opening Twitter/X for you!";
-            case "googleSearch":
-              const query = lowerInput.replace(/search google for|google search|search for/gi, "").trim();
-              if (query) {
-                window.open(`https://google.com/search?q=${encodeURIComponent(query)}`, "_blank");
-                return `Searching Google for "${query}"!`;
-              }
-              break;
-            case "youtubeSearch":
-              const ytQuery = lowerInput.replace(/search youtube for|youtube search/gi, "").trim();
-              if (ytQuery) {
-                window.open(`https://youtube.com/results?search_query=${encodeURIComponent(ytQuery)}`, "_blank");
-                return `Searching YouTube for "${ytQuery}"!`;
-              }
-              break;
-          }
-        }
-      }
-    }
-    return null;
-  };
-
   const isImageModel = (modelId: string): boolean => {
     return AI_MODELS.image.some((m) => m.id === modelId);
   };
@@ -216,23 +157,6 @@ export default function Chat() {
     if (messages.length === 0) {
       const title = content.slice(0, 50) + (content.length > 50 ? "..." : "");
       updateConversationTitle(conversationId, title);
-    }
-    
-    // Check for smart commands first
-    const smartResponse = handleSmartCommand(content);
-    if (smartResponse) {
-      const assistantMessage: Message = {
-        id: nanoid(),
-        role: "assistant",
-        content: smartResponse,
-        timestamp: Date.now(),
-        parentId: userMessage.id,
-      };
-      addMessage(assistantMessage);
-      if (voiceEnabled) {
-        speakText(smartResponse);
-      }
-      return;
     }
     
     setIsGenerating(true);
