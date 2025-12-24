@@ -8,10 +8,12 @@ import DOMPurify from "dompurify";
 import { marked } from "marked";
 import hljs from "highlight.js";
 import "highlight.js/styles/github-dark.css";
+import bossaiRobot from "@assets/bossai-robot.png";
 
 interface MessageBubbleProps {
   message: Message;
   isUser: boolean;
+  userName?: string;
   onSpeak?: (text: string) => void;
   onRegenerate?: () => void;
   onEdit?: (id: string, content: string) => void;
@@ -23,6 +25,7 @@ interface MessageBubbleProps {
 export function MessageBubble({
   message,
   isUser,
+  userName = "User",
   onSpeak,
   onRegenerate,
   onEdit,
@@ -128,19 +131,27 @@ export function MessageBubble({
     >
       <div className="flex items-start gap-3 md:gap-4 mb-2 md:mb-3">
         <div 
-          className={`w-8 h-8 md:w-9 md:h-9 rounded-lg flex items-center justify-center flex-shrink-0 text-sm md:text-base ${
+          className={`w-8 h-8 md:w-9 md:h-9 rounded-full flex items-center justify-center flex-shrink-0 text-sm md:text-base overflow-hidden ${
             isUser 
-              ? "bg-primary text-primary-foreground" 
-              : "bg-card border border-card-border text-foreground"
+              ? "bg-primary text-primary-foreground font-semibold" 
+              : "bg-card border border-card-border"
           }`}
         >
-          {isUser ? "You" : "AI"}
+          {isUser ? (
+            <span>{userName.charAt(0).toUpperCase()}</span>
+          ) : (
+            <img 
+              src={bossaiRobot} 
+              alt="BossAI" 
+              className="w-full h-full object-cover"
+            />
+          )}
         </div>
         
         <div className="flex-1 min-w-0">
-          <div className="flex items-center gap-2 md:gap-3 mb-1">
-            <span className="text-sm font-semibold text-foreground">
-              {isUser ? "You" : "BossAI"}
+          <div className="flex items-center gap-2 md:gap-3 mb-2">
+            <span className="text-sm font-bold text-foreground">
+              {isUser ? userName : "BossAI"}
             </span>
             
             {branchCount > 1 && (
@@ -274,12 +285,14 @@ export function MessageBubble({
       ) : (
         <div 
           ref={contentRef}
-          className="pl-11 md:pl-[52px] text-sm md:text-[15px] leading-relaxed text-foreground/90 prose prose-invert prose-sm max-w-none
+          className="pl-11 md:pl-[52px] text-sm md:text-[15px] leading-relaxed text-foreground prose prose-invert prose-sm max-w-none
+            prose-p:my-2 prose-p:text-foreground
             prose-pre:bg-card prose-pre:border prose-pre:border-border prose-pre:rounded-xl prose-pre:p-4
             prose-code:bg-muted prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded prose-code:text-sm prose-code:before:content-none prose-code:after:content-none
             prose-a:text-blue-400 prose-a:no-underline hover:prose-a:underline
             prose-blockquote:border-l-primary prose-blockquote:text-muted-foreground prose-blockquote:italic
-            prose-img:rounded-xl prose-img:max-w-full"
+            prose-img:rounded-xl prose-img:max-w-full
+            prose-h1:text-xl prose-h1:font-bold prose-h2:text-lg prose-h2:font-bold prose-h3:text-base prose-h3:font-bold"
           dangerouslySetInnerHTML={{ __html: isUser ? message.content : renderedContent }}
           data-testid="text-message-content"
         />
