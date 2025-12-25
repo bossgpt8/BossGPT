@@ -7,6 +7,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import { useChatStore } from "@/lib/store";
 import { subscribeToAuth } from "@/lib/firebase";
+import { AI_MODELS } from "@shared/schema";
 import Chat from "@/pages/Chat";
 import Settings from "@/pages/Settings";
 import OfflineScreen from "@/pages/offline";
@@ -38,6 +39,21 @@ function AuthProvider({ children }: { children: React.ReactNode }) {
 function App() {
   const [isOnline, setIsOnline] = useState(navigator.onLine);
   const [isInitialized, setIsInitialized] = useState(false);
+  const { currentModel, setCurrentModel } = useChatStore();
+
+  useEffect(() => {
+    // Validate model is still available, reset if not
+    const validIds = new Set<string>();
+    Object.values(AI_MODELS).forEach((category) => {
+      category.forEach((model) => {
+        validIds.add(model.id);
+      });
+    });
+    
+    if (currentModel && !validIds.has(currentModel)) {
+      setCurrentModel("meta-llama/llama-3.3-70b-instruct:free");
+    }
+  }, [currentModel, setCurrentModel]);
 
   useEffect(() => {
     // Set initialized after a brief delay to ensure app is ready
