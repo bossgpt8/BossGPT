@@ -57,7 +57,7 @@ export default function Chat() {
   const [showScrollButton, setShowScrollButton] = useState(false);
   const [showOnboarding, setShowOnboarding] = useState(false);
   const [showNameModal, setShowNameModal] = useState(false);
-  
+
   useEffect(() => {
     if (!hasSeenOnboarding) {
       const timer = setTimeout(() => {
@@ -75,7 +75,7 @@ export default function Chat() {
       return () => clearTimeout(timer);
     }
   }, [hasSeenSettings]);
-  
+
   const handleCloseOnboarding = () => {
     setShowOnboarding(false);
     setHasSeenOnboarding(true);
@@ -101,21 +101,23 @@ export default function Chat() {
 
   useEffect(() => {
     synthesisRef.current = window.speechSynthesis;
-    
+
     // Initialize speech recognition
-    const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+    const SpeechRecognition =
+      (window as any).SpeechRecognition ||
+      (window as any).webkitSpeechRecognition;
     if (SpeechRecognition) {
       recognitionRef.current = new SpeechRecognition();
       recognitionRef.current.continuous = false;
       recognitionRef.current.interimResults = false;
       recognitionRef.current.lang = "en-US";
-      
+
       recognitionRef.current.onresult = (event: any) => {
         const transcript = event.results[0][0].transcript;
         handleSendMessage(transcript, []);
         setIsRecording(false);
       };
-      
+
       recognitionRef.current.onerror = () => {
         setIsRecording(false);
         toast({
@@ -124,12 +126,12 @@ export default function Chat() {
           variant: "destructive",
         });
       };
-      
+
       recognitionRef.current.onend = () => {
         setIsRecording(false);
       };
     }
-    
+
     return () => {
       if (recognitionRef.current) {
         recognitionRef.current.abort();
@@ -143,7 +145,7 @@ export default function Chat() {
 
   const speakText = useCallback((text: string) => {
     if (!synthesisRef.current) return;
-    
+
     synthesisRef.current.cancel();
     const utterance = new SpeechSynthesisUtterance(text.replace(/[*#`]/g, ""));
     utterance.rate = 1;
@@ -157,13 +159,13 @@ export default function Chat() {
 
   const handleSendMessage = async (content: string, images: string[]) => {
     if (!content.trim() && images.length === 0) return;
-    
+
     // Create conversation if none exists
     let conversationId = currentConversationId;
     if (!conversationId) {
       conversationId = createNewConversation();
     }
-    
+
     // Add user message
     const userMessage: Message = {
       id: nanoid(),
@@ -175,15 +177,15 @@ export default function Chat() {
     };
     addMessage(userMessage);
     clearImages();
-    
+
     // Update conversation title if first message
     if (messages.length === 0) {
       const title = content.slice(0, 50) + (content.length > 50 ? "..." : "");
       updateConversationTitle(conversationId, title);
     }
-    
+
     setIsGenerating(true);
-    
+
     try {
       // Check if using image generation model
       if (isImageModel(currentModel)) {
@@ -192,13 +194,13 @@ export default function Chat() {
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ prompt: content, modelId: currentModel }),
         });
-        
+
         const data = await response.json();
-        
+
         if (data.error) {
           throw new Error(data.error);
         }
-        
+
         const assistantMessage: Message = {
           id: nanoid(),
           role: "assistant",
@@ -207,7 +209,7 @@ export default function Chat() {
           parentId: userMessage.id,
         };
         addMessage(assistantMessage);
-        
+
         if (voiceEnabled) {
           speakText("I've generated an image for you!");
         }
@@ -216,10 +218,13 @@ export default function Chat() {
         const chatMessages = [
           ...messages.map((m) => ({
             role: m.role,
-            content: m.images?.length 
+            content: m.images?.length
               ? [
                   { type: "text", text: m.content },
-                  ...m.images.map((img) => ({ type: "image_url", image_url: { url: img } })),
+                  ...m.images.map((img) => ({
+                    type: "image_url",
+                    image_url: { url: img },
+                  })),
                 ]
               : m.content,
           })),
@@ -228,24 +233,27 @@ export default function Chat() {
             content: userMessage.images?.length
               ? [
                   { type: "text", text: content },
-                  ...userMessage.images.map((img) => ({ type: "image_url", image_url: { url: img } })),
+                  ...userMessage.images.map((img) => ({
+                    type: "image_url",
+                    image_url: { url: img },
+                  })),
                 ]
               : content,
           },
         ];
-        
+
         const response = await fetch("/api/chat", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ 
-            messages: chatMessages, 
-            model: currentModel, 
+          body: JSON.stringify({
+            messages: chatMessages,
+            model: currentModel,
             customPrompt: customSystemPrompt,
             userName,
             userGender,
           }),
         });
-        
+
         if (!response.ok) {
           const errorData = await response.json();
           throw new Error(errorData.error || "Failed to get response");
@@ -300,10 +308,11 @@ export default function Chat() {
     } catch (error: any) {
       toast({
         title: "Error",
-        description: error.message || "Failed to get response. Please try again.",
+        description:
+          error.message || "Failed to get response. Please try again.",
         variant: "destructive",
       });
-      
+
       const errorMessage: Message = {
         id: nanoid(),
         role: "assistant",
@@ -326,7 +335,7 @@ export default function Chat() {
       });
       return;
     }
-    
+
     if (isRecording) {
       recognitionRef.current.stop();
       setIsRecording(false);
@@ -342,8 +351,10 @@ export default function Chat() {
 
   const handleRegenerate = () => {
     if (messages.length < 2) return;
-    
-    const lastUserMessage = [...messages].reverse().find((m) => m.role === "user");
+
+    const lastUserMessage = [...messages]
+      .reverse()
+      .find((m) => m.role === "user");
     if (lastUserMessage) {
       handleSendMessage(lastUserMessage.content, lastUserMessage.images || []);
     }
@@ -352,7 +363,7 @@ export default function Chat() {
   return (
     <div className="flex h-screen w-full bg-background">
       <AppSidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
-      
+
       <main className="flex-1 flex flex-col min-w-0">
         <ChatHeader
           currentModel={currentModel}
@@ -360,7 +371,7 @@ export default function Chat() {
           onToggleVoice={() => setVoiceEnabled(!voiceEnabled)}
           onToggleSidebar={() => setSidebarOpen(!sidebarOpen)}
         />
-        
+
         <div className="flex-1 relative overflow-hidden">
           <div
             ref={scrollAreaRef}
@@ -369,7 +380,9 @@ export default function Chat() {
           >
             <div className="max-w-4xl mx-auto px-4 md:px-6 py-4 md:py-6">
               {messages.length === 0 ? (
-                <WelcomeScreen onSuggestionClick={(prompt) => handleSendMessage(prompt, [])} />
+                <WelcomeScreen
+                  onSuggestionClick={(prompt) => handleSendMessage(prompt, [])}
+                />
               ) : (
                 <>
                   {messages.map((message) => (
@@ -379,8 +392,18 @@ export default function Chat() {
                       isUser={message.role === "user"}
                       userName={userName}
                       onSpeak={voiceEnabled ? speakText : undefined}
-                      onRegenerate={message.role === "assistant" && message.id === messages[messages.length - 1]?.id ? handleRegenerate : undefined}
-                      onEdit={message.role === "user" ? (id, content) => useChatStore.getState().updateMessage(id, content) : undefined}
+                      onRegenerate={
+                        message.role === "assistant" &&
+                        message.id === messages[messages.length - 1]?.id
+                          ? handleRegenerate
+                          : undefined
+                      }
+                      onEdit={
+                        message.role === "user"
+                          ? (id, content) =>
+                              useChatStore.getState().updateMessage(id, content)
+                          : undefined
+                      }
                     />
                   ))}
                   {isGenerating && <TypingIndicator />}
@@ -389,12 +412,12 @@ export default function Chat() {
               )}
             </div>
           </div>
-          
+
           {showScrollButton && (
             <Button
               size="icon"
               variant="secondary"
-              className="absolute bottom-20 right-4 rounded-full shadow-lg z-50 hover:scale-110 transition-transform"
+              className="absolute bottom-20 left-4 rounded-full shadow-lg z-10 hover:scale-110 transition-transform"
               onClick={scrollToBottom}
               data-testid="button-scroll-down"
             >
@@ -402,7 +425,7 @@ export default function Chat() {
             </Button>
           )}
         </div>
-        
+
         <ChatInput
           onSend={handleSendMessage}
           isGenerating={isGenerating}
@@ -413,17 +436,17 @@ export default function Chat() {
           onToggleRecording={handleToggleRecording}
         />
       </main>
-      
-      <VoiceRecordingOverlay 
-        isRecording={isRecording} 
-        onStop={handleToggleRecording} 
+
+      <VoiceRecordingOverlay
+        isRecording={isRecording}
+        onStop={handleToggleRecording}
       />
-      
-      <OnboardingModal 
-        isOpen={showOnboarding} 
-        onClose={handleCloseOnboarding} 
+
+      <OnboardingModal
+        isOpen={showOnboarding}
+        onClose={handleCloseOnboarding}
       />
-      
+
       <NameModal
         open={showNameModal}
         onClose={() => {
