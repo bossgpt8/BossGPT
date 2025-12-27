@@ -56,6 +56,13 @@ function App() {
   }, [currentModel, setCurrentModel]);
 
   useEffect(() => {
+    // Register service worker for offline support
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('/service-worker.js').catch((error) => {
+        console.debug('Service worker registration failed:', error);
+      });
+    }
+
     // Set initialized after a brief delay to ensure app is ready
     const timer = setTimeout(() => {
       setIsInitialized(true);
