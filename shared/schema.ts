@@ -79,8 +79,8 @@ export const AI_MODELS = {
     { id: "stabilityai/stable-diffusion-v1-5", name: "SD 1.5", description: "Popular and fast" },
   ],
   code: [
-    { id: "meta-llama/llama-3.1-8b-instruct:free", name: "Llama 3.1 8B", description: "Good for coding" },
-    { id: "deepseek/deepseek-r1:free", name: "DeepSeek R1", description: "Advanced code reasoning" },
+    { id: "qwen/qwen3-coder:free", name: "Qwen 3 Coder", description: "Specialized for code generation" },
+    { id: "kwaipilot/kat-coder-pro:free", name: "KwaiPilot KAT Coder Pro", description: "Professional coding assistant" },
   ],
 } as const;
 

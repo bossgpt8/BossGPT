@@ -45,9 +45,25 @@ export function ChatInput({
   };
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === "Enter" && !e.shiftKey) {
-      e.preventDefault();
-      handleSubmit();
+    // Check if device is mobile (touch device or small screen)
+    const isMobile = window.innerWidth < 768 || 
+                     (navigator.maxTouchPoints !== undefined && navigator.maxTouchPoints > 2);
+    
+    if (e.key === "Enter") {
+      if (isMobile) {
+        // On mobile: Shift+Enter sends, regular Enter creates new line
+        if (e.shiftKey) {
+          e.preventDefault();
+          handleSubmit();
+        }
+        // Allow regular Enter to create new line
+      } else {
+        // On desktop: Regular Enter sends, Shift+Enter creates new line
+        if (!e.shiftKey) {
+          e.preventDefault();
+          handleSubmit();
+        }
+      }
     }
   };
 

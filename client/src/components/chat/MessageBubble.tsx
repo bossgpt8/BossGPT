@@ -140,10 +140,10 @@ export function MessageBubble({
         </div>
         
         <div className={`flex flex-col ${isUser ? "items-end" : "items-start"}`}>
-          <div className={`rounded-2xl px-4 py-2 ${
+          <div className={`rounded-2xl px-4 py-2 border-2 ${
             isUser 
-              ? "bg-primary text-primary-foreground rounded-br-none" 
-              : "bg-muted text-foreground rounded-bl-none"
+              ? "bg-primary text-primary-foreground rounded-br-none border-primary-foreground/30" 
+              : "bg-muted text-foreground rounded-bl-none border-foreground/20"
           }`}>
             {message.images && message.images.length > 0 && (
               <div className="flex flex-wrap gap-2 mb-2">
@@ -152,7 +152,7 @@ export function MessageBubble({
                     key={i}
                     src={img}
                     alt={`Attached ${i + 1}`}
-                    className="max-w-[150px] max-h-[150px] rounded-lg object-cover cursor-pointer"
+                    className="max-w-[150px] max-h-[150px] rounded-lg object-cover cursor-pointer border-2 border-current"
                     onClick={() => window.open(img, "_blank")}
                     data-testid={`image-attachment-${i}`}
                   />
@@ -167,7 +167,7 @@ export function MessageBubble({
                   value={editContent}
                   onChange={(e) => setEditContent(e.target.value)}
                   onKeyDown={handleKeyDown}
-                  className="min-h-[80px] text-sm"
+                  className="min-h-[80px] text-sm border-2"
                   data-testid="textarea-edit-message"
                 />
                 <div className="flex gap-2 justify-end">
