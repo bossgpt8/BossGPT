@@ -95,7 +95,7 @@ export function ChatInput({
 
   return (
     <div className="border-t border-border bg-background/80 backdrop-blur-md p-3 md:p-4">
-      <div className="max-w-4xl mx-auto">
+      <div className="max-w-2xl mx-auto">
         {attachedImages.length > 0 && (
           <div className="flex gap-2 mb-3 overflow-x-auto pb-2">
             {attachedImages.map((img, i) => (

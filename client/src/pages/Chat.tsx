@@ -112,19 +112,34 @@ export default function Chat() {
       recognitionRef.current.interimResults = false;
       recognitionRef.current.lang = "en-US";
 
+      recognitionRef.current.onstart = () => {
+        setIsRecording(true);
+      };
+
       recognitionRef.current.onresult = (event: any) => {
-        const transcript = event.results[0][0].transcript;
-        handleSendMessage(transcript, []);
+        try {
+          if (event.results && event.results.length > 0) {
+            const transcript = event.results[event.results.length - 1][0].transcript;
+            if (transcript && transcript.trim()) {
+              handleSendMessage(transcript, []);
+            }
+          }
+        } catch (error) {
+          console.error("Error processing speech result:", error);
+        }
         setIsRecording(false);
       };
 
-      recognitionRef.current.onerror = () => {
+      recognitionRef.current.onerror = (event: any) => {
+        console.error("Speech recognition error:", event.error);
         setIsRecording(false);
-        toast({
-          title: "Voice Error",
-          description: "Could not recognize speech. Please try again.",
-          variant: "destructive",
-        });
+        if (event.error !== "no-speech" && event.error !== "audio-capture") {
+          toast({
+            title: "Voice Error",
+            description: "Could not recognize speech. Please try again.",
+            variant: "destructive",
+          });
+        }
       };
 
       recognitionRef.current.onend = () => {
@@ -134,10 +149,12 @@ export default function Chat() {
 
     return () => {
       if (recognitionRef.current) {
-        recognitionRef.current.abort();
+        try {
+          recognitionRef.current.abort();
+        } catch {}
       }
     };
-  }, []);
+  }, [toast]);
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -270,22 +287,43 @@ export default function Chat() {
 
         addMessage(assistantMessage);
 
-        const reader = response.body!.getReader();
-        const decoder = new TextDecoder();
+        if (response.body) {
+          const reader = response.body.getReader();
+          const decoder = new TextDecoder();
 
-        try {
-          while (true) {
-            const { done, value } = await reader.read();
-            if (done) break;
+          try {
+            let buffer = "";
+            while (true) {
+              const { done, value } = await reader.read();
+              if (done) break;
 
-            const chunk = decoder.decode(value);
-            const lines = chunk.split("\n");
+              buffer += decoder.decode(value, { stream: true });
+              const lines = buffer.split("\n");
+              
+              for (let i = 0; i < lines.length - 1; i++) {
+                const line = lines[i];
+                if (line.startsWith("data: ")) {
+                  const data = line.slice(6).trim();
+                  if (data === "[DONE]") continue;
+                  if (!data) continue;
 
-            for (const line of lines) {
-              if (line.startsWith("data: ")) {
-                const data = line.slice(6);
-                if (data === "[DONE]") continue;
-
+                  try {
+                    const parsed = JSON.parse(data);
+                    const content = parsed.content || "";
+                    if (content) {
+                      fullContent += content;
+                      updateMessage(assistantMessage.id, fullContent);
+                    }
+                  } catch {}
+                }
+              }
+              
+              buffer = lines[lines.length - 1];
+            }
+            
+            if (buffer.trim().startsWith("data: ")) {
+              const data = buffer.trim().slice(6).trim();
+              if (data && data !== "[DONE]") {
                 try {
                   const parsed = JSON.parse(data);
                   const content = parsed.content || "";
@@ -296,9 +334,10 @@ export default function Chat() {
                 } catch {}
               }
             }
+          } catch (error) {
+            console.error("Stream reading error:", error);
+            if (!fullContent) throw error;
           }
-        } catch (error) {
-          throw error;
         }
 
         if (voiceEnabled && fullContent) {
@@ -337,13 +376,15 @@ export default function Chat() {
     }
 
     if (isRecording) {
-      recognitionRef.current.stop();
+      try {
+        recognitionRef.current.stop();
+      } catch {}
       setIsRecording(false);
     } else {
       try {
         recognitionRef.current.start();
-        setIsRecording(true);
       } catch (error) {
+        console.error("Error starting speech recognition:", error);
         setIsRecording(false);
       }
     }
@@ -378,38 +419,40 @@ export default function Chat() {
             className="h-full overflow-y-auto"
             onScroll={handleScroll}
           >
-            <div className="max-w-4xl mx-auto px-4 md:px-6 py-4 md:py-6">
-              {messages.length === 0 ? (
-                <WelcomeScreen
-                  onSuggestionClick={(prompt) => handleSendMessage(prompt, [])}
-                />
-              ) : (
-                <>
-                  {messages.map((message) => (
-                    <MessageBubble
-                      key={message.id}
-                      message={message}
-                      isUser={message.role === "user"}
-                      userName={userName}
-                      onSpeak={voiceEnabled ? speakText : undefined}
-                      onRegenerate={
-                        message.role === "assistant" &&
-                        message.id === messages[messages.length - 1]?.id
-                          ? handleRegenerate
-                          : undefined
-                      }
-                      onEdit={
-                        message.role === "user"
-                          ? (id, content) =>
-                              useChatStore.getState().updateMessage(id, content)
-                          : undefined
-                      }
-                    />
-                  ))}
-                  {isGenerating && <TypingIndicator />}
-                  <div ref={messagesEndRef} />
-                </>
-              )}
+            <div className="w-full px-4 py-4 md:py-6">
+              <div className="max-w-2xl mx-auto">
+                {messages.length === 0 ? (
+                  <WelcomeScreen
+                    onSuggestionClick={(prompt) => handleSendMessage(prompt, [])}
+                  />
+                ) : (
+                  <>
+                    {messages.map((message) => (
+                      <MessageBubble
+                        key={message.id}
+                        message={message}
+                        isUser={message.role === "user"}
+                        userName={userName}
+                        onSpeak={voiceEnabled ? speakText : undefined}
+                        onRegenerate={
+                          message.role === "assistant" &&
+                          message.id === messages[messages.length - 1]?.id
+                            ? handleRegenerate
+                            : undefined
+                        }
+                        onEdit={
+                          message.role === "user"
+                            ? (id, content) =>
+                                useChatStore.getState().updateMessage(id, content)
+                            : undefined
+                        }
+                      />
+                    ))}
+                    {isGenerating && <TypingIndicator />}
+                    <div ref={messagesEndRef} />
+                  </>
+                )}
+              </div>
             </div>
           </div>
 

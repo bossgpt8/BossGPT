@@ -126,15 +126,15 @@ export function MessageBubble({
 
   return (
     <div 
-      className="group mb-6 md:mb-8 animate-in fade-in slide-in-from-bottom-4 duration-300"
+      className={`group mb-4 animate-in fade-in slide-in-from-bottom-4 duration-300 flex ${isUser ? "justify-end" : "justify-start"}`}
       data-testid={`message-${message.id}`}
     >
-      <div className="flex items-start gap-3 md:gap-4 mb-2 md:mb-3">
+      <div className={`flex items-end gap-2 max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg ${isUser ? "flex-row-reverse" : "flex-row"}`}>
         <div 
-          className={`w-8 h-8 md:w-9 md:h-9 rounded-full flex items-center justify-center flex-shrink-0 text-sm md:text-base overflow-hidden ${
+          className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 text-sm overflow-hidden ${
             isUser 
               ? "bg-primary text-primary-foreground font-semibold" 
-              : "bg-card border border-card-border"
+              : "bg-muted"
           }`}
         >
           {isUser ? (
@@ -148,158 +148,120 @@ export function MessageBubble({
           )}
         </div>
         
-        <div className="flex-1 min-w-0">
-          <div className="flex items-center gap-2 md:gap-3 mb-2">
-            <div className="flex items-center gap-1">
-              <span className="text-sm font-bold text-foreground">
-                {isUser ? userName : "BossAI"}
-              </span>
-              {isUser && <span className="text-xs text-muted-foreground">(you)</span>}
-            </div>
-            
-            {branchCount > 1 && (
-              <div className="flex items-center gap-1">
-                <Button
-                  size="icon"
-                  variant="ghost"
-                  className="w-6 h-6"
-                  onClick={() => onBranchChange?.(Math.max(0, currentBranch - 1))}
-                  disabled={currentBranch === 0}
-                  data-testid="button-branch-prev"
-                >
-                  <ChevronLeft className="w-3 h-3" />
-                </Button>
-                <Badge variant="secondary" className="text-xs px-2">
-                  {currentBranch + 1}/{branchCount}
-                </Badge>
-                <Button
-                  size="icon"
-                  variant="ghost"
-                  className="w-6 h-6"
-                  onClick={() => onBranchChange?.(Math.min(branchCount - 1, currentBranch + 1))}
-                  disabled={currentBranch === branchCount - 1}
-                  data-testid="button-branch-next"
-                >
-                  <ChevronRight className="w-3 h-3" />
-                </Button>
+        <div className={`flex flex-col ${isUser ? "items-end" : "items-start"}`}>
+          <div className={`rounded-2xl px-4 py-2 ${
+            isUser 
+              ? "bg-primary text-primary-foreground rounded-br-none" 
+              : "bg-muted text-foreground rounded-bl-none"
+          }`}>
+            {message.images && message.images.length > 0 && (
+              <div className="flex flex-wrap gap-2 mb-2">
+                {message.images.map((img, i) => (
+                  <img
+                    key={i}
+                    src={img}
+                    alt={`Attached ${i + 1}`}
+                    className="max-w-[150px] max-h-[150px] rounded-lg object-cover cursor-pointer"
+                    onClick={() => window.open(img, "_blank")}
+                    data-testid={`image-attachment-${i}`}
+                  />
+                ))}
               </div>
             )}
             
-            <div className="ml-auto flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-              {isUser && onEdit && !isEditing && (
-                <Button
-                  size="icon"
-                  variant="ghost"
-                  className="w-7 h-7 md:w-8 md:h-8"
-                  onClick={handleStartEdit}
-                  data-testid="button-edit-message"
-                >
-                  <Pencil className="w-3.5 h-3.5" />
-                </Button>
-              )}
-              
+            {isEditing ? (
+              <div className="space-y-2">
+                <Textarea
+                  ref={textareaRef}
+                  value={editContent}
+                  onChange={(e) => setEditContent(e.target.value)}
+                  onKeyDown={handleKeyDown}
+                  className="min-h-[80px] text-sm"
+                  data-testid="textarea-edit-message"
+                />
+                <div className="flex gap-2 justify-end">
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    onClick={handleCancelEdit}
+                    data-testid="button-cancel-edit"
+                  >
+                    <X className="w-3.5 h-3.5 mr-1" />
+                    Cancel
+                  </Button>
+                  <Button
+                    size="sm"
+                    onClick={handleSaveEdit}
+                    disabled={!editContent.trim() || editContent === message.content}
+                    data-testid="button-save-edit"
+                  >
+                    <Check className="w-3.5 h-3.5 mr-1" />
+                    Save
+                  </Button>
+                </div>
+                <p className="text-xs opacity-70">
+                  Press Ctrl+Enter to save, Escape to cancel
+                </p>
+              </div>
+            ) : (
+              <div 
+                ref={contentRef}
+                className={`text-sm leading-relaxed ${isUser ? "text-primary-foreground" : "text-foreground"} ${!isUser ? "prose prose-sm max-w-none prose-invert prose-p:my-1 prose-p:m-0 prose-pre:bg-card prose-pre:border prose-pre:border-border prose-pre:rounded-xl prose-pre:p-3 prose-code:bg-card prose-code:px-1 prose-code:py-0.5 prose-code:rounded prose-code:text-xs prose-code:before:content-none prose-code:after:content-none prose-a:text-blue-400 prose-a:no-underline hover:prose-a:underline prose-blockquote:border-l-primary prose-blockquote:text-muted-foreground prose-blockquote:italic prose-img:rounded-lg prose-img:max-w-full prose-h1:text-base prose-h1:font-bold prose-h2:text-sm prose-h2:font-bold prose-h3:text-sm prose-h3:font-bold" : ""}`}
+                dangerouslySetInnerHTML={{ __html: isUser ? message.content : renderedContent }}
+                data-testid="text-message-content"
+              />
+            )}
+          </div>
+          
+          <div className={`flex items-center gap-1 mt-1 opacity-0 group-hover:opacity-100 transition-opacity ${isUser ? "flex-row-reverse mr-1" : "ml-1"}`}>
+            {isUser && onEdit && !isEditing && (
               <Button
                 size="icon"
                 variant="ghost"
-                className="w-7 h-7 md:w-8 md:h-8"
-                onClick={handleCopy}
-                data-testid="button-copy-message"
+                className="w-6 h-6"
+                onClick={handleStartEdit}
+                data-testid="button-edit-message"
               >
-                {copied ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
+                <Pencil className="w-3 h-3" />
               </Button>
-              
-              {!isUser && onSpeak && (
-                <Button
-                  size="icon"
-                  variant="ghost"
-                  className="w-7 h-7 md:w-8 md:h-8"
-                  onClick={() => onSpeak(message.content)}
-                  data-testid="button-speak-message"
-                >
-                  <Volume2 className="w-3.5 h-3.5" />
-                </Button>
-              )}
-              
-              {!isUser && onRegenerate && (
-                <Button
-                  size="icon"
-                  variant="ghost"
-                  className="w-7 h-7 md:w-8 md:h-8"
-                  onClick={onRegenerate}
-                  data-testid="button-regenerate"
-                >
-                  <RotateCcw className="w-3.5 h-3.5" />
-                </Button>
-              )}
-            </div>
+            )}
+            
+            <Button
+              size="icon"
+              variant="ghost"
+              className="w-6 h-6"
+              onClick={handleCopy}
+              data-testid="button-copy-message"
+            >
+              {copied ? <Check className="w-3 h-3" /> : <Copy className="w-3 h-3" />}
+            </Button>
+            
+            {!isUser && onSpeak && (
+              <Button
+                size="icon"
+                variant="ghost"
+                className="w-6 h-6"
+                onClick={() => onSpeak(message.content)}
+                data-testid="button-speak-message"
+              >
+                <Volume2 className="w-3 h-3" />
+              </Button>
+            )}
+            
+            {!isUser && onRegenerate && (
+              <Button
+                size="icon"
+                variant="ghost"
+                className="w-6 h-6"
+                onClick={onRegenerate}
+                data-testid="button-regenerate"
+              >
+                <RotateCcw className="w-3 h-3" />
+              </Button>
+            )}
           </div>
         </div>
       </div>
-      
-      {message.images && message.images.length > 0 && (
-        <div className="flex flex-wrap gap-2 md:gap-3 pl-11 md:pl-[52px] mb-2 md:mb-3">
-          {message.images.map((img, i) => (
-            <img
-              key={i}
-              src={img}
-              alt={`Attached ${i + 1}`}
-              className="max-w-[200px] md:max-w-[250px] max-h-[200px] md:max-h-[250px] rounded-lg object-cover cursor-pointer border border-border"
-              onClick={() => window.open(img, "_blank")}
-              data-testid={`image-attachment-${i}`}
-            />
-          ))}
-        </div>
-      )}
-      
-      {isEditing ? (
-        <div className="pl-11 md:pl-[52px] space-y-2">
-          <Textarea
-            ref={textareaRef}
-            value={editContent}
-            onChange={(e) => setEditContent(e.target.value)}
-            onKeyDown={handleKeyDown}
-            className="min-h-[80px] text-sm"
-            data-testid="textarea-edit-message"
-          />
-          <div className="flex gap-2 justify-end">
-            <Button
-              size="sm"
-              variant="outline"
-              onClick={handleCancelEdit}
-              data-testid="button-cancel-edit"
-            >
-              <X className="w-3.5 h-3.5 mr-1" />
-              Cancel
-            </Button>
-            <Button
-              size="sm"
-              onClick={handleSaveEdit}
-              disabled={!editContent.trim() || editContent === message.content}
-              data-testid="button-save-edit"
-            >
-              <Check className="w-3.5 h-3.5 mr-1" />
-              Save
-            </Button>
-          </div>
-          <p className="text-xs text-muted-foreground">
-            Press Ctrl+Enter to save, Escape to cancel
-          </p>
-        </div>
-      ) : (
-        <div 
-          ref={contentRef}
-          className="pl-11 md:pl-[52px] text-sm md:text-[15px] leading-relaxed text-foreground prose prose-invert prose-sm max-w-none
-            prose-p:my-2 prose-p:text-foreground
-            prose-pre:bg-card prose-pre:border prose-pre:border-border prose-pre:rounded-xl prose-pre:p-4
-            prose-code:bg-muted prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded prose-code:text-sm prose-code:before:content-none prose-code:after:content-none
-            prose-a:text-blue-400 prose-a:no-underline hover:prose-a:underline
-            prose-blockquote:border-l-primary prose-blockquote:text-muted-foreground prose-blockquote:italic
-            prose-img:rounded-xl prose-img:max-w-full
-            prose-h1:text-xl prose-h1:font-bold prose-h2:text-lg prose-h2:font-bold prose-h3:text-base prose-h3:font-bold"
-          dangerouslySetInnerHTML={{ __html: isUser ? message.content : renderedContent }}
-          data-testid="text-message-content"
-        />
-      )}
     </div>
   );
 }
