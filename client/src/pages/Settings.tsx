@@ -5,6 +5,8 @@ import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { useLocation } from "wouter";
 import { useChatStore } from "@/lib/store";
+import { saveUserProfile } from "@/lib/firebase";
+import { useToast } from "@/hooks/use-toast";
 import avatar1 from "@assets/stock_images/astronaut_avatar_nas_d6106021.jpg";
 import avatar2 from "@assets/stock_images/astronaut_avatar_nas_bc39255e.jpg";
 import avatar3 from "@assets/stock_images/astronaut_avatar_nas_d931e821.jpg";
@@ -33,7 +35,9 @@ const GENDER_OPTIONS = [
 
 export default function Settings() {
   const [, setLocation] = useLocation();
+  const { toast } = useToast();
   const {
+    user,
     userName,
     userAvatar,
     userPersonality,
@@ -48,13 +52,41 @@ export default function Settings() {
   const [avatar, setAvatar] = useState(userAvatar);
   const [personality, setPersonality] = useState(userPersonality);
   const [gender, setGender] = useState(userGender);
+  const [isSaving, setIsSaving] = useState(false);
 
-  const handleSave = () => {
+  const handleSave = async () => {
     const cleanName = (name || "").trim().slice(0, 100);
     setUserName(cleanName || "User");
     setUserAvatar(avatar);
     setUserPersonality(personality);
     setUserGender(gender);
+    
+    // Save to Firestore if user is logged in
+    if (user?.uid) {
+      setIsSaving(true);
+      try {
+        await saveUserProfile(user.uid, {
+          userName: cleanName || "User",
+          userAvatar: avatar,
+          userPersonality: personality,
+          userGender: gender,
+        });
+        toast({
+          title: "Success",
+          description: "Your profile has been saved!",
+        });
+      } catch (error) {
+        console.error("Error saving profile:", error);
+        toast({
+          title: "Error",
+          description: "Failed to save profile. Changes saved locally.",
+          variant: "destructive",
+        });
+      } finally {
+        setIsSaving(false);
+      }
+    }
+    
     setLocation("/");
   };
 

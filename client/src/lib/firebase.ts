@@ -1,7 +1,7 @@
 // Firebase configuration - using Firebase integration blueprint
 import { initializeApp, type FirebaseApp } from "firebase/app";
 import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged, type User } from "firebase/auth";
-import { getFirestore, collection, doc, getDocs, setDoc, deleteDoc, query, where, orderBy, type Firestore } from "firebase/firestore";
+import { getFirestore, collection, doc, getDocs, getDoc, setDoc, deleteDoc, query, where, orderBy, type Firestore } from "firebase/firestore";
 
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
@@ -87,4 +87,31 @@ export const getConversations = async (userId: string) => {
 export const deleteConversation = async (userId: string, conversationId: string) => {
   if (!db) return;
   await deleteDoc(doc(db, "users", userId, "conversations", conversationId));
+};
+
+// Firestore helpers for user profile
+export const saveUserProfile = async (userId: string, profileData: {
+  userName: string;
+  userAvatar: string;
+  userPersonality: string;
+  userGender: string;
+}) => {
+  if (!db) return;
+  const docRef = doc(db, "users", userId);
+  await setDoc(docRef, {
+    ...profileData,
+    updatedAt: new Date(),
+  }, { merge: true });
+};
+
+export const getUserProfile = async (userId: string) => {
+  if (!db) return null;
+  const docRef = doc(db, "users", userId);
+  try {
+    const snapshot = await getDoc(docRef);
+    return snapshot.exists() ? snapshot.data() : null;
+  } catch (error) {
+    console.error("Error getting user profile:", error);
+    return null;
+  }
 };

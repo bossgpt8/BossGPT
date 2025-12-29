@@ -17,6 +17,7 @@ import { useChatStore } from "@/lib/store";
 import { useToast } from "@/hooks/use-toast";
 import { AI_MODELS } from "@shared/schema";
 import type { Message } from "@shared/schema";
+import { getUserProfile } from "@/lib/firebase";
 
 // Helper function to fetch with timeout
 const fetchWithTimeout = (url: string, options: RequestInit, timeoutMs: number = 60000) => {
@@ -75,6 +76,27 @@ export default function Chat() {
   const [showOnboarding, setShowOnboarding] = useState(false);
   const [showNameModal, setShowNameModal] = useState(false);
   const [showProfileModal, setShowProfileModal] = useState(false);
+
+  // Load user profile from Firestore on mount
+  useEffect(() => {
+    const loadUserProfile = async () => {
+      if (user?.uid) {
+        try {
+          const profile = await getUserProfile(user.uid);
+          if (profile) {
+            if (profile.userName) setUserName(profile.userName);
+            if (profile.userAvatar) setUserAvatar(profile.userAvatar);
+            if (profile.userPersonality) setUserPersonality(profile.userPersonality);
+            if (profile.userGender) setUserGender(profile.userGender);
+          }
+        } catch (error) {
+          console.error("Error loading user profile:", error);
+        }
+      }
+    };
+    
+    loadUserProfile();
+  }, [user?.uid, setUserName, setUserAvatar, setUserPersonality, setUserGender]);
 
   useEffect(() => {
     if (!hasSeenOnboarding) {
