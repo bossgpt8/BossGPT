@@ -90,7 +90,15 @@ export const useChatStore = create<ChatState>()(
       setUser: (user) => set({ user }),
       
       userName: "User",
-      setUserName: (name) => set({ userName: name }),
+      setUserName: (name) => {
+        // Validate name to prevent corruption
+        const cleanName = (name || "").trim().slice(0, 100);
+        if (cleanName && !cleanName.includes("timeout") && !cleanName.includes("stuff")) {
+          set({ userName: cleanName || "User" });
+        } else {
+          set({ userName: "User" });
+        }
+      },
 
       userAvatar: "avatar-1",
       setUserAvatar: (avatar) => set({ userAvatar: avatar }),

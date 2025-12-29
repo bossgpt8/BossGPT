@@ -50,12 +50,16 @@ export default function Settings() {
   const [gender, setGender] = useState(userGender);
 
   const handleSave = () => {
-    setUserName(name.trim() || userName);
+    const cleanName = (name || "").trim().slice(0, 100);
+    setUserName(cleanName || "User");
     setUserAvatar(avatar);
     setUserPersonality(personality);
     setUserGender(gender);
     setLocation("/");
   };
+
+  // Auto-clean corrupted name on load
+  const displayName = name && name.includes("timeout") ? "" : name;
 
   return (
     <div className="min-h-screen bg-background">
@@ -81,7 +85,7 @@ export default function Settings() {
             <div className="space-y-2">
               <label className="text-sm font-medium text-foreground">Your Name</label>
               <Input
-                value={name}
+                value={displayName}
                 onChange={(e) => setName(e.target.value)}
                 placeholder="Enter your name"
                 className="text-base"
