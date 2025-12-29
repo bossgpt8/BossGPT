@@ -30,15 +30,9 @@ const ONBOARDING_STEPS: OnboardingStep[] = [
     color: "text-green-500",
   },
   {
-    icon: Sparkles,
-    title: "Smart Commands",
-    description: "Try commands like 'what time is it', 'tell me a joke', or 'open YouTube' for quick actions.",
-    color: "text-yellow-500",
-  },
-  {
     icon: Settings,
     title: "Customize Your Experience",
-    description: "Choose from multiple AI models, set custom instructions, and personalize themes and accent colors in the sidebar.",
+    description: "Set your name, choose an avatar, personalize your personality style, and configure gender preferences to make BossAI truly yours.",
     color: "text-pink-500",
   },
 ];
@@ -77,18 +71,7 @@ export function OnboardingModal({ isOpen, onClose }: OnboardingModalProps) {
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="sm:max-w-md" data-testid="onboarding-modal">
         <DialogHeader>
-          <div className="flex items-center justify-between">
-            <DialogTitle className="text-lg font-semibold">Welcome to BossAI</DialogTitle>
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={handleSkip}
-              className="h-8 w-8"
-              data-testid="button-close-onboarding"
-            >
-              <X className="w-4 h-4" />
-            </Button>
-          </div>
+          <DialogTitle className="text-lg font-semibold">Welcome to BossAI</DialogTitle>
           <DialogDescription className="sr-only">
             Get started with BossAI - learn about the features available to you
           </DialogDescription>
