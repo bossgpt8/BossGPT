@@ -3,13 +3,6 @@ import { ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { useLocation } from "wouter";
 import { useChatStore } from "@/lib/store";
 import avatar1 from "@assets/stock_images/astronaut_avatar_nas_d6106021.jpg";
@@ -23,11 +16,19 @@ const AVATAR_OPTIONS = [
 ];
 
 const PERSONALITY_OPTIONS = [
-  { id: "friendly", label: "Friendly - Warm and approachable" },
-  { id: "professional", label: "Professional - Focused and direct" },
-  { id: "creative", label: "Creative - Imaginative and playful" },
-  { id: "analytical", label: "Analytical - Detailed and logical" },
-  { id: "casual", label: "Casual - Relaxed and conversational" },
+  { id: "friendly", label: "Friendly", desc: "Warm and approachable" },
+  { id: "professional", label: "Professional", desc: "Focused and direct" },
+  { id: "creative", label: "Creative", desc: "Imaginative and playful" },
+  { id: "analytical", label: "Analytical", desc: "Detailed and logical" },
+  { id: "casual", label: "Casual", desc: "Relaxed and conversational" },
+];
+
+const GENDER_OPTIONS = [
+  { id: "not-specified", label: "Prefer not to say" },
+  { id: "male", label: "Male" },
+  { id: "female", label: "Female" },
+  { id: "non-binary", label: "Non-binary" },
+  { id: "other", label: "Other" },
 ];
 
 export default function Settings() {
@@ -74,8 +75,9 @@ export default function Settings() {
 
       <div className="max-w-2xl mx-auto px-4 md:px-6 py-6 md:py-8 space-y-6">
         <Card className="p-6">
-          <h2 className="text-base font-semibold mb-4">Your Profile</h2>
-          <div className="space-y-6">
+          <h2 className="text-base font-semibold mb-6">Your Profile</h2>
+          <div className="space-y-8">
+            {/* Name */}
             <div className="space-y-2">
               <label className="text-sm font-medium text-foreground">Your Name</label>
               <Input
@@ -87,6 +89,7 @@ export default function Settings() {
               />
             </div>
 
+            {/* Avatar Selection */}
             <div className="space-y-3">
               <label className="text-sm font-medium text-foreground">Your Avatar</label>
               <div className="grid grid-cols-3 gap-4">
@@ -112,40 +115,49 @@ export default function Settings() {
               </div>
             </div>
 
-            <div className="space-y-2">
-              <label className="text-sm font-medium text-foreground">Personality</label>
-              <Select value={personality} onValueChange={setPersonality}>
-                <SelectTrigger className="text-base" data-testid="select-settings-personality">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  {PERSONALITY_OPTIONS.map((option) => (
-                    <SelectItem key={option.id} value={option.id}>
-                      {option.label}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+            {/* Personality Selection */}
+            <div className="space-y-3">
+              <label className="text-sm font-medium text-foreground">Personality Style</label>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                {PERSONALITY_OPTIONS.map((option) => (
+                  <button
+                    key={option.id}
+                    onClick={() => setPersonality(option.id)}
+                    className={`p-3 rounded-lg border-2 text-left transition-all ${
+                      personality === option.id
+                        ? "border-primary bg-primary/10"
+                        : "border-border hover-elevate"
+                    }`}
+                    data-testid={`button-personality-${option.id}`}
+                  >
+                    <div className="font-medium text-sm">{option.label}</div>
+                    <div className="text-xs text-muted-foreground">{option.desc}</div>
+                  </button>
+                ))}
+              </div>
             </div>
 
-            <div className="space-y-2">
+            {/* Gender Selection */}
+            <div className="space-y-3">
               <label className="text-sm font-medium text-foreground">Gender</label>
-              <Select value={gender} onValueChange={setGender}>
-                <SelectTrigger className="text-base" data-testid="select-settings-gender">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="not-specified">Prefer not to say</SelectItem>
-                  <SelectItem value="male">Male</SelectItem>
-                  <SelectItem value="female">Female</SelectItem>
-                  <SelectItem value="non-binary">Non-binary</SelectItem>
-                  <SelectItem value="other">Other</SelectItem>
-                </SelectContent>
-              </Select>
+              <div className="flex flex-wrap gap-2">
+                {GENDER_OPTIONS.map((option) => (
+                  <Button
+                    key={option.id}
+                    onClick={() => setGender(option.id)}
+                    variant={gender === option.id ? "default" : "outline"}
+                    className="rounded-full"
+                    data-testid={`button-gender-${option.id}`}
+                  >
+                    {option.label}
+                  </Button>
+                ))}
+              </div>
             </div>
           </div>
         </Card>
 
+        {/* Action Buttons */}
         <div className="flex gap-2 justify-end">
           <Button
             variant="outline"
