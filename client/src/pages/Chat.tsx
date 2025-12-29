@@ -278,6 +278,7 @@ export default function Chat() {
             customPrompt: customSystemPrompt,
             userName,
             userGender,
+            enableWebSearch: true,
           }),
         });
 

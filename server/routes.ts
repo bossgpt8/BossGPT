@@ -9,11 +9,16 @@ const chatRequestSchema = z.object({
   customPrompt: z.string().optional(),
   userName: z.string().optional(),
   userGender: z.string().optional(),
+  enableWebSearch: z.boolean().optional(),
 });
 
 const imageGenerationRequestSchema = z.object({
   prompt: z.string().min(1),
   modelId: z.string(),
+});
+
+const webSearchRequestSchema = z.object({
+  query: z.string().min(1),
 });
 
 // Model mappings must match AI_MODELS in shared/schema.ts
@@ -35,7 +40,7 @@ export async function registerRoutes(
         return res.status(400).json({ error: "Invalid request body" });
       }
 
-      const { messages, model, customPrompt, userName = "Friend", userGender = "" } = parseResult.data;
+      const { messages, model, customPrompt, userName = "Friend", userGender = "", enableWebSearch } = parseResult.data;
       const apiKey = process.env.OPENROUTER_API_KEY;
 
       if (!apiKey) {
@@ -76,6 +81,16 @@ RESPONSE FORMAT:
 
 ONLY mention your name/identity when specifically asked (e.g., "what is your name", "who are you", "who made you")`;
 
+      if (enableWebSearch && process.env.TAVILY_API_KEY) {
+        systemContent += `\n\nWEB SEARCH CAPABILITY:
+You have access to real-time web search. Use it when:
+- Users ask about current events, news, or recent information
+- You need to verify recent data or statistics
+- Users ask about specific products, prices, or availability
+- You need current information to provide accurate answers
+When using web search results, mention your sources.`;
+      }
+
       if (customPrompt) {
         systemContent += `\n\nAdditional User Instructions:\n${customPrompt}`;
       }
@@ -87,13 +102,12 @@ ONLY mention your name/identity when specifically asked (e.g., "what is your nam
 
       const messagesWithSystem = [systemMessage, ...messages];
 
-      const refererUrl = req.headers['origin'] || req.headers['referer'] || "https://bossai.example.com";
       const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
           "Authorization": `Bearer ${apiKey}`,
-          "HTTP-Referer": refererUrl,
+          "HTTP-Referer": "https://boss-gpt.vercel.app",
           "X-Title": "BossAI",
         },
         body: JSON.stringify({
@@ -217,13 +231,59 @@ ONLY mention your name/identity when specifically asked (e.g., "what is your nam
     }
   });
 
+  app.post("/api/web-search", async (req, res) => {
+    try {
+      const parseResult = webSearchRequestSchema.safeParse(req.body);
+      if (!parseResult.success) {
+        return res.status(400).json({ error: "Query is required" });
+      }
+
+      const { query } = parseResult.data;
+      const tavilyApiKey = process.env.TAVILY_API_KEY;
+
+      if (!tavilyApiKey) {
+        return res.status(500).json({
+          error: "Web search not configured. Please add TAVILY_API_KEY in Secrets.",
+        });
+      }
+
+      const response = await fetch("https://api.tavily.com/search", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          api_key: tavilyApiKey,
+          query: query,
+          max_results: 5,
+          include_answer: true,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error(`Tavily API error: ${response.statusText}`);
+      }
+
+      const data = await response.json();
+      return res.json({
+        results: data.results || [],
+        answer: data.answer,
+      });
+    } catch (error: any) {
+      console.error("Web search error:", error);
+      return res.status(500).json({ error: error.message || "Failed to search web" });
+    }
+  });
+
   app.get("/api/status", (req, res) => {
     const hasApiKey = !!process.env.OPENROUTER_API_KEY;
     const hasHfKey = !!process.env.HUGGINGFACE_API_KEY;
+    const hasWebSearch = !!process.env.TAVILY_API_KEY;
     return res.json({ 
       configured: hasApiKey,
       chatEnabled: hasApiKey,
       imageEnabled: hasHfKey,
+      webSearchEnabled: hasWebSearch,
     });
   });
 
