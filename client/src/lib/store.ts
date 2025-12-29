@@ -21,6 +21,12 @@ interface ChatState {
   
   userName: string;
   setUserName: (name: string) => void;
+
+  userAvatar: string;
+  setUserAvatar: (avatar: string) => void;
+
+  userPersonality: string;
+  setUserPersonality: (personality: string) => void;
   
   userGender: string;
   setUserGender: (gender: string) => void;
@@ -30,6 +36,9 @@ interface ChatState {
   
   hasSeenSettings: boolean;
   setHasSeenSettings: (seen: boolean) => void;
+
+  hasSeenProfile: boolean;
+  setHasSeenProfile: (seen: boolean) => void;
   
   conversations: Conversation[];
   currentConversationId: string | null;
@@ -82,6 +91,12 @@ export const useChatStore = create<ChatState>()(
       
       userName: "User",
       setUserName: (name) => set({ userName: name }),
+
+      userAvatar: "avatar-1",
+      setUserAvatar: (avatar) => set({ userAvatar: avatar }),
+
+      userPersonality: "friendly",
+      setUserPersonality: (personality) => set({ userPersonality: personality }),
       
       userGender: "",
       setUserGender: (gender) => set({ userGender: gender }),
@@ -91,6 +106,9 @@ export const useChatStore = create<ChatState>()(
       
       hasSeenSettings: false,
       setHasSeenSettings: (seen) => set({ hasSeenSettings: seen }),
+
+      hasSeenProfile: false,
+      setHasSeenProfile: (seen) => set({ hasSeenProfile: seen }),
       
       conversations: [],
       currentConversationId: null,
@@ -261,7 +279,10 @@ export const useChatStore = create<ChatState>()(
         customSystemPrompt: state.customSystemPrompt,
         hasSeenOnboarding: state.hasSeenOnboarding,
         hasSeenSettings: state.hasSeenSettings,
+        hasSeenProfile: state.hasSeenProfile,
         userName: state.userName,
+        userAvatar: state.userAvatar,
+        userPersonality: state.userPersonality,
         userGender: state.userGender,
       }),
     }

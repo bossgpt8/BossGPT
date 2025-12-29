@@ -1,4 +1,4 @@
-import { Zap, Layers, Camera, Mic, ImageIcon, Code, Sparkles, BookOpen } from "lucide-react";
+import { Zap, Code, Sparkles, BookOpen, Lightbulb, Brush } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import bossaiRobot from "@assets/bossai-robot.png";
 
@@ -6,94 +6,93 @@ interface WelcomeScreenProps {
   onSuggestionClick: (prompt: string) => void;
 }
 
-const features = [
-  { icon: Layers, label: "Multiple AI Models" },
-  { icon: Camera, label: "Vision Analysis" },
-  { icon: Mic, label: "Voice Chat" },
-  { icon: ImageIcon, label: "Image Generation" },
-];
-
 const suggestions = [
   {
     icon: BookOpen,
-    title: "Master Biology",
-    description: "Human body systems explained",
-    prompt: "Explain the human digestive system step by step, from eating to nutrient absorption",
+    title: "Explain a concept",
+    description: "Get clear explanations on any topic",
+    prompt: "Explain the concept of artificial intelligence in simple terms",
   },
   {
     icon: Code,
-    title: "Learn to Code",
-    description: "Programming tutorials",
-    prompt: "Teach me the basics of JavaScript with practical examples",
+    title: "Code help",
+    description: "Debug, learn, or build projects",
+    prompt: "Help me understand async/await in JavaScript",
   },
   {
     icon: Sparkles,
-    title: "Creative Writing",
-    description: "Stories and content",
-    prompt: "Write a short story about an AI that develops emotions",
+    title: "Get creative",
+    description: "Generate stories, ideas, and content",
+    prompt: "Write a creative short story about time travel",
+  },
+  {
+    icon: Lightbulb,
+    title: "Brainstorm ideas",
+    description: "Explore new possibilities",
+    prompt: "Help me brainstorm ideas for a mobile app",
   },
   {
     icon: Zap,
-    title: "Quick Math",
-    description: "Solve problems fast",
-    prompt: "Help me understand calculus derivatives with simple examples",
+    title: "Problem solver",
+    description: "Work through challenges step-by-step",
+    prompt: "Help me solve this math problem step by step",
+  },
+  {
+    icon: Brush,
+    title: "Image generation",
+    description: "Create images from descriptions",
+    prompt: "Generate an image of a futuristic city at sunset",
   },
 ];
 
 export function WelcomeScreen({ onSuggestionClick }: WelcomeScreenProps) {
   return (
-    <div className="flex items-center justify-center min-h-full p-6 md:p-8">
-      <div className="text-center max-w-2xl w-full">
-        <div className="relative w-20 h-20 md:w-24 md:h-24 mx-auto mb-6 md:mb-8">
-          <img 
-            src={bossaiRobot} 
-            alt="BossAI Robot" 
-            className="w-full h-full object-contain drop-shadow-lg"
-            data-testid="img-bossai-robot"
-          />
+    <div className="flex items-center justify-center min-h-full p-4 md:p-8">
+      <div className="w-full max-w-3xl">
+        <div className="mb-8 md:mb-12">
+          <div className="flex items-center justify-center mb-4">
+            <div className="w-16 h-16 md:w-20 md:h-20 rounded-2xl bg-muted flex items-center justify-center overflow-hidden">
+              <img 
+                src={bossaiRobot} 
+                alt="BossAI" 
+                className="w-full h-full object-cover"
+                data-testid="img-bossai-robot"
+              />
+            </div>
+          </div>
+          
+          <h1 
+            className="text-3xl md:text-4xl font-bold text-center mb-2"
+            data-testid="text-welcome-title"
+          >
+            Hello, I'm BossAI
+          </h1>
+          
+          <p className="text-center text-muted-foreground text-base md:text-lg">
+            Your personal AI assistant. Ask anything, and I'll help you learn, create, and solve problems.
+          </p>
         </div>
         
-        <h2 
-          className="text-3xl md:text-4xl font-bold mb-3 md:mb-4 bg-gradient-to-r from-foreground to-muted-foreground bg-clip-text text-transparent"
-          data-testid="text-welcome-title"
-        >
-          Welcome to BossAI
-        </h2>
-        
-        <p className="text-muted-foreground text-base md:text-lg mb-6 md:mb-8 px-4">
-          Your intelligent assistant powered by multiple AI models. Ask questions, analyze images, generate images, and chat with voice!
-        </p>
-        
-        <div className="flex flex-wrap justify-center gap-2 md:gap-3 mb-8 md:mb-10 px-4">
-          {features.map((feature) => (
-            <span
-              key={feature.label}
-              className="inline-flex items-center gap-2 px-3 md:px-4 py-2 bg-card border border-card-border rounded-full text-xs md:text-sm text-muted-foreground"
-            >
-              <feature.icon className="w-3.5 h-3.5 md:w-4 md:h-4" />
-              {feature.label}
-            </span>
-          ))}
-        </div>
-        
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 md:gap-4 max-w-xl mx-auto px-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
           {suggestions.map((suggestion) => (
             <Card
               key={suggestion.title}
-              className="group p-4 md:p-5 text-left flex items-start gap-3 md:gap-4 cursor-pointer hover-elevate active-elevate-2 transition-all duration-200"
+              className="group p-4 cursor-pointer hover-elevate active-elevate-2 transition-all"
               onClick={() => onSuggestionClick(suggestion.prompt)}
               data-testid={`card-suggestion-${suggestion.title.toLowerCase().replace(/\s+/g, '-')}`}
             >
-              <div className="w-10 h-10 md:w-12 md:h-12 bg-muted rounded-xl flex items-center justify-center flex-shrink-0 transition-colors">
-                <suggestion.icon className="w-5 h-5 md:w-6 md:h-6 text-foreground" />
-              </div>
-              <div className="min-w-0">
-                <span className="block font-semibold text-foreground text-sm md:text-base">
-                  {suggestion.title}
-                </span>
-                <span className="text-xs md:text-sm text-muted-foreground">
-                  {suggestion.description}
-                </span>
+              <div className="flex items-start gap-3">
+                <div className="w-10 h-10 rounded-lg bg-muted flex items-center justify-center flex-shrink-0">
+                  <suggestion.icon className="w-5 h-5 text-foreground" />
+                </div>
+                <div className="min-w-0 flex-1">
+                  <p className="font-semibold text-foreground text-sm">
+                    {suggestion.title}
+                  </p>
+                  <p className="text-xs text-muted-foreground">
+                    {suggestion.description}
+                  </p>
+                </div>
               </div>
             </Card>
           ))}

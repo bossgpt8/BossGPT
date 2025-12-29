@@ -14,6 +14,7 @@ interface MessageBubbleProps {
   message: Message;
   isUser: boolean;
   userName?: string;
+  userAvatar?: string;
   onSpeak?: (text: string) => void;
   onRegenerate?: () => void;
   onEdit?: (id: string, content: string) => void;
@@ -22,10 +23,20 @@ interface MessageBubbleProps {
   onBranchChange?: (index: number) => void;
 }
 
+const AVATAR_COLORS: { [key: string]: string } = {
+  "avatar-1": "bg-blue-500",
+  "avatar-2": "bg-purple-500",
+  "avatar-3": "bg-green-500",
+  "avatar-4": "bg-orange-500",
+  "avatar-5": "bg-pink-500",
+  "avatar-6": "bg-cyan-500",
+};
+
 export function MessageBubble({
   message,
   isUser,
   userName = "User",
+  userAvatar = "avatar-1",
   onSpeak,
   onRegenerate,
   onEdit,
@@ -131,9 +142,9 @@ export function MessageBubble({
     >
       <div className={`flex items-end gap-2 max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg ${isUser ? "flex-row-reverse" : "flex-row"}`}>
         <div 
-          className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 text-sm overflow-hidden ${
+          className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 text-xs font-semibold text-white overflow-hidden ${
             isUser 
-              ? "bg-primary text-primary-foreground font-semibold" 
+              ? AVATAR_COLORS[userAvatar] || "bg-blue-500"
               : "bg-muted"
           }`}
         >

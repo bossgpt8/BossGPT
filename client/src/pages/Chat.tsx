@@ -10,6 +10,7 @@ import { TypingIndicator } from "@/components/chat/TypingIndicator";
 import { VoiceRecordingOverlay } from "@/components/chat/VoiceRecordingOverlay";
 import { OnboardingModal } from "@/components/onboarding/OnboardingModal";
 import { NameModal } from "@/components/settings/NameModal";
+import { ProfileModal } from "@/components/settings/ProfileModal";
 import { ChatHeader } from "@/components/header/ChatHeader";
 import { AppSidebar } from "@/components/sidebar/AppSidebar";
 import { useChatStore } from "@/lib/store";
@@ -21,6 +22,8 @@ export default function Chat() {
   const {
     user,
     userName,
+    userAvatar,
+    userPersonality,
     userGender,
     messages,
     currentConversationId,
@@ -33,9 +36,13 @@ export default function Chat() {
     customSystemPrompt,
     hasSeenOnboarding,
     hasSeenSettings,
+    hasSeenProfile,
     setHasSeenOnboarding,
     setHasSeenSettings,
+    setHasSeenProfile,
     setUserName,
+    setUserAvatar,
+    setUserPersonality,
     setIsGenerating,
     addMessage,
     updateMessage,
@@ -57,6 +64,7 @@ export default function Chat() {
   const [showScrollButton, setShowScrollButton] = useState(false);
   const [showOnboarding, setShowOnboarding] = useState(false);
   const [showNameModal, setShowNameModal] = useState(false);
+  const [showProfileModal, setShowProfileModal] = useState(false);
 
   useEffect(() => {
     if (!hasSeenOnboarding) {
@@ -68,23 +76,25 @@ export default function Chat() {
   }, [hasSeenOnboarding]);
 
   useEffect(() => {
-    if (!hasSeenSettings) {
+    if (!hasSeenProfile) {
       const timer = setTimeout(() => {
-        setShowNameModal(true);
+        setShowProfileModal(true);
       }, 800);
       return () => clearTimeout(timer);
     }
-  }, [hasSeenSettings]);
+  }, [hasSeenProfile]);
 
   const handleCloseOnboarding = () => {
     setShowOnboarding(false);
     setHasSeenOnboarding(true);
   };
 
-  const handleSetUserName = (name: string) => {
+  const handleSaveProfile = (name: string, avatar: string, personality: string) => {
     setUserName(name);
-    setHasSeenSettings(true);
-    setShowNameModal(false);
+    setUserAvatar(avatar);
+    setUserPersonality(personality);
+    setHasSeenProfile(true);
+    setShowProfileModal(false);
   };
 
   const scrollToBottom = useCallback(() => {
@@ -433,6 +443,7 @@ export default function Chat() {
                         message={message}
                         isUser={message.role === "user"}
                         userName={userName}
+                        userAvatar={userAvatar}
                         onSpeak={voiceEnabled ? speakText : undefined}
                         onRegenerate={
                           message.role === "assistant" &&
@@ -490,14 +501,13 @@ export default function Chat() {
         onClose={handleCloseOnboarding}
       />
 
-      <NameModal
-        open={showNameModal}
-        onClose={() => {
-          setShowNameModal(false);
-          setHasSeenSettings(true);
-        }}
-        onSetName={handleSetUserName}
+      <ProfileModal
+        open={showProfileModal}
+        onClose={() => setShowProfileModal(false)}
+        onSaveProfile={handleSaveProfile}
         currentName={userName}
+        currentAvatar={userAvatar}
+        currentPersonality={userPersonality}
       />
     </div>
   );
