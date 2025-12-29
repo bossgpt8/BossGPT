@@ -143,7 +143,7 @@ export function MessageBubble({
           <div className={`rounded-2xl px-4 py-2 border-2 ${
             isUser 
               ? "bg-primary text-primary-foreground rounded-br-none border-primary-foreground/30" 
-              : "bg-muted text-foreground rounded-bl-none border-foreground/20"
+              : "text-foreground rounded-bl-none border-transparent"
           }`}>
             {message.images && message.images.length > 0 && (
               <div className="flex flex-wrap gap-2 mb-2">
