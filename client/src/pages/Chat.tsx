@@ -415,13 +415,15 @@ export default function Chat() {
     <div className="flex h-screen w-full bg-background">
       <AppSidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
 
-      <main className="flex-1 flex flex-col min-w-0">
-        <ChatHeader
-          currentModel={currentModel}
-          voiceEnabled={voiceEnabled}
-          onToggleVoice={() => setVoiceEnabled(!voiceEnabled)}
-          onToggleSidebar={() => setSidebarOpen(!sidebarOpen)}
-        />
+      <main className="flex-1 flex flex-col min-w-0 h-screen">
+        <div className="flex-shrink-0 sticky top-0 z-40 bg-background border-b border-border">
+          <ChatHeader
+            currentModel={currentModel}
+            voiceEnabled={voiceEnabled}
+            onToggleVoice={() => setVoiceEnabled(!voiceEnabled)}
+            onToggleSidebar={() => setSidebarOpen(!sidebarOpen)}
+          />
+        </div>
 
         <div className="flex-1 relative overflow-hidden">
           <div
@@ -480,15 +482,17 @@ export default function Chat() {
           )}
         </div>
 
-        <ChatInput
-          onSend={handleSendMessage}
-          isGenerating={isGenerating}
-          attachedImages={attachedImages}
-          onAddImage={addImage}
-          onRemoveImage={removeImage}
-          isRecording={isRecording}
-          onToggleRecording={handleToggleRecording}
-        />
+        <div className="flex-shrink-0 sticky bottom-0 z-40 bg-background border-t border-border">
+          <ChatInput
+            onSend={handleSendMessage}
+            isGenerating={isGenerating}
+            attachedImages={attachedImages}
+            onAddImage={addImage}
+            onRemoveImage={removeImage}
+            isRecording={isRecording}
+            onToggleRecording={handleToggleRecording}
+          />
+        </div>
       </main>
 
       <VoiceRecordingOverlay
