@@ -18,6 +18,16 @@ import { useToast } from "@/hooks/use-toast";
 import { AI_MODELS } from "@shared/schema";
 import type { Message } from "@shared/schema";
 
+// Helper function to fetch with timeout
+const fetchWithTimeout = (url: string, options: RequestInit, timeoutMs: number = 60000) => {
+  return Promise.race([
+    fetch(url, options),
+    new Promise<Response>((_, reject) =>
+      setTimeout(() => reject(new Error("Request timeout - no internet connection or server not responding")), timeoutMs)
+    ),
+  ]);
+};
+
 export default function Chat() {
   const {
     user,
@@ -220,11 +230,11 @@ export default function Chat() {
     try {
       // Check if using image generation model
       if (isImageModel(currentModel)) {
-        const response = await fetch("/api/generate-image", {
+        const response = await fetchWithTimeout("/api/generate-image", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ prompt: content, modelId: currentModel }),
-        });
+        }, 60000);
 
         const data = await response.json();
 
@@ -273,7 +283,7 @@ export default function Chat() {
           },
         ];
 
-        const response = await fetch("/api/chat", {
+        const response = await fetchWithTimeout("/api/chat", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
@@ -284,7 +294,7 @@ export default function Chat() {
             userGender,
             enableWebSearch: true,
           }),
-        });
+        }, 60000);
 
         if (!response.ok) {
           const errorData = await response.json();
@@ -360,17 +370,25 @@ export default function Chat() {
         }
       }
     } catch (error: any) {
+      let errorTitle = "Error";
+      let errorDescription = error.message || "Failed to get response. Please try again.";
+      
+      // Handle timeout errors
+      if (error.message.includes("timeout") || error.message.includes("no internet")) {
+        errorTitle = "Connection Timeout";
+        errorDescription = "No internet connection or the server is not responding. Please check your connection and try again.";
+      }
+      
       toast({
-        title: "Error",
-        description:
-          error.message || "Failed to get response. Please try again.",
+        title: errorTitle,
+        description: errorDescription,
         variant: "destructive",
       });
 
       const errorMessage: Message = {
         id: nanoid(),
         role: "assistant",
-        content: `Sorry, I encountered an error: ${error.message || "Unknown error"}. Please try again.`,
+        content: errorDescription,
         timestamp: Date.now(),
         parentId: userMessage.id,
       };
