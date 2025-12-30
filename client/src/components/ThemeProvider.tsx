@@ -13,26 +13,26 @@ interface ThemeContextType {
 
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
-const accentColorsConfig: Record<AccentColor, { light: { primary: string; ring: string }; dark: { primary: string; ring: string } }> = {
+const accentColorsConfig: Record<AccentColor, { light: { primary: string; ring: string; accent: string; accentForeground: string }; dark: { primary: string; ring: string; accent: string; accentForeground: string } }> = {
   blue: { 
-    light: { primary: "217 91% 50%", ring: "217 91% 50%" },
-    dark: { primary: "217 91% 60%", ring: "217 91% 60%" }
+    light: { primary: "217 91% 50%", ring: "217 91% 50%", accent: "217 91% 50%", accentForeground: "0 0% 100%" },
+    dark: { primary: "217 91% 60%", ring: "217 91% 60%", accent: "217 91% 60%", accentForeground: "210 20% 98%" }
   },
   gold: { 
-    light: { primary: "43 96% 45%", ring: "43 96% 45%" },
-    dark: { primary: "43 96% 56%", ring: "43 96% 56%" }
+    light: { primary: "43 96% 45%", ring: "43 96% 45%", accent: "43 96% 45%", accentForeground: "0 0% 100%" },
+    dark: { primary: "43 96% 56%", ring: "43 96% 56%", accent: "43 96% 56%", accentForeground: "43 96% 20%" }
   },
   purple: { 
-    light: { primary: "262 83% 50%", ring: "262 83% 50%" },
-    dark: { primary: "262 83% 58%", ring: "262 83% 58%" }
+    light: { primary: "262 83% 50%", ring: "262 83% 50%", accent: "262 83% 50%", accentForeground: "0 0% 100%" },
+    dark: { primary: "262 83% 58%", ring: "262 83% 58%", accent: "262 83% 58%", accentForeground: "262 83% 15%" }
   },
   emerald: { 
-    light: { primary: "160 84% 32%", ring: "160 84% 32%" },
-    dark: { primary: "160 84% 39%", ring: "160 84% 39%" }
+    light: { primary: "160 84% 32%", ring: "160 84% 32%", accent: "160 84% 32%", accentForeground: "0 0% 100%" },
+    dark: { primary: "160 84% 39%", ring: "160 84% 39%", accent: "160 84% 39%", accentForeground: "160 84% 15%" }
   },
   rose: { 
-    light: { primary: "346 77% 45%", ring: "346 77% 45%" },
-    dark: { primary: "346 77% 50%", ring: "346 77% 50%" }
+    light: { primary: "346 77% 45%", ring: "346 77% 45%", accent: "346 77% 45%", accentForeground: "0 0% 100%" },
+    dark: { primary: "346 77% 50%", ring: "346 77% 50%", accent: "346 77% 50%", accentForeground: "346 77% 15%" }
   },
 };
 
@@ -66,6 +66,8 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
     const colors = accentColorsConfig[accentColor][theme];
     root.style.setProperty("--primary", colors.primary);
     root.style.setProperty("--ring", colors.ring);
+    root.style.setProperty("--accent", colors.accent);
+    root.style.setProperty("--accent-foreground", colors.accentForeground);
     localStorage.setItem("bossai-accent", accentColor);
   }, [accentColor, theme]);
 
