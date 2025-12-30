@@ -21,6 +21,7 @@ interface MessageBubbleProps {
   isUser: boolean;
   userName?: string;
   userAvatar?: string;
+  photoURL?: string | null;
   onSpeak?: (text: string) => void;
   onRegenerate?: () => void;
   onEdit?: (id: string, content: string) => void;
@@ -43,6 +44,7 @@ export function MessageBubble({
   isUser,
   userName = "User",
   userAvatar = "avatar-1",
+  photoURL,
   onSpeak,
   onRegenerate,
   onEdit,
@@ -177,7 +179,7 @@ export function MessageBubble({
         <div className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 overflow-hidden bg-muted">
           {isUser ? (
             <img 
-              src={AVATAR_IMAGES[userAvatar] || avatar1}
+              src={photoURL || AVATAR_IMAGES[userAvatar] || avatar1}
               alt={userName}
               className="w-full h-full object-cover"
               data-testid="img-user-avatar"
