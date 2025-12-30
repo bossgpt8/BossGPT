@@ -532,7 +532,6 @@ export default function Chat() {
                         isUser={message.role === "user"}
                         userName={userName}
                         userAvatar={userAvatar}
-                        photoURL={user?.photoURL}
                         onSpeak={voiceEnabled ? speakText : undefined}
                         onRegenerate={
                           message.role === "assistant" &&

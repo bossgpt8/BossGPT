@@ -183,7 +183,7 @@ export function MessageBubble({
         <div className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 overflow-hidden bg-muted">
           {isUser ? (
             <img 
-              src={photoURL || AVATAR_IMAGES[userAvatar] || avatar1}
+              src={AVATAR_IMAGES[userAvatar] || avatar1}
               alt={userName}
               className="w-full h-full object-cover"
               data-testid="img-user-avatar"
