@@ -136,7 +136,7 @@ When using web search results, mention your sources.`;
 
       const modelName = model.replace('hf/', '');
       
-      response = await fetch('https://api-inference.huggingface.co/models/' + modelName, {
+      response = await fetch('https://router.huggingface.co/models/' + modelName, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${hfApiKey}`,
