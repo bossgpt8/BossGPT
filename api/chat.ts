@@ -19,14 +19,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     }
 
     const { messages, model, customPrompt } = parseResult.data;
-    const apiKey = process.env.OPENROUTER_API_KEY;
-
-    if (!apiKey) {
-      return res.status(500).json({
-        error: 'OpenRouter API key not configured. Please add OPENROUTER_API_KEY in environment variables.',
-      });
-    }
-
+    const isHuggingFace = model?.startsWith('hf/');
+    
     let systemContent = `You are BossAI, an intelligent AI assistant.
 
 IMPORTANT IDENTITY RULES:
@@ -54,29 +48,81 @@ RESPONSE STYLE:
 
     const messagesWithSystem = [systemMessage, ...messages];
 
-    const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${apiKey}`,
-        'HTTP-Referer': process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 'https://bossai.vercel.app',
-        'X-Title': 'BossAI',
-      },
-      body: JSON.stringify({
-        model: model || 'meta-llama/llama-3.3-70b-instruct:free',
-        messages: messagesWithSystem,
-      }),
-    });
+    let response;
 
-    const data = await response.json();
+    if (isHuggingFace) {
+      // Use HuggingFace API
+      const hfApiKey = process.env.HUGGINGFACE_API_KEY;
+      if (!hfApiKey) {
+        return res.status(500).json({
+          error: 'HuggingFace API key not configured. Please add HUGGINGFACE_API_KEY in environment variables.',
+        });
+      }
 
-    if (data.error) {
-      return res.status(500).json({ error: data.error.message || 'API Error' });
+      const modelName = model.replace('hf/', '');
+      
+      response = await fetch('https://api-inference.huggingface.co/models/' + modelName, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${hfApiKey}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          inputs: messagesWithSystem.map((m: any) => ({
+            role: m.role,
+            content: m.content,
+          })),
+        }),
+      });
+
+      const data = await response.json();
+      
+      if (data.error) {
+        return res.status(500).json({ error: data.error || 'HuggingFace API Error' });
+      }
+
+      let content = '';
+      if (Array.isArray(data)) {
+        content = data[0]?.generated_text || 'No response generated';
+      } else if (data.generated_text) {
+        content = data.generated_text;
+      }
+
+      return res.json({ content });
+    } else {
+      // Use OpenRouter API (default)
+      const apiKey = process.env.OPENROUTER_API_KEY;
+
+      if (!apiKey) {
+        return res.status(500).json({
+          error: 'OpenRouter API key not configured. Please add OPENROUTER_API_KEY in environment variables.',
+        });
+      }
+
+      response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${apiKey}`,
+          'HTTP-Referer': process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 'https://bossai.vercel.app',
+          'X-Title': 'BossAI',
+        },
+        body: JSON.stringify({
+          model: model || 'meta-llama/llama-3.3-70b-instruct:free',
+          messages: messagesWithSystem,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (data.error) {
+        return res.status(500).json({ error: data.error.message || 'API Error' });
+      }
+
+      return res.json({
+        content: data.choices?.[0]?.message?.content || 'No response generated',
+      });
     }
-
-    return res.json({
-      content: data.choices?.[0]?.message?.content || 'No response generated',
-    });
   } catch (error: any) {
     console.error('Chat API error:', error);
     return res.status(500).json({ error: 'Failed to process request' });

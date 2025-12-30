@@ -72,6 +72,11 @@ export const AI_MODELS = {
     { id: "mistralai/mistral-small-3.1-24b-instruct:free", name: "Mistral Small 3.1", description: "Efficient and capable" },
     { id: "meta-llama/llama-3.2-3b-instruct:free", name: "Llama 3.2 3B", description: "Lightweight model" },
     { id: "nousresearch/hermes-3-llama-3.1-405b:free", name: "Hermes 3 Llama 3.1 405B", description: "Research optimized" },
+    // HuggingFace Models
+    { id: "hf/meta-llama/Llama-2-70b-chat-hf", name: "Llama 2 70B Chat (HF)", description: "HuggingFace hosted" },
+    { id: "hf/mistralai/Mistral-7B-Instruct-v0.2", name: "Mistral 7B Instruct v0.2 (HF)", description: "HuggingFace hosted" },
+    { id: "hf/tiiuae/falcon-7b-instruct", name: "Falcon 7B Instruct (HF)", description: "HuggingFace hosted" },
+    { id: "hf/NousResearch/Nous-Hermes-2-Mixtral-8x7B-DPO", name: "Nous Hermes Mixtral (HF)", description: "HuggingFace hosted" },
   ],
   image: [
     { id: "black-forest-labs/FLUX.1-schnell", name: "FLUX.1 Schnell", description: "Best quality - fastest" },
