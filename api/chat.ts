@@ -126,44 +126,39 @@ When using web search results, mention your sources.`;
     let response;
 
     if (isHuggingFace) {
-      // Use HuggingFace API
-      const hfApiKey = process.env.HUGGINGFACE_API_KEY;
-      if (!hfApiKey) {
+      // Use HuggingFace API via OpenRouter (acts as proxy)
+      // HuggingFace models are accessed through OpenRouter with hf/ prefix
+      const apiKey = process.env.OPENROUTER_API_KEY;
+
+      if (!apiKey) {
         return res.status(500).json({
-          error: 'HuggingFace API key not configured. Please add HUGGINGFACE_API_KEY in environment variables.',
+          error: 'OpenRouter API key not configured. HuggingFace models require OpenRouter. Please add OPENROUTER_API_KEY in environment variables.',
         });
       }
 
-      const modelName = model.replace('hf/', '');
-      
-      response = await fetch('https://router.huggingface.co/models/' + modelName, {
+      response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
         method: 'POST',
         headers: {
-          'Authorization': `Bearer ${hfApiKey}`,
           'Content-Type': 'application/json',
+          'Authorization': `Bearer ${apiKey}`,
+          'HTTP-Referer': process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 'https://bossai.vercel.app',
+          'X-Title': 'BossAI',
         },
         body: JSON.stringify({
-          inputs: messagesWithSystem.map((m: any) => ({
-            role: m.role,
-            content: m.content,
-          })),
+          model: model, // Send with hf/ prefix as-is for OpenRouter
+          messages: messagesWithSystem,
         }),
       });
 
       const data = await response.json();
-      
+
       if (data.error) {
-        return res.status(500).json({ error: data.error || 'HuggingFace API Error' });
+        return res.status(500).json({ error: data.error.message || 'HuggingFace/OpenRouter API Error' });
       }
 
-      let content = '';
-      if (Array.isArray(data)) {
-        content = data[0]?.generated_text || 'No response generated';
-      } else if (data.generated_text) {
-        content = data.generated_text;
-      }
-
-      return res.json({ content });
+      return res.json({
+        content: data.choices?.[0]?.message?.content || 'No response generated',
+      });
     } else {
       // Use OpenRouter API (default)
       const apiKey = process.env.OPENROUTER_API_KEY;
