@@ -108,7 +108,19 @@ export function MessageBubble({
 
       button.addEventListener("click", async (e) => {
         e.preventDefault();
-        const code = pre.textContent || "";
+        // Get all text content except the button
+        let code = "";
+        const children = Array.from(pre.childNodes);
+        children.forEach((node) => {
+          if (node !== button) {
+            if (node.nodeType === Node.TEXT_NODE) {
+              code += node.textContent;
+            } else if (node.nodeType === Node.ELEMENT_NODE && node !== button) {
+              code += (node as Element).textContent;
+            }
+          }
+        });
+        
         try {
           await navigator.clipboard.writeText(code);
           const originalText = button.textContent;
