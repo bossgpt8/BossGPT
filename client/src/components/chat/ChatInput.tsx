@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from "react";
-import { Send, Mic, MicOff, ImagePlus, X, Loader2 } from "lucide-react";
+import { Send, ImagePlus, X, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 
@@ -109,6 +109,14 @@ export function ChatInput({
     }
   };
 
+  const AudioWaves = () => (
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect x="5" y="10" width="2" height="4" fill="currentColor" rx="1" />
+      <rect x="11" y="7" width="2" height="10" fill="currentColor" rx="1" />
+      <rect x="17" y="10" width="2" height="4" fill="currentColor" rx="1" />
+    </svg>
+  );
+
   return (
     <div className="border-t border-border bg-background/80 backdrop-blur-md p-3 md:p-4">
       <div className="max-w-2xl mx-auto">
@@ -174,12 +182,12 @@ export function ChatInput({
             size="icon"
             onClick={onToggleRecording}
             disabled={disabled || isGenerating}
-            className={`flex-shrink-0 h-10 w-10 rounded-full bg-accent hover:opacity-90 text-accent-foreground ${
+            className={`flex-shrink-0 h-10 w-10 rounded-full bg-blue-500 hover:bg-blue-600 text-white ${
               isRecording ? "animate-pulse" : ""
             }`}
             data-testid="button-voice-input"
           >
-            {isRecording ? <MicOff className="w-5 h-5" /> : <Mic className="w-5 h-5" />}
+            <AudioWaves />
           </Button>
           
           <Button
