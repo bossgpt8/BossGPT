@@ -117,11 +117,11 @@ export function MessageBubble({
 
   return (
     <div 
-      className={`group mb-4 animate-in fade-in slide-in-from-bottom-4 duration-300 flex ${isUser ? "justify-end" : "justify-start"}`}
+      className={`group mb-12 animate-in fade-in slide-in-from-bottom-4 duration-300 flex ${isUser ? "justify-end" : "justify-start"}`}
       data-testid={`message-${message.id}`}
     >
-      <div className={`flex items-end gap-2 max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg ${isUser ? "flex-row-reverse" : "flex-row"}`}>
-        <div className="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 overflow-hidden">
+      <div className={`flex items-start gap-4 max-w-2xl ${isUser ? "flex-row-reverse" : "flex-row"}`}>
+        <div className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 overflow-hidden bg-muted">
           {isUser ? (
             <img 
               src={AVATAR_IMAGES[userAvatar] || avatar1}
@@ -141,7 +141,7 @@ export function MessageBubble({
         
         <div className={`flex flex-col ${isUser ? "items-end" : "items-start"}`}>
           <div className={isUser 
-            ? "rounded-2xl px-4 py-2 border-2 bg-primary text-primary-foreground rounded-br-none border-primary-foreground/30" 
+            ? "rounded-2xl px-5 py-3 border-2 bg-primary text-primary-foreground rounded-br-none border-primary-foreground/30" 
             : ""
           }>
             {message.images && message.images.length > 0 && (
@@ -166,7 +166,7 @@ export function MessageBubble({
                   value={editContent}
                   onChange={(e) => setEditContent(e.target.value)}
                   onKeyDown={handleKeyDown}
-                  className="min-h-[80px] text-sm border-2"
+                  className="min-h-[100px] text-base border-2"
                   data-testid="textarea-edit-message"
                 />
                 <div className="flex gap-2 justify-end">
@@ -191,7 +191,7 @@ export function MessageBubble({
             ) : (
               <div
                 ref={contentRef}
-                className="prose prose-sm dark:prose-invert max-w-none break-words"
+                className="prose prose-base dark:prose-invert max-w-none break-words text-base leading-relaxed"
                 dangerouslySetInnerHTML={{ __html: renderedContent }}
                 data-testid="div-message-content"
               />
