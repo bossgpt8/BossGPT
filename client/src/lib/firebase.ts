@@ -1,6 +1,6 @@
 // Firebase configuration - using Firebase integration blueprint
 import { initializeApp, type FirebaseApp } from "firebase/app";
-import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged, type User } from "firebase/auth";
+import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged, createUserWithEmailAndPassword, signInWithEmailAndPassword, type User } from "firebase/auth";
 import { getFirestore, collection, doc, getDocs, getDoc, setDoc, deleteDoc, query, where, orderBy, type Firestore } from "firebase/firestore";
 
 const firebaseConfig = {
@@ -32,6 +32,28 @@ if (isFirebaseConfigured) {
 }
 
 export { auth, db };
+
+export const signUpWithEmail = async (email: string, pass: string): Promise<User | null> => {
+  if (!auth) return null;
+  try {
+    const result = await createUserWithEmailAndPassword(auth, email, pass);
+    return result.user;
+  } catch (error) {
+    console.error("Email sign up error:", error);
+    throw error;
+  }
+};
+
+export const signInWithEmail = async (email: string, pass: string): Promise<User | null> => {
+  if (!auth) return null;
+  try {
+    const result = await signInWithEmailAndPassword(auth, email, pass);
+    return result.user;
+  } catch (error) {
+    console.error("Email sign in error:", error);
+    throw error;
+  }
+};
 
 export const signInWithGoogle = async (): Promise<User | null> => {
   if (!auth) {
