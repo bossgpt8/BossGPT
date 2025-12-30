@@ -231,43 +231,40 @@ export default function Chat() {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages, isGenerating]);
 
-  const speakText = useCallback(async (text: string) => {
-    try {
-      // First try ElevenLabs API for better quality
-      const response = await fetch("/api/tts", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ text: text.replace(/[*#`]/g, "") }),
-      });
-
-      if (response.ok) {
-        const data = await response.json();
-        if (data.audio) {
-          const audio = new Audio(data.audio);
-          audio.play().catch(err => {
-            console.error("Audio playback failed:", err);
-            // Fallback to browser TTS
-            useBrowserTTS(text);
-          });
-          return;
-        }
-      }
-    } catch (error) {
-      console.error("ElevenLabs TTS error:", error);
-    }
-
-    // Fallback to browser's built-in TTS
-    useBrowserTTS(text);
-  }, []);
-
-  const useBrowserTTS = (text: string) => {
+  const speakText = useCallback((text: string) => {
     if (!synthesisRef.current) return;
+
     synthesisRef.current.cancel();
     const utterance = new SpeechSynthesisUtterance(text.replace(/[*#`]/g, ""));
-    utterance.rate = 1;
+    
+    // Get available voices and pick the best one available
+    const voices = synthesisRef.current.getVoices();
+    let selectedVoice = voices[0];
+    
+    // Try to find a high-quality voice
+    const preferredVoices = [
+      'Google UK English Female',
+      'Google US English',
+      'Microsoft Zira Desktop',
+      'Microsoft David Desktop',
+      'Samantha',
+      'Victoria',
+    ];
+    
+    for (const prefVoice of preferredVoices) {
+      const found = voices.find(v => v.name.includes(prefVoice));
+      if (found) {
+        selectedVoice = found;
+        break;
+      }
+    }
+    
+    utterance.voice = selectedVoice;
+    utterance.rate = 0.95;
     utterance.pitch = 1;
+    utterance.volume = 1;
     synthesisRef.current.speak(utterance);
-  };
+  }, []);
 
   const isImageModel = (modelId: string): boolean => {
     return AI_MODELS.image.some((m) => m.id === modelId);
