@@ -83,7 +83,7 @@ export function WelcomeScreen({ onSuggestionClick }: WelcomeScreenProps) {
             >
               <div className="flex items-start gap-3">
                 <div className="w-10 h-10 rounded-lg bg-muted flex items-center justify-center flex-shrink-0">
-                  <suggestion.icon className="w-5 h-5 text-foreground" />
+                  <suggestion.icon className="w-5 h-5 text-accent" />
                 </div>
                 <div className="min-w-0 flex-1">
                   <p className="font-semibold text-foreground text-sm">
