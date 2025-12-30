@@ -296,59 +296,65 @@ export function AppSidebar({ isOpen, onClose }: AppSidebarProps) {
                     </div>
                     <div className="space-y-2">
                       <Label htmlFor="password">{isSignUp ? "Create Password" : "Password"}</Label>
-                      <div className="relative">
-                        <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                      <div className="relative group">
+                        <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground z-10" />
                         <Input
                           id="password"
                           type={showPassword ? "text" : "password"}
                           placeholder="••••••••"
-                          className="pl-9 pr-10"
+                          className="pl-9 pr-10 relative z-0"
                           value={password}
                           onChange={(e) => setPassword(e.target.value)}
                           required
                         />
-                        <Button
-                          type="button"
-                          variant="ghost"
-                          size="icon"
-                          className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
-                          onClick={() => setShowPassword(!showPassword)}
-                        >
-                          {showPassword ? (
-                            <EyeOff className="h-4 w-4 text-muted-foreground" />
-                          ) : (
-                            <Eye className="h-4 w-4 text-muted-foreground" />
-                          )}
-                        </Button>
-                      </div>
-                    </div>
-                    {isSignUp && (
-                      <div className="space-y-2">
-                        <Label htmlFor="confirmPassword">Confirm Password</Label>
-                        <div className="relative">
-                          <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-                          <Input
-                            id="confirmPassword"
-                            type={showConfirmPassword ? "text" : "password"}
-                            placeholder="••••••••"
-                            className="pl-9 pr-10"
-                            value={confirmPassword}
-                            onChange={(e) => setConfirmPassword(e.target.value)}
-                            required
-                          />
+                        <div className="absolute right-0 top-0 h-full flex items-center pr-1 z-10">
                           <Button
                             type="button"
                             variant="ghost"
                             size="icon"
-                            className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
-                            onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                            className="h-8 w-8 hover:bg-transparent"
+                            onClick={() => setShowPassword(!showPassword)}
+                            data-testid="button-toggle-password"
                           >
-                            {showConfirmPassword ? (
+                            {showPassword ? (
                               <EyeOff className="h-4 w-4 text-muted-foreground" />
                             ) : (
                               <Eye className="h-4 w-4 text-muted-foreground" />
                             )}
                           </Button>
+                        </div>
+                      </div>
+                    </div>
+                    {isSignUp && (
+                      <div className="space-y-2">
+                        <Label htmlFor="confirmPassword">Confirm Password</Label>
+                        <div className="relative group">
+                          <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground z-10" />
+                          <Input
+                            id="confirmPassword"
+                            type={showConfirmPassword ? "text" : "password"}
+                            placeholder="••••••••"
+                            className="pl-9 pr-10 relative z-0"
+                            value={confirmPassword}
+                            onChange={(e) => setConfirmPassword(e.target.value)}
+                            required
+                          />
+                          <div className="absolute right-0 top-0 h-full flex items-center pr-1 z-10">
+                            <Button
+                              type="button"
+                              variant="ghost"
+                              size="icon"
+                              className="h-8 w-8 hover:bg-transparent z-10"
+                              onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                              data-testid="button-toggle-confirm-password"
+                            >
+                              {showConfirmPassword ? (
+                                <EyeOff className="h-4 w-4 text-muted-foreground" />
+                              ) : (
+                                <Eye className="h-4 w-4 text-muted-foreground" />
+                              )}
+                            </Button>
+                          </div>
                         </div>
                       </div>
                     )}
