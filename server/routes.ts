@@ -118,7 +118,7 @@ When using web search results, mention your sources.`;
         headers: {
           "Content-Type": "application/json",
           "Authorization": `Bearer ${apiKey}`,
-          "HTTP-Referer": "https://boss-gpt.vercel.app",
+          "HTTP-Referer": "https://bossai.replit.app",
           "X-Title": "BossAI",
         },
         body: JSON.stringify({
