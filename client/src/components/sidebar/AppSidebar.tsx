@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Checkbox } from "@/components/ui/checkbox";
 import {
   Dialog,
   DialogContent,
@@ -19,6 +20,7 @@ import { ModelSelector } from "./ModelSelector";
 import { useChatStore } from "@/lib/store";
 import { isFirebaseConfigured, signInWithGoogle, signOutUser, signInWithEmail, signUpWithEmail } from "@/lib/firebase";
 import { useToast } from "@/hooks/use-toast";
+import { Link } from "wouter";
 
 interface AppSidebarProps {
   isOpen: boolean;
@@ -47,6 +49,8 @@ export function AppSidebar({ isOpen, onClose }: AppSidebarProps) {
   const [isSignUp, setIsSignUp] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [agreedToTerms, setAgreedToTerms] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [tempPrompt, setTempPrompt] = useState(customSystemPrompt);
   const { toast } = useToast();
@@ -83,6 +87,25 @@ export function AppSidebar({ isOpen, onClose }: AppSidebarProps) {
     e.preventDefault();
     if (!email || !password) return;
 
+    if (isSignUp) {
+      if (password !== confirmPassword) {
+        toast({
+          title: "Validation Error",
+          description: "Passwords do not match.",
+          variant: "destructive",
+        });
+        return;
+      }
+      if (!agreedToTerms) {
+        toast({
+          title: "Validation Error",
+          description: "You must agree to the Terms of Service and Privacy Policy.",
+          variant: "destructive",
+        });
+        return;
+      }
+    }
+
     try {
       setIsLoading(true);
       if (isSignUp) {
@@ -93,6 +116,7 @@ export function AppSidebar({ isOpen, onClose }: AppSidebarProps) {
       setAuthOpen(false);
       setEmail("");
       setPassword("");
+      setConfirmPassword("");
     } catch (error: any) {
       toast({
         title: "Auth Error",
@@ -246,7 +270,7 @@ export function AppSidebar({ isOpen, onClose }: AppSidebarProps) {
                       </div>
                     </div>
                     <div className="space-y-2">
-                      <Label htmlFor="password">Password</Label>
+                      <Label htmlFor="password">{isSignUp ? "Create Password" : "Password"}</Label>
                       <div className="relative">
                         <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
                         <Input
@@ -260,6 +284,42 @@ export function AppSidebar({ isOpen, onClose }: AppSidebarProps) {
                         />
                       </div>
                     </div>
+                    {isSignUp && (
+                      <div className="space-y-2">
+                        <Label htmlFor="confirmPassword">Confirm Password</Label>
+                        <div className="relative">
+                          <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                          <Input
+                            id="confirmPassword"
+                            type="password"
+                            placeholder="••••••••"
+                            className="pl-9"
+                            value={confirmPassword}
+                            onChange={(e) => setConfirmPassword(e.target.value)}
+                            required
+                          />
+                        </div>
+                      </div>
+                    )}
+                    {isSignUp && (
+                      <div className="flex items-start gap-2 pt-2">
+                        <Checkbox 
+                          id="terms" 
+                          checked={agreedToTerms}
+                          onCheckedChange={(checked) => setAgreedToTerms(checked as boolean)}
+                        />
+                        <Label htmlFor="terms" className="text-xs leading-none cursor-pointer">
+                          I agree to the{" "}
+                          <Link href="/terms" className="text-primary hover:underline">
+                            Terms of Service
+                          </Link>{" "}
+                          and{" "}
+                          <Link href="/privacy" className="text-primary hover:underline">
+                            Privacy Policy
+                          </Link>
+                        </Label>
+                      </div>
+                    )}
                     <Button type="submit" className="w-full" disabled={isLoading}>
                       {isLoading ? "Please wait..." : isSignUp ? "Sign Up" : "Sign In"}
                     </Button>
