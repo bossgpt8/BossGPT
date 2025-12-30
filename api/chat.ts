@@ -200,6 +200,7 @@ When using web search results, mention your sources.`;
     }
   } catch (error: any) {
     console.error('Chat API error:', error);
-    return res.status(500).json({ error: 'Failed to process request' });
+    const errorMessage = error?.message || error?.toString() || 'Unknown error';
+    return res.status(500).json({ error: `Failed to process request: ${errorMessage}` });
   }
 }
