@@ -67,15 +67,18 @@ export function MessageBubble({
       }
 
       marked.setOptions({
+        gfm: true,
+        breaks: true,
+      });
+
+      const html = await marked.parse(message.content, {
         highlight: (code, lang) => {
           if (lang && hljs.getLanguage(lang)) {
             return hljs.highlight(code, { language: lang }).value;
           }
           return hljs.highlightAuto(code).value;
         },
-      });
-
-      const html = await marked.parse(message.content);
+      } as any);
       setRenderedContent(DOMPurify.sanitize(html));
     };
 

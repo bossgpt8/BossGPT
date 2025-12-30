@@ -173,14 +173,15 @@ export const useChatStore = create<ChatState>()(
           messagesByParent.get(parentId)!.push(msg);
         }
         
+        let currentParent: string | null = null;
         while (true) {
-          const children = messagesByParent.get(currentParentId) || [];
+          const children: Message[] = messagesByParent.get(currentParent) || [];
           if (children.length === 0) break;
           
-          const branchIndex = currentBranchPath.get(currentParentId ?? "root") || 0;
-          const selectedChild = children[Math.min(branchIndex, children.length - 1)];
+          const branchIndex = currentBranchPath.get(currentParent ?? "root") || 0;
+          const selectedChild: Message = children[Math.min(branchIndex, children.length - 1)];
           result.push(selectedChild);
-          currentParentId = selectedChild.id;
+          currentParent = selectedChild.id;
         }
         
         return result;
