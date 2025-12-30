@@ -72,7 +72,8 @@ export function MessageBubble({
       });
 
       const html = await marked.parse(message.content, {
-        highlight: (code, lang) => {
+        async: true,
+        highlight: (code: string, lang: string) => {
           if (lang && hljs.getLanguage(lang)) {
             return hljs.highlight(code, { language: lang }).value;
           }

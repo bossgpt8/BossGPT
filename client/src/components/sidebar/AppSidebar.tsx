@@ -168,7 +168,7 @@ export function AppSidebar({ isOpen, onClose }: AppSidebarProps) {
                 <LogOut className="w-4 h-4" />
               </Button>
             </div>
-          ) : isFirebaseConfigured ? (
+          ) : (isFirebaseConfigured || !!import.meta.env.VITE_FIREBASE_API_KEY) ? (
             <Button
               variant="outline"
               className="w-full gap-2"
