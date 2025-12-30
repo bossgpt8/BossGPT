@@ -182,7 +182,7 @@ export function ChatInput({
             size="icon"
             onClick={onToggleRecording}
             disabled={disabled || isGenerating}
-            className={`flex-shrink-0 h-10 w-10 rounded-full bg-blue-500 hover:bg-blue-600 text-white ${
+            className={`flex-shrink-0 h-10 w-10 rounded-full bg-accent hover:opacity-90 text-accent-foreground ${
               isRecording ? "animate-pulse" : ""
             }`}
             data-testid="button-voice-input"
