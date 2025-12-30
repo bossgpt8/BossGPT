@@ -199,7 +199,7 @@ export function AppSidebar({ isOpen, onClose }: AppSidebarProps) {
             <div className="w-9 h-9 md:w-10 md:h-10 rounded-xl flex items-center justify-center overflow-hidden">
               <img src={bossaiRobot} alt="Boss" className="w-full h-full object-cover" />
             </div>
-            <span className="text-base md:text-lg font-bold text-sidebar-foreground">Boss</span>
+            <span className="text-base md:text-lg font-bold text-sidebar-foreground">BossAI</span>
           </div>
           
           <Button
