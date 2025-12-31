@@ -187,9 +187,10 @@ When using web search results, mention your sources.`;
 
       const primaryModel = model || 'meta-llama/llama-3.3-70b-instruct:free';
       const fallbackModels = [
-        'meta-llama/llama-3.1-70b-instruct:free',
-        'gpt-4o-mini',
-        'claude-3.5-sonnet:beta',
+        'meta-llama/llama-3.1-405b-instruct:free',
+        'deepseek/deepseek-r1:free',
+        'mistralai/mistral-small-3.1-24b-instruct:free',
+        'xiaomi/mimo-v2-flash:free',
       ];
       
       let attemptedModels = [primaryModel];
