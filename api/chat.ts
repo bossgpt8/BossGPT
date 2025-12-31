@@ -188,7 +188,8 @@ When using web search results, mention your sources.`;
       const primaryModel = model || 'meta-llama/llama-3.3-70b-instruct:free';
       const fallbackModels = [
         'meta-llama/llama-3.1-405b-instruct:free',
-        'deepseek/deepseek-r1:free',
+        'deepseek/deepseek-r1-0528:free',
+        'nvidia/nemotron-3-nano-30b-a3b:free',
         'mistralai/mistral-small-3.1-24b-instruct:free',
         'xiaomi/mimo-v2-flash:free',
       ];
