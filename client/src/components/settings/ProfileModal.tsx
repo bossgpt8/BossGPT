@@ -15,17 +15,23 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import avatar1 from "@assets/stock_images/astronaut_avatar_nas_d6106021.jpg";
-import avatar2 from "@assets/stock_images/astronaut_avatar_nas_bc39255e.jpg";
-import avatar3 from "@assets/stock_images/astronaut_avatar_nas_d931e821.jpg";
+import avatar1 from "@assets/image_1767059069765.png";
+import avatar2 from "@assets/image_1767059090978.png";
+import avatar3 from "@assets/image_1767059124279.png";
+import avatar4 from "@assets/image_1767059177424.png";
+import avatar5 from "@assets/image_1767059193731.png";
+import avatar6 from "@assets/image_1767059240340.png";
 
 import { getUserProfile, saveUserProfile } from "@/lib/firebase";
 import { useChatStore } from "@/lib/store";
 
 const AVATAR_OPTIONS = [
-  { id: "avatar-1", label: "Astronaut 1", image: avatar1 },
-  { id: "avatar-2", label: "Astronaut 2", image: avatar2 },
-  { id: "avatar-3", label: "Astronaut 3", image: avatar3 },
+  { id: "avatar-1", label: "Avatar 1", image: avatar1 },
+  { id: "avatar-2", label: "Avatar 2", image: avatar2 },
+  { id: "avatar-3", label: "Avatar 3", image: avatar3 },
+  { id: "avatar-4", label: "Avatar 4", image: avatar4 },
+  { id: "avatar-5", label: "Avatar 5", image: avatar5 },
+  { id: "avatar-6", label: "Avatar 6", image: avatar6 },
 ];
 
 const PERSONALITY_OPTIONS = [
@@ -83,7 +89,7 @@ export function ProfileModal({
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent className="sm:max-w-[500px]">
         <DialogHeader>
           <DialogTitle>Make it your own</DialogTitle>
           <DialogDescription>
@@ -105,13 +111,13 @@ export function ProfileModal({
 
           <div className="space-y-3">
             <label className="text-sm font-medium text-foreground">Your Avatar</label>
-            <div className="grid grid-cols-3 gap-3">
+            <div className="grid grid-cols-3 sm:grid-cols-6 gap-3">
               {AVATAR_OPTIONS.map((option) => (
                 <button
                   key={option.id}
                   type="button"
                   onClick={() => setAvatar(option.id)}
-                  className={`relative w-20 h-20 rounded-2xl overflow-hidden transition-all border-2 ${
+                  className={`relative w-12 h-12 rounded-2xl overflow-hidden transition-all border-2 ${
                     avatar === option.id 
                       ? "border-primary scale-105" 
                       : "border-border"
