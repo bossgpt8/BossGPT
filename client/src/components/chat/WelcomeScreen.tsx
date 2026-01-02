@@ -2,7 +2,7 @@ import { Zap, Code, Sparkles, BookOpen, Lightbulb, Brush, Image as ImageIcon, Gr
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useChatStore } from "@/lib/store";
-import bossaiRobot from "@assets/bossai-robot.png";
+import zenoLogo from "@assets/image_1767364441563.png";
 
 interface WelcomeScreenProps {
   onSuggestionClick: (prompt: string) => void;
@@ -68,12 +68,12 @@ export function WelcomeScreen({ onSuggestionClick }: WelcomeScreenProps) {
       <div className="w-full max-w-3xl">
         <div className="mb-8 md:mb-12">
           <div className="flex items-center justify-center mb-4">
-            <div className="w-16 h-16 md:w-20 md:h-20 rounded-2xl bg-muted flex items-center justify-center overflow-hidden">
+            <div className="w-20 h-20 md:w-24 md:h-24 rounded-2xl bg-muted flex items-center justify-center overflow-hidden border border-border/50">
               <img 
-                src={bossaiRobot} 
+                src={zenoLogo} 
                 alt="Zeno" 
                 className="w-full h-full object-cover"
-                data-testid="img-bossai-robot"
+                data-testid="img-zeno-logo"
               />
             </div>
           </div>

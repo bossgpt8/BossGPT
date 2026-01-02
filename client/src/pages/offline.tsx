@@ -1,6 +1,6 @@
 import { Wifi, RotateCw } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import bossaiRobot from "@assets/bossai-robot.png";
+import zenoLogo from "@assets/image_1767364441563.png";
 
 interface OfflineScreenProps {
   isOnline: boolean;
@@ -26,9 +26,9 @@ export default function OfflineScreen({ isOnline, isLoading }: OfflineScreenProp
           <div className="relative">
             <div className="absolute inset-0 bg-primary/10 rounded-full blur-xl w-32 h-32 mx-auto" />
             <img 
-              src={bossaiRobot} 
+              src={zenoLogo} 
               alt="Zeno" 
-              className="h-24 w-auto relative z-10 drop-shadow-lg"
+              className="h-24 w-auto relative z-10 drop-shadow-lg rounded-2xl overflow-hidden"
             />
           </div>
         </div>

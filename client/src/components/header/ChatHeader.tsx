@@ -6,7 +6,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { useTheme, ACCENT_COLORS } from "@/components/ThemeProvider";
-import bossaiRobot from "@assets/bossai-robot.png";
+import zenoLogo from "@assets/image_1767364441563.png";
 import { useLocation } from "wouter";
 import { ModelSelector } from "@/components/sidebar/ModelSelector";
 import { useChatStore } from "@/lib/store";
@@ -43,10 +43,10 @@ export function ChatHeader({
           </BaseButton>
           
           <img 
-            src={bossaiRobot} 
+            src={zenoLogo} 
             alt="Zeno" 
-            className="h-8 md:h-9 w-auto"
-            data-testid="img-bossai-header"
+            className="h-9 md:h-10 w-auto rounded-lg overflow-hidden border border-border/30"
+            data-testid="img-zeno-header"
           />
           
           <ModelSelector value={currentModel} onChange={setCurrentModel} />

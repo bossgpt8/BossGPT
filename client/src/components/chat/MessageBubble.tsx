@@ -8,7 +8,7 @@ import DOMPurify from "dompurify";
 import { marked } from "marked";
 import hljs from "highlight.js";
 import "highlight.js/styles/github-dark.css";
-import bossaiRobot from "@assets/bossai-robot.png";
+import zenoLogo from "@assets/image_1767364441563.png";
 import avatar1 from "@assets/image_1767059069765.png";
 import avatar2 from "@assets/image_1767059090978.png";
 import avatar3 from "@assets/image_1767059124279.png";
@@ -190,10 +190,10 @@ export function MessageBubble({
             />
           ) : (
             <img 
-              src={bossaiRobot} 
+              src={zenoLogo} 
               alt="Zeno" 
               className="w-full h-full object-cover"
-              data-testid="img-bossai-avatar"
+              data-testid="img-zeno-avatar"
             />
           )}
         </div>
