@@ -1,6 +1,7 @@
 import { useState } from "react";
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Switch } from "@/components/ui/switch";
-import { ArrowLeft, Trash2, Edit2, Save, Plus, User, Sliders, Brain, Info, Monitor, Layout, Globe, Volume2, ChevronRight } from "lucide-react";
+import { ArrowLeft, Trash2, Edit2, Save, Plus, User, Sliders, Brain, Info, Monitor, Layout, Globe, Volume2, ChevronRight, ChevronDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -204,6 +205,78 @@ export default function Settings() {
                   <Switch defaultChecked className="data-[state=checked]:bg-primary" />
                 </div>
               </div>
+
+              <div className="flex justify-end gap-3 pt-8 border-t border-border/50">
+                <Button variant="ghost" onClick={() => setLocation("/")} className="text-sm">Cancel</Button>
+                <Button onClick={handleSave} disabled={isSaving} className="text-sm">
+                  {isSaving ? "Saving..." : "Save Changes"}
+                </Button>
+              </div>
+            </div>
+          )}
+
+          {activeTab === "models" && (
+            <div className="space-y-10 animate-in fade-in slide-in-from-right-4 duration-300 pb-20">
+              <h2 className="text-2xl font-bold">Models</h2>
+
+              <Accordion type="single" collapsible className="w-full space-y-4">
+                <AccordionItem value="qwen3-max" className="border-none">
+                  <AccordionTrigger className="flex items-center gap-3 py-3 px-4 rounded-xl hover:bg-muted/50 transition-all hover:no-underline group data-[state=open]:bg-muted/30">
+                    <div className="flex items-center gap-3">
+                      <div className="w-2 h-2 rounded-full bg-primary" />
+                      <span className="font-semibold text-sm">Zeno-Max (Qwen3)</span>
+                    </div>
+                  </AccordionTrigger>
+                  <AccordionContent className="pt-4 px-4 pb-6 space-y-6">
+                    <p className="text-sm text-muted-foreground leading-relaxed">
+                      Zeno-Max is our most advanced reasoning model, excelling in complex mathematics, coding, role-playing, and long-form creative writing.
+                    </p>
+                    
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                      <div className="bg-muted/40 p-5 rounded-2xl border border-border/50 space-y-2">
+                        <div className="text-[10px] uppercase tracking-wider font-bold text-muted-foreground">Maximum context length:</div>
+                        <div className="text-lg font-bold">262,144 tokens</div>
+                      </div>
+                      <div className="bg-muted/40 p-5 rounded-2xl border border-border/50 space-y-2">
+                        <div className="text-[10px] uppercase tracking-wider font-bold text-muted-foreground">Max generation length:</div>
+                        <div className="text-lg font-bold">32,768 tokens</div>
+                      </div>
+                      <div className="bg-muted/40 p-5 rounded-2xl border border-border/50 space-y-2">
+                        <div className="text-[10px] uppercase tracking-wider font-bold text-muted-foreground">Intelligence Level:</div>
+                        <div className="text-lg font-bold">State-of-the-art</div>
+                      </div>
+                      <div className="bg-muted/40 p-5 rounded-2xl border border-border/50 space-y-2">
+                        <div className="text-[10px] uppercase tracking-wider font-bold text-muted-foreground">Modality:</div>
+                        <div className="text-lg font-bold">Text + Vision</div>
+                      </div>
+                    </div>
+                  </AccordionContent>
+                </AccordionItem>
+
+                <AccordionItem value="zeno-coder" className="border-none">
+                  <AccordionTrigger className="flex items-center gap-3 py-3 px-4 rounded-xl hover:bg-muted/50 transition-all hover:no-underline group">
+                    <div className="flex items-center gap-3">
+                      <div className="w-2 h-2 rounded-full bg-blue-500" />
+                      <span className="font-semibold text-sm">Zeno-Coder</span>
+                    </div>
+                  </AccordionTrigger>
+                  <AccordionContent className="pt-4 px-4 pb-6">
+                    <p className="text-sm text-muted-foreground">Specialized for high-performance software engineering and technical documentation.</p>
+                  </AccordionContent>
+                </AccordionItem>
+
+                <AccordionItem value="zeno-vl" className="border-none">
+                  <AccordionTrigger className="flex items-center gap-3 py-3 px-4 rounded-xl hover:bg-muted/50 transition-all hover:no-underline group">
+                    <div className="flex items-center gap-3">
+                      <div className="w-2 h-2 rounded-full bg-green-500" />
+                      <span className="font-semibold text-sm">Zeno-Vision (VL)</span>
+                    </div>
+                  </AccordionTrigger>
+                  <AccordionContent className="pt-4 px-4 pb-6">
+                    <p className="text-sm text-muted-foreground">Our flagship multi-modal model capable of deep visual analysis and image understanding.</p>
+                  </AccordionContent>
+                </AccordionItem>
+              </Accordion>
 
               <div className="flex justify-end gap-3 pt-8 border-t border-border/50">
                 <Button variant="ghost" onClick={() => setLocation("/")} className="text-sm">Cancel</Button>
