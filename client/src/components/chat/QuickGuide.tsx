@@ -14,28 +14,28 @@ export function QuickGuide() {
   const guides = [
     {
       icon: MessageSquare,
-      title: "Smart Chatting",
-      description: "Ask anything! Use Shift+Enter for new lines on desktop, or just Enter for new lines on mobile (Shift+Enter to send on mobile)."
+      title: "Contextual Intelligence",
+      description: "Engage in sophisticated dialogue. Use Shift+Enter for professional formatting and multi-line precision."
     },
     {
       icon: ImageIcon,
-      title: "Image Vision",
-      description: "Attach images using the + button or paste them directly from your clipboard to analyze them with AI."
+      title: "Visual Analysis",
+      description: "Bridge the gap between vision and text. Upload complex diagrams or imagery for instant, high-fidelity insights."
     },
     {
       icon: Sparkles,
-      title: "Image Generation",
-      description: "Switch to 'Image Generation' model using the selector at the top to create artwork from descriptions."
+      title: "Creative Synthesis",
+      description: "Transform abstract concepts into stunning visual reality. Leverage our specialized image generation suite."
     },
     {
       icon: BookOpen,
-      title: "Deep Research",
-      description: "Need a deep dive? Use the 'Deep Research' tag to switch to models optimized for detailed analysis."
+      title: "Advanced Research",
+      description: "Unlock deep-domain expertise. Toggle research modes for comprehensive technical analysis and data-driven reports."
     },
     {
       icon: Settings,
-      title: "Customization",
-      description: "Personalize your experience in the sidebar: set your name, choose an avatar, and adjust theme colors."
+      title: "Engine Calibration",
+      description: "Fine-tune Zeno's cognitive parameters. Customize personality, instructions, and visual identity for a bespoke AI experience."
     }
   ];
 
