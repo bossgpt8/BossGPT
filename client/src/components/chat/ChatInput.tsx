@@ -172,8 +172,8 @@ export function ChatInput({
   ];
 
   return (
-    <div className="border-t border-border bg-background/80 backdrop-blur-md p-3 md:p-4 pb-6">
-      <div className="max-w-3xl mx-auto space-y-4">
+    <div className="border-t border-border bg-background/80 backdrop-blur-md p-2 md:p-4 pb-4">
+      <div className="max-w-3xl mx-auto space-y-2">
         {attachedImages.length > 0 && (
           <div className="flex gap-2 mb-3 overflow-x-auto pb-2">
             {attachedImages.map((img, i) => (
@@ -266,16 +266,16 @@ export function ChatInput({
           </div>
         </div>
 
-        <div className="flex flex-wrap justify-center gap-1.5 pt-2">
-          {featureTags.map((tag) => (
+        <div className="flex flex-wrap justify-center gap-1 mt-1">
+          {featureTags.slice(0, 3).map((tag) => (
             <Button
               key={tag.label}
               variant="outline"
               size="sm"
-              className="h-7 rounded-full bg-background border-border/50 hover:bg-muted text-[10px] md:text-xs gap-1 px-2.5"
+              className="h-6 rounded-full bg-background border-border/50 hover:bg-muted text-[9px] md:text-xs gap-1 px-2"
               onClick={() => handleTagClick(tag.model)}
             >
-              <tag.icon className="w-3 h-3 text-muted-foreground" />
+              <tag.icon className="w-2.5 h-2.5 text-muted-foreground" />
               {tag.label}
             </Button>
           ))}
@@ -284,14 +284,14 @@ export function ChatInput({
               <Button
                 variant="outline"
                 size="sm"
-                className="h-7 rounded-full bg-background border-border/50 hover:bg-muted text-[10px] md:text-xs px-2.5"
+                className="h-6 rounded-full bg-background border-border/50 hover:bg-muted text-[9px] md:text-xs px-2"
               >
                 More
               </Button>
             </PopoverTrigger>
-            <PopoverContent className="w-[320px] md:w-[480px] p-2 rounded-2xl border-border bg-background/95 backdrop-blur-md shadow-2xl" side="top" align="center">
-              <div className="flex flex-wrap gap-1.5 justify-center py-1">
-                {moreTags.map((tag) => (
+            <PopoverContent className="w-[300px] md:w-[480px] p-2 rounded-2xl border-border bg-background/95 backdrop-blur-md shadow-2xl" side="top" align="center">
+              <div className="flex flex-wrap gap-1 justify-center py-1">
+                {[...featureTags.slice(3), ...moreTags].map((tag) => (
                   <Button
                     key={tag.label}
                     variant="outline"
