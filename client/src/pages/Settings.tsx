@@ -272,8 +272,62 @@ export default function Settings() {
                       <span className="font-semibold text-sm">Zeno-Vision (VL)</span>
                     </div>
                   </AccordionTrigger>
-                  <AccordionContent className="pt-4 px-4 pb-6">
+                  <AccordionContent className="pt-4 px-4 pb-6 space-y-6">
                     <p className="text-sm text-muted-foreground">Our flagship multi-modal model capable of deep visual analysis and image understanding.</p>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                      <div className="bg-muted/40 p-5 rounded-2xl border border-border/50 space-y-2">
+                        <div className="text-[10px] uppercase tracking-wider font-bold text-muted-foreground">Modality:</div>
+                        <div className="text-lg font-bold">Text + Vision</div>
+                      </div>
+                    </div>
+                  </AccordionContent>
+                </AccordionItem>
+
+                <AccordionItem value="zeno-lite" className="border-none">
+                  <AccordionTrigger className="flex items-center gap-3 py-3 px-4 rounded-xl hover:bg-muted/50 transition-all hover:no-underline group">
+                    <div className="flex items-center gap-3">
+                      <div className="w-2 h-2 rounded-full bg-orange-500" />
+                      <span className="font-semibold text-sm">Zeno-Lite</span>
+                    </div>
+                  </AccordionTrigger>
+                  <AccordionContent className="pt-4 px-4 pb-6 space-y-6">
+                    <p className="text-sm text-muted-foreground leading-relaxed">
+                      A lightweight, lightning-fast model optimized for quick responses and everyday tasks.
+                    </p>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                      <div className="bg-muted/40 p-5 rounded-2xl border border-border/50 space-y-2">
+                        <div className="text-[10px] uppercase tracking-wider font-bold text-muted-foreground">Maximum context length:</div>
+                        <div className="text-lg font-bold">128,000 tokens</div>
+                      </div>
+                      <div className="bg-muted/40 p-5 rounded-2xl border border-border/50 space-y-2">
+                        <div className="text-[10px] uppercase tracking-wider font-bold text-muted-foreground">Optimized for:</div>
+                        <div className="text-lg font-bold">Speed</div>
+                      </div>
+                    </div>
+                  </AccordionContent>
+                </AccordionItem>
+
+                <AccordionItem value="zeno-pro" className="border-none">
+                  <AccordionTrigger className="flex items-center gap-3 py-3 px-4 rounded-xl hover:bg-muted/50 transition-all hover:no-underline group">
+                    <div className="flex items-center gap-3">
+                      <div className="w-2 h-2 rounded-full bg-purple-500" />
+                      <span className="font-semibold text-sm">Zeno-Pro</span>
+                    </div>
+                  </AccordionTrigger>
+                  <AccordionContent className="pt-4 px-4 pb-6 space-y-6">
+                    <p className="text-sm text-muted-foreground leading-relaxed">
+                      Our balanced professional model, perfect for deep analysis and nuanced conversation.
+                    </p>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                      <div className="bg-muted/40 p-5 rounded-2xl border border-border/50 space-y-2">
+                        <div className="text-[10px] uppercase tracking-wider font-bold text-muted-foreground">Maximum context length:</div>
+                        <div className="text-lg font-bold">200,000 tokens</div>
+                      </div>
+                      <div className="bg-muted/40 p-5 rounded-2xl border border-border/50 space-y-2">
+                        <div className="text-[10px] uppercase tracking-wider font-bold text-muted-foreground">Intelligence Level:</div>
+                        <div className="text-lg font-bold">Advanced</div>
+                      </div>
+                    </div>
                   </AccordionContent>
                 </AccordionItem>
               </Accordion>
