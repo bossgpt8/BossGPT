@@ -23,7 +23,7 @@ Zeno AI is a sophisticated, full-stack AI chat application designed to provide a
 - **Real-time Streaming:** Instant AI responses with smooth streaming technology.
 - **Cloud Sync:** Securely store and synchronize conversations across sessions via Firebase.
 - **Responsive Design:** A modern, mobile-first interface built with Tailwind CSS and Shadcn UI.
-- **Offline Support:** Resilient operation even with intermittent connectivity.
+- **Resilient Connectivity:** Graceful handling of network status changes with a dedicated offline screen.
 
 ## 🛠 Tech Stack
 
