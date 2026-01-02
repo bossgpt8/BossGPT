@@ -14,19 +14,31 @@ const steps: Step[] = [
   {
     target: '[data-testid="button-new-chat"]',
     title: "Start Fresh",
-    description: "Click here to clear the current conversation and start a new one.",
+    description: "Click here to clear the current conversation and start a new one whenever you need a clean slate.",
     position: "right",
   },
   {
     target: '[data-testid="button-toggle-sidebar"]',
-    title: "Toggle Sidebar",
-    description: "Show or hide your chat history to focus on your current task.",
+    title: "Manage History",
+    description: "Keep your workspace tidy. Toggle the sidebar to browse past conversations or hide them to focus.",
+    position: "bottom",
+  },
+  {
+    target: '[data-testid="button-toggle-voice"]',
+    title: "Voice Interaction",
+    description: "Talk directly with Zeno. Enable voice mode to listen to responses and use your mic for hands-free chatting.",
+    position: "bottom",
+  },
+  {
+    target: '[data-testid="model-selector"]',
+    title: "Choose Your Engine",
+    description: "Switch between different AI models to find the one that best fits your specific task or creative needs.",
     position: "bottom",
   },
   {
     target: '[data-testid="button-settings"]',
-    title: "Custom Instructions",
-    description: "Personalize how Zeno responds to you by providing custom system instructions.",
+    title: "Personalize Zeno",
+    description: "Define Zeno's personality and set custom instructions to make the AI truly yours.",
     position: "top",
   },
 ];
