@@ -11,37 +11,37 @@ const suggestions = [
     icon: BookOpen,
     title: "Explain a concept",
     description: "Get clear explanations on any topic",
-    prompt: "Explain the concept of artificial intelligence in simple terms",
+    prompt: "Explain the concept of quantum computing in simple terms",
   },
   {
     icon: Code,
     title: "Code help",
     description: "Debug, learn, or build projects",
-    prompt: "Help me understand async/await in JavaScript",
+    prompt: "Show me how to use the fetch API in JavaScript",
   },
   {
     icon: Sparkles,
     title: "Get creative",
     description: "Generate stories, ideas, and content",
-    prompt: "Write a creative short story about time travel",
+    prompt: "Write a short story about a robot who discovers music",
   },
   {
     icon: Lightbulb,
     title: "Brainstorm ideas",
-    description: "Explore new possibilities",
-    prompt: "Help me brainstorm ideas for a mobile app",
+    description: "Explore new possibilities together",
+    prompt: "Give me some unique business ideas for a college student",
   },
   {
     icon: Zap,
     title: "Problem solver",
     description: "Work through challenges step-by-step",
-    prompt: "Help me solve this math problem step by step",
+    prompt: "Help me plan a budget for my first apartment",
   },
   {
     icon: Brush,
     title: "Image generation",
-    description: "Create images from descriptions",
-    prompt: "Generate an image of a futuristic city at sunset",
+    description: "Create visuals from descriptions",
+    prompt: "Generate an image of a futuristic workspace with lots of plants",
   },
 ];
 
@@ -65,11 +65,11 @@ export function WelcomeScreen({ onSuggestionClick }: WelcomeScreenProps) {
             className="text-3xl md:text-4xl font-bold text-center mb-2"
             data-testid="text-welcome-title"
           >
-            I'm here to help!
+            Good afternoon, Boss
           </h1>
           
-          <p className="text-center text-muted-foreground text-base md:text-lg px-4">
-            Think of me as your personal creative partner. I can help you learn new things, write stories, or even solve tricky problems together.
+          <p className="text-center text-muted-foreground text-sm md:text-base px-4">
+            I'm here to help — whether you're learning, creating, or solving.
           </p>
         </div>
         

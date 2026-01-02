@@ -163,7 +163,7 @@ export function ChatInput({
             <ImagePlus className="w-5 h-5" />
           </Button>
           
-          <div className="flex-1 relative">
+          <div className="flex-1 relative group">
             <Textarea
               ref={textareaRef}
               value={message}
@@ -172,10 +172,18 @@ export function ChatInput({
               onPaste={handlePaste}
               placeholder="Message BossAI..."
               disabled={disabled || isGenerating}
-              className="min-h-[44px] max-h-[200px] resize-none pr-12 text-sm md:text-base"
+              className="min-h-[44px] max-h-[200px] resize-none pr-12 text-sm md:text-base transition-all duration-200"
               rows={1}
               data-testid="input-chat-message"
             />
+            <Button
+              size="icon"
+              variant="ghost"
+              className="absolute right-1 top-1/2 -translate-y-1/2 w-8 h-8 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity"
+              onClick={() => window.open('https://replit.com', '_blank')}
+            >
+              <span className="text-lg font-bold">?</span>
+            </Button>
           </div>
           
           <Button
