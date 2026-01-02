@@ -1,4 +1,4 @@
-import { Menu, Moon, Sun, Palette, Settings, LayoutPanelLeft, LayoutSidebar, LayoutSidebarOpen } from "lucide-react";
+import { Menu, Moon, Sun, Palette, Settings, LayoutSidebar, LayoutSidebarOpen } from "lucide-react";
 import { Button as BaseButton } from "@/components/ui/button";
 import {
   Popover,
