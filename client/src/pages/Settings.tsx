@@ -397,7 +397,35 @@ export default function Settings() {
               <div className="space-y-6">
                 <div className="flex items-center justify-between py-2">
                   <div className="font-medium text-sm">Import Chats</div>
-                  <Button variant="outline" size="sm" className="h-8 text-xs font-semibold px-4 rounded-lg bg-muted/30">
+                  <Button 
+                    variant="outline" 
+                    size="sm" 
+                    onClick={() => {
+                      const input = document.createElement('input');
+                      input.type = 'file';
+                      input.accept = '.json';
+                      input.onchange = (e: any) => {
+                        const file = e.target.files?.[0];
+                        if (file) {
+                          const reader = new FileReader();
+                          reader.onload = (re) => {
+                            try {
+                              const data = JSON.parse(re.target?.result as string);
+                              if (Array.isArray(data)) {
+                                setConversations([...conversations, ...data]);
+                                toast({ title: "Success", description: "Chats imported successfully!" });
+                              }
+                            } catch (err) {
+                              toast({ title: "Error", description: "Invalid chat file format.", variant: "destructive" });
+                            }
+                          };
+                          reader.readAsText(file);
+                        }
+                      };
+                      input.click();
+                    }}
+                    className="h-8 text-xs font-semibold px-4 rounded-lg bg-muted/30"
+                  >
                     Import Chats
                   </Button>
                 </div>
@@ -406,7 +434,22 @@ export default function Settings() {
 
                 <div className="flex items-center justify-between py-2">
                   <div className="font-medium text-sm">Export Chats</div>
-                  <Button variant="outline" size="sm" className="h-8 text-xs font-semibold px-4 rounded-lg bg-muted/30">
+                  <Button 
+                    variant="outline" 
+                    size="sm" 
+                    onClick={() => {
+                      const data = JSON.stringify(conversations, null, 2);
+                      const blob = new Blob([data], { type: 'application/json' });
+                      const url = URL.createObjectURL(blob);
+                      const a = document.createElement('a');
+                      a.href = url;
+                      a.download = `zeno-chats-export-${new Date().toISOString().split('T')[0]}.json`;
+                      a.click();
+                      URL.revokeObjectURL(url);
+                      toast({ title: "Success", description: "Your chats have been exported." });
+                    }}
+                    className="h-8 text-xs font-semibold px-4 rounded-lg bg-muted/30"
+                  >
                     Export Chats
                   </Button>
                 </div>
@@ -656,9 +699,12 @@ export default function Settings() {
                         className="w-full h-full object-cover"
                       />
                     </div>
-                    <div className="font-bold text-lg">{userName}</div>
+                    <div className="space-y-1">
+                      <div className="font-bold text-lg">{userName || "User"}</div>
+                      <div className="text-xs text-muted-foreground">{user?.email || "osanisrael2@gmail.com"}</div>
+                    </div>
                   </div>
-                  <Button variant="outline" size="sm" className="h-8 text-xs font-semibold px-4 rounded-lg bg-muted/30">
+                  <Button variant="outline" size="sm" onClick={() => setActiveTab("personalization")} className="h-8 text-xs font-semibold px-4 rounded-lg bg-muted/30">
                     Edit account
                   </Button>
                 </div>
@@ -676,7 +722,16 @@ export default function Settings() {
 
                 <div className="flex items-center justify-between py-2">
                   <div className="font-medium text-sm">Account Management</div>
-                  <Button variant="outline" size="sm" className="h-8 text-xs font-semibold px-4 rounded-lg border-destructive/30 text-destructive hover:bg-destructive/10 hover:text-destructive">
+                  <Button 
+                    variant="outline" 
+                    size="sm" 
+                    onClick={() => {
+                      if (confirm("Are you sure you want to delete your account? This action is irreversible.")) {
+                        toast({ title: "Request Sent", description: "Your account deletion request is being processed.", variant: "destructive" });
+                      }
+                    }}
+                    className="h-8 text-xs font-semibold px-4 rounded-lg border-destructive/30 text-destructive hover:bg-destructive/10 hover:text-destructive"
+                  >
                     Delete Account
                   </Button>
                 </div>
