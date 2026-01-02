@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { ArrowLeft, Trash2, Edit2, Save, Plus, User, Sliders, Brain, Info, Monitor, Layout, Globe, Volume2 } from "lucide-react";
+import { ArrowLeft, Trash2, Edit2, Save, Plus, User, Sliders, Brain, Info, Monitor, Layout, Globe, Volume2, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -38,7 +38,7 @@ const AVATAR_OPTIONS = [
 export default function Settings() {
   const [, setLocation] = useLocation();
   const { toast } = useToast();
-  const [activeTab, setActiveTab] = useState("personalization");
+  const [activeTab, setActiveTab] = useState("general");
   const {
     user,
     userName,
@@ -122,32 +122,31 @@ export default function Settings() {
       {/* Content Area */}
       <div className="flex-1 overflow-y-auto">
         <div className="max-w-3xl mx-auto px-8 py-12 space-y-12">
-          {activeTab === "personalization" && (
+          {activeTab === "general" && (
             <div className="space-y-10 animate-in fade-in slide-in-from-right-4 duration-300">
-              <h2 className="text-2xl font-bold">Personalization</h2>
+              <h2 className="text-2xl font-bold">General</h2>
 
               {/* Theme/General UI Look */}
               <div className="space-y-6">
                 <div className="flex items-center justify-between py-2">
                   <div className="space-y-0.5">
-                    <div className="font-medium">Theme</div>
+                    <div className="font-medium text-sm">Theme</div>
                   </div>
-                  <div className="flex bg-muted p-1 rounded-full border border-border">
-                    <Button variant="ghost" size="sm" className="rounded-full px-4 h-8">System</Button>
-                    <Button variant="ghost" size="sm" className="rounded-full px-4 h-8">Light</Button>
-                    <Button variant="secondary" size="sm" className="rounded-full px-4 h-8 bg-background shadow-sm border border-border/50">Dark</Button>
+                  <div className="flex bg-muted/50 p-1 rounded-full border border-border/50">
+                    <Button variant="ghost" size="sm" className="rounded-full px-4 h-7 text-xs text-muted-foreground hover:text-foreground">System</Button>
+                    <Button variant="ghost" size="sm" className="rounded-full px-4 h-7 text-xs text-muted-foreground hover:text-foreground">Light</Button>
+                    <Button variant="secondary" size="sm" className="rounded-full px-4 h-7 text-xs bg-background shadow-sm border border-border/50 font-medium">Dark</Button>
                   </div>
                 </div>
                 
-                <Separator />
+                <Separator className="opacity-50" />
 
                 <div className="flex items-center justify-between py-2">
                   <div className="flex items-center gap-2">
-                    <Globe className="w-4 h-4 text-muted-foreground" />
-                    <div className="font-medium">Language</div>
+                    <div className="font-medium text-sm">Language</div>
                   </div>
                   <Select defaultValue="en">
-                    <SelectTrigger className="w-[180px] bg-transparent border-0 hover:bg-muted/50 transition-colors">
+                    <SelectTrigger className="w-[180px] bg-transparent border-0 hover:bg-muted/30 transition-colors text-sm text-right justify-end gap-2">
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
@@ -157,18 +156,30 @@ export default function Settings() {
                   </Select>
                 </div>
 
-                <Separator />
+                <Separator className="opacity-50" />
 
                 <div className="flex items-center justify-between py-2">
                   <div className="flex items-center gap-2">
-                    <Volume2 className="w-4 h-4 text-muted-foreground" />
-                    <div className="font-medium">Voice</div>
+                    <div className="font-medium text-sm">Voice</div>
                   </div>
-                  <Button variant="ghost" className="text-muted-foreground hover:text-foreground">
-                    Katerina
+                  <Button variant="ghost" className="text-sm text-muted-foreground hover:text-foreground gap-2 h-auto py-1 px-2">
+                    Katerina <ChevronRight className="w-3 h-3" />
                   </Button>
                 </div>
               </div>
+
+              <div className="flex justify-end gap-3 pt-8 border-t border-border/50">
+                <Button variant="ghost" onClick={() => setLocation("/")} className="text-sm">Cancel</Button>
+                <Button onClick={handleSave} disabled={isSaving} className="text-sm">
+                  {isSaving ? "Saving..." : "Save Changes"}
+                </Button>
+              </div>
+            </div>
+          )}
+
+          {activeTab === "personalization" && (
+            <div className="space-y-10 animate-in fade-in slide-in-from-right-4 duration-300">
+              <h2 className="text-2xl font-bold">Personalization</h2>
 
               {/* Profile Details */}
               <div className="space-y-8 pt-4">
