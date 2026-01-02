@@ -1,4 +1,4 @@
-import { Menu, Moon, Sun, Palette, Settings, LayoutSidebar, LayoutSidebarOpen } from "lucide-react";
+import { Menu, Moon, Sun, Palette, Settings, PanelLeftClose, PanelLeftOpen } from "lucide-react";
 import { Button as BaseButton } from "@/components/ui/button";
 import {
   Popover,
@@ -41,9 +41,9 @@ export function ChatHeader({
             title={sidebarOpen ? "Hide sidebar" : "Show sidebar"}
           >
             {sidebarOpen ? (
-              <LayoutSidebar className="w-5 h-5" />
+              <PanelLeftClose className="w-5 h-5" />
             ) : (
-              <LayoutSidebarOpen className="w-5 h-5" />
+              <PanelLeftOpen className="w-5 h-5" />
             )}
           </BaseButton>
           
