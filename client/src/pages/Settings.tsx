@@ -1,7 +1,8 @@
 import { useState } from "react";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Switch } from "@/components/ui/switch";
-import { ArrowLeft, Trash2, Edit2, Save, Plus, User, Sliders, Brain, Info, Monitor, Layout, Globe, Volume2, ChevronRight, ChevronDown, MessageSquare, Download, Upload, Archive, Github, Twitter, Linkedin, MessageCircle } from "lucide-react";
+import { ArrowLeft, Trash2, Edit2, Save, Plus, User, Sliders, Brain, Info, Monitor, Layout, Globe, Volume2, ChevronRight, ChevronDown, MessageSquare, Download, Upload, Archive, Github, Twitter, Linkedin, MessageCircle, X } from "lucide-react";
 import { SiDiscord, SiX, SiGithub, SiLinkedin } from "react-icons/si";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -399,9 +400,63 @@ export default function Settings() {
               <div className="space-y-6">
                 <div className="flex items-center justify-between">
                   <h3 className="text-lg font-semibold">Memory</h3>
-                  <Button variant="outline" size="sm" className="h-8 gap-2 text-xs font-semibold px-4 rounded-lg bg-muted/30">
-                    <Sliders className="w-3 h-3" /> Manage
-                  </Button>
+                  <Dialog>
+                    <DialogTrigger asChild>
+                      <Button variant="outline" size="sm" className="h-8 gap-2 text-xs font-semibold px-4 rounded-lg bg-muted/30">
+                        <Sliders className="w-3 h-3" /> Manage
+                      </Button>
+                    </DialogTrigger>
+                    <DialogContent className="max-w-2xl bg-[#1a1a1a] border-border/40 p-0 overflow-hidden rounded-2xl">
+                      <div className="p-6 space-y-6">
+                        <DialogHeader className="flex flex-row items-center justify-between space-y-0">
+                          <DialogTitle className="text-xl font-bold">Saved Memory</DialogTitle>
+                        </DialogHeader>
+                        
+                        <p className="text-[13px] text-muted-foreground">
+                          Memory storage can hold up to 50 items. If this limit is exceeded, the oldest memories will be removed.
+                        </p>
+
+                        <div className="space-y-3 max-h-[400px] overflow-y-auto pr-2 custom-scrollbar">
+                          {memories.map((memory) => (
+                            <div key={memory.id} className="group relative bg-[#242424] hover:bg-[#2a2a2a] border border-border/20 rounded-xl transition-colors p-4">
+                              <div className="flex items-start justify-between gap-4">
+                                <p className="text-sm leading-relaxed pr-8">{memory.content}</p>
+                                <Button 
+                                  variant="ghost" 
+                                  size="icon" 
+                                  className="h-8 w-8 text-muted-foreground hover:text-destructive hover:bg-destructive/10 opacity-0 group-hover:opacity-100 transition-opacity absolute right-2 top-2"
+                                  onClick={() => deleteMemory(memory.id)}
+                                >
+                                  <Trash2 className="w-4 h-4" />
+                                </Button>
+                              </div>
+                            </div>
+                          ))}
+                          {memories.length === 0 && (
+                            <div className="text-center py-20 bg-muted/5 rounded-2xl border border-dashed border-border/20">
+                              <Brain className="w-8 h-8 mx-auto mb-3 opacity-10" />
+                              <p className="text-sm text-muted-foreground">No memories saved yet.</p>
+                            </div>
+                          )}
+                        </div>
+
+                        <div className="flex justify-end pt-4 border-t border-border/10">
+                          <Button 
+                            variant="outline" 
+                            size="sm" 
+                            className="rounded-full border-destructive/40 text-destructive hover:bg-destructive/10 h-9 px-6 text-xs font-bold"
+                            onClick={() => {
+                              if (confirm("Forget all memories? This cannot be undone.")) {
+                                memories.forEach(m => deleteMemory(m.id));
+                              }
+                            }}
+                          >
+                            Forget All
+                          </Button>
+                        </div>
+                      </div>
+                    </DialogContent>
+                  </Dialog>
                 </div>
                 
                 <div className="space-y-6 pt-2">
