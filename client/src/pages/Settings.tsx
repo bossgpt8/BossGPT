@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Switch } from "@/components/ui/switch";
-import { ArrowLeft, Trash2, Edit2, Save, Plus, User, Sliders, Brain, Info, Monitor, Layout, Globe, Volume2, ChevronRight, ChevronDown, MessageSquare, Download, Upload, Archive } from "lucide-react";
+import { ArrowLeft, Trash2, Edit2, Save, Plus, User, Sliders, Brain, Info, Monitor, Layout, Globe, Volume2, ChevronRight, ChevronDown, MessageSquare, Download, Upload, Archive, Github, Twitter, Linkedin, MessageCircle } from "lucide-react";
+import { SiDiscord, SiX, SiGithub, SiLinkedin } from "react-icons/si";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -493,11 +494,42 @@ export default function Settings() {
           )}
 
           {activeTab === "about" && (
-            <div className="flex flex-col items-center justify-center py-32 text-muted-foreground space-y-4 animate-in fade-in zoom-in-95 duration-500">
-              <div className="p-4 bg-muted/30 rounded-full">
-                <Layout className="w-8 h-8 opacity-20" />
+            <div className="space-y-10 animate-in fade-in slide-in-from-right-4 duration-300 pb-20">
+              <h2 className="text-2xl font-bold">About</h2>
+
+              <div className="space-y-8">
+                <div className="space-y-4">
+                  <h3 className="text-lg font-semibold">About</h3>
+                  <p className="text-sm text-muted-foreground leading-relaxed text-justify">
+                    The Zeno team is dedicated to pursuing artificial general intelligence (AGI) and is focused on building generalist models, including large language models and large multimodal models. Our mission is to create safe, responsible, and intelligent models, making AGI accessible to the global community through open-source initiatives. We have developed a diverse portfolio of AGI models, with our latest release being the Zeno3 series of large language models, officially launched on January 2, 2026. The Zeno3 series includes multiple models of various sizes, featuring both dense models and Mixture-of-Experts (MoE) architectures. We have also introduced specialized models such as Zeno3-Coder for enhanced programming capabilities. In the multimodal domain, we have released Zeno-Image, a 20B parameter image generation foundation model, and its advanced editing counterpart, Zeno-Image-Edit. To enable more sophisticated applications, we have developed the Zeno-Agent framework, leveraging the instruction-following, tool-use, and planning capabilities of our models to create versatile agents. Zeno Chat serves as the primary platform for users and developers to interact with our models, offering comprehensive functionalities such as image and video understanding, image generation, document processing, web search, and tool utilization. We welcome you to explore Zeno Chat and share your valuable feedback with us.
+                  </p>
+                </div>
+
+                <div className="space-y-2">
+                  <h3 className="text-lg font-semibold">Feedback email</h3>
+                  <p className="text-sm font-medium">osanisrael2@gmail.com</p>
+                </div>
+
+                <div className="pt-10 flex items-center justify-between border-t border-border/50">
+                  <div className="flex items-center gap-4 text-xs font-medium text-muted-foreground">
+                    <button className="hover:text-foreground transition-colors">Terms of Service</button>
+                    <button className="hover:text-foreground transition-colors">Privacy Policy</button>
+                  </div>
+                  <div className="flex items-center gap-4 text-muted-foreground">
+                    <SiGithub className="w-4 h-4 hover:text-foreground cursor-pointer transition-colors" />
+                    <SiX className="w-4 h-4 hover:text-foreground cursor-pointer transition-colors" />
+                    <SiLinkedin className="w-4 h-4 hover:text-foreground cursor-pointer transition-colors" />
+                    <SiDiscord className="w-4 h-4 hover:text-foreground cursor-pointer transition-colors" />
+                  </div>
+                </div>
               </div>
-              <p className="text-sm">This section is coming soon.</p>
+
+              <div className="flex justify-end gap-3 pt-8 border-t border-border/50">
+                <Button variant="ghost" onClick={() => setLocation("/")} className="text-sm">Cancel</Button>
+                <Button onClick={handleSave} disabled={isSaving} className="text-sm">
+                  {isSaving ? "Saving..." : "Save Changes"}
+                </Button>
+              </div>
             </div>
           )}
         </div>
