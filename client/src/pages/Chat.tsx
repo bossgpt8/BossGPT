@@ -13,6 +13,7 @@ import { NameModal } from "@/components/settings/NameModal";
 import { ProfileModal } from "@/components/settings/ProfileModal";
 import { ChatHeader } from "@/components/header/ChatHeader";
 import { AppSidebar } from "@/components/sidebar/AppSidebar";
+import { OnboardingTutorial } from "@/components/onboarding/OnboardingTutorial";
 import { useChatStore } from "@/lib/store";
 import { useToast } from "@/hooks/use-toast";
 import { AI_MODELS } from "@shared/schema";
