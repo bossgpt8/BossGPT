@@ -167,7 +167,9 @@ When using web search results, mention your sources.`;
                 const parsed = JSON.parse(data);
                 const content = parsed.choices?.[0]?.delta?.content || "";
                 if (content) {
+                  // Ensure immediate flush for "small small" sending
                   res.write(`data: ${JSON.stringify({ content })}\n\n`);
+                  if ((res as any).flush) (res as any).flush();
                 }
               } catch {}
             }
