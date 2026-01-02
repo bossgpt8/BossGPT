@@ -514,19 +514,18 @@ export function AppSidebar({ isOpen, onClose }: AppSidebarProps) {
             </DialogContent>
           </Dialog>
           
-          <div className="flex gap-2">
+          <div className="flex flex-col gap-2">
             <QuickGuide />
             <Dialog open={settingsOpen} onOpenChange={setSettingsOpen}>
               <DialogTrigger asChild>
                 <Button 
-                  size="icon" 
                   variant="outline"
                   onClick={() => setTempPrompt(customSystemPrompt)}
                   data-testid="button-settings"
-                  className="w-full gap-2"
+                  className="w-full gap-2 h-9"
                 >
                   <Settings className="w-4 h-4" />
-                  <span>Custom Instructions</span>
+                  <span className="truncate">Custom Instructions</span>
                 </Button>
               </DialogTrigger>
               <DialogContent className="sm:max-w-md">

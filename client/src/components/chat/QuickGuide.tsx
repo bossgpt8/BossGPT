@@ -42,7 +42,7 @@ export function QuickGuide() {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button variant="outline" size="sm" className="gap-2 h-8 rounded-full">
+        <Button variant="outline" className="gap-2 w-full h-9 rounded-md">
           <HelpCircle className="w-4 h-4" />
           Quick Guide
         </Button>
