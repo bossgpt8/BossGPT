@@ -5,6 +5,9 @@ import { Textarea } from "@/components/ui/textarea";
 import { useChatStore } from "@/lib/store";
 import { AI_MODELS } from "@shared/schema";
 
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Puzzle, Plane, Code as CodeIcon, Calendar, Newspaper, Search as SearchIcon, FileText, GraduationCap as GraduationCapIcon, PenTool, Lightbulb } from "lucide-react";
+
 interface ChatInputProps {
   onSend: (message: string, images: string[]) => void;
   isGenerating: boolean;
@@ -155,6 +158,19 @@ export function ChatInput({
     setCurrentModel(modelId);
   };
 
+  const moreTags = [
+    { label: "Artifacts", icon: Puzzle, model: "meta-llama/llama-3.3-70b-instruct:free" },
+    { label: "Travel Planner", icon: Plane, model: "mistralai/mistral-small-3.1-24b-instruct:free" },
+    { label: "Code", icon: CodeIcon, model: "qwen/qwen3-coder:free" },
+    { label: "Make a plan", icon: Calendar, model: "meta-llama/llama-3.1-405b-instruct:free" },
+    { label: "News", icon: Newspaper, model: "google/gemma-3-27b-it:free" },
+    { label: "Analyze image", icon: SearchIcon, model: "qwen/qwen-2.5-vl-7b-instruct:free" },
+    { label: "Summarize text", icon: FileText, model: "mistralai/mistral-small-3.1-24b-instruct:free" },
+    { label: "Get advice", icon: GraduationCapIcon, model: "meta-llama/llama-3.3-70b-instruct:free" },
+    { label: "Help me write", icon: PenTool, model: "mistralai/mistral-small-3.1-24b-instruct:free" },
+    { label: "Brainstorm", icon: Lightbulb, model: "deepseek/deepseek-r1:free" },
+  ];
+
   return (
     <div className="border-t border-border bg-background/80 backdrop-blur-md p-3 md:p-4 pb-6">
       <div className="max-w-3xl mx-auto space-y-4">
@@ -263,13 +279,33 @@ export function ChatInput({
               {tag.label}
             </Button>
           ))}
-          <Button
-            variant="outline"
-            size="sm"
-            className="h-7 rounded-full bg-background border-border/50 hover:bg-muted text-[10px] md:text-xs px-2.5"
-          >
-            More
-          </Button>
+          <Popover>
+            <PopoverTrigger asChild>
+              <Button
+                variant="outline"
+                size="sm"
+                className="h-7 rounded-full bg-background border-border/50 hover:bg-muted text-[10px] md:text-xs px-2.5"
+              >
+                More
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent className="w-[320px] md:w-[480px] p-2 rounded-2xl border-border bg-background/95 backdrop-blur-md shadow-2xl" side="top" align="center">
+              <div className="flex flex-wrap gap-1.5 justify-center py-1">
+                {moreTags.map((tag) => (
+                  <Button
+                    key={tag.label}
+                    variant="outline"
+                    size="sm"
+                    className="h-7 rounded-full bg-background border-border/50 hover:bg-muted text-[10px] md:text-xs gap-1 px-2.5"
+                    onClick={() => handleTagClick(tag.model)}
+                  >
+                    <tag.icon className="w-3 h-3 text-muted-foreground" />
+                    {tag.label}
+                  </Button>
+                ))}
+              </div>
+            </PopoverContent>
+          </Popover>
         </div>
       </div>
     </div>
