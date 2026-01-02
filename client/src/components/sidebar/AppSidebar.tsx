@@ -566,6 +566,50 @@ export function AppSidebar({ isOpen, onClose }: AppSidebarProps) {
                 </div>
               </DialogContent>
             </Dialog>
+                  data-testid="button-settings"
+                  className="w-full gap-2 h-9"
+                >
+                  <Settings className="w-4 h-4" />
+                  <span className="truncate">Custom Instructions</span>
+                </Button>
+              </DialogTrigger>
+              <DialogContent className="sm:max-w-md">
+                <DialogHeader>
+                  <DialogTitle>Custom Instructions</DialogTitle>
+                </DialogHeader>
+                <div className="space-y-4 pt-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="system-prompt">Custom System Prompt</Label>
+                    <Textarea
+                      id="system-prompt"
+                      placeholder="Add custom instructions for how Zeno should respond..."
+                      value={tempPrompt}
+                      onChange={(e) => setTempPrompt(e.target.value)}
+                      className="min-h-[150px]"
+                      data-testid="textarea-system-prompt"
+                    />
+                    <p className="text-xs text-muted-foreground">
+                      This will be added to every conversation to customize AI responses.
+                    </p>
+                  </div>
+                  <div className="flex gap-2 justify-end">
+                    <Button 
+                      variant="outline" 
+                      onClick={() => setSettingsOpen(false)}
+                      data-testid="button-cancel-settings"
+                    >
+                      Cancel
+                    </Button>
+                    <Button 
+                      onClick={handleSaveSystemPrompt}
+                      data-testid="button-save-settings"
+                    >
+                      Save
+                    </Button>
+                  </div>
+                </div>
+              </DialogContent>
+            </Dialog>
           </div>
         </div>
       </aside>
