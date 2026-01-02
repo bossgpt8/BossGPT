@@ -199,8 +199,14 @@ export const useChatStore = create<ChatState>()(
         return result;
       },
       
-      currentModel: "meta-llama/llama-3.3-70b-instruct:free",
+      currentModel: "qwen/qwen-2.5-vl-7b-instruct:free",
       setCurrentModel: (model) => set({ currentModel: model }),
+      
+      thinkingEnabled: false,
+      setThinkingEnabled: (enabled: boolean) => set({ thinkingEnabled: enabled }),
+      
+      searchEnabled: false,
+      setSearchEnabled: (enabled: boolean) => set({ searchEnabled: enabled }),
       
       customSystemPrompt: "",
       setCustomSystemPrompt: (prompt) => set({ customSystemPrompt: prompt }),
