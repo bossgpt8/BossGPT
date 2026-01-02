@@ -8,6 +8,8 @@ import { AI_MODELS } from "@shared/schema";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Puzzle, Plane, Code as CodeIcon, Calendar, Newspaper, Search as SearchIcon, FileText, GraduationCap as GraduationCapIcon, PenTool, Lightbulb } from "lucide-react";
 
+import zenoLogo from "@assets/image_1767364441563.png";
+
 interface ChatInputProps {
   onSend: (message: string, images: string[]) => void;
   isGenerating: boolean;
@@ -221,6 +223,10 @@ export function ChatInput({
               <input ref={fileInputRef} type="file" accept="image/*" multiple className="hidden" onChange={handleFileChange} />
               
               <div className="flex items-center bg-muted/50 rounded-full p-0.5 border border-border/50">
+                <div className="w-7 h-7 flex items-center justify-center p-1.5 bg-background rounded-full shadow-sm ml-0.5">
+                  <img src={zenoLogo} alt="Zeno" className="w-full h-full object-contain" />
+                </div>
+                <div className="w-[1px] h-3 bg-border/50 mx-1" />
                 <Button
                   variant="ghost"
                   size="sm"
