@@ -443,7 +443,56 @@ export default function Settings() {
             </div>
           )}
 
-          {(activeTab === "account" || activeTab === "about") && (
+          {activeTab === "account" && (
+            <div className="space-y-10 animate-in fade-in slide-in-from-right-4 duration-300">
+              <h2 className="text-2xl font-bold">Account</h2>
+
+              <div className="space-y-8">
+                <div className="flex items-center justify-between py-2">
+                  <div className="flex items-center gap-4">
+                    <div className="w-12 h-12 rounded-full overflow-hidden border border-border/50">
+                      <img 
+                        src={AVATAR_OPTIONS.find(a => a.id === userAvatar)?.image || avatar1} 
+                        alt="Profile" 
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+                    <div className="font-bold text-lg">{userName}</div>
+                  </div>
+                  <Button variant="outline" size="sm" className="h-8 text-xs font-semibold px-4 rounded-lg bg-muted/30">
+                    Edit account
+                  </Button>
+                </div>
+
+                <Separator className="opacity-50" />
+
+                <div className="flex items-center justify-between py-2">
+                  <div className="font-medium text-sm">Password management</div>
+                  <Button variant="outline" size="sm" className="h-8 text-xs font-semibold px-4 rounded-lg bg-muted/30">
+                    Change password
+                  </Button>
+                </div>
+
+                <Separator className="opacity-50" />
+
+                <div className="flex items-center justify-between py-2">
+                  <div className="font-medium text-sm">Account Management</div>
+                  <Button variant="outline" size="sm" className="h-8 text-xs font-semibold px-4 rounded-lg border-destructive/30 text-destructive hover:bg-destructive/10 hover:text-destructive">
+                    Delete Account
+                  </Button>
+                </div>
+              </div>
+
+              <div className="flex justify-end gap-3 pt-8 border-t border-border/50">
+                <Button variant="ghost" onClick={() => setLocation("/")} className="text-sm">Cancel</Button>
+                <Button onClick={handleSave} disabled={isSaving} className="text-sm">
+                  {isSaving ? "Saving..." : "Save Changes"}
+                </Button>
+              </div>
+            </div>
+          )}
+
+          {activeTab === "about" && (
             <div className="flex flex-col items-center justify-center py-32 text-muted-foreground space-y-4 animate-in fade-in zoom-in-95 duration-500">
               <div className="p-4 bg-muted/30 rounded-full">
                 <Layout className="w-8 h-8 opacity-20" />
