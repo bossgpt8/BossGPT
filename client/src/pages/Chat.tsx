@@ -13,6 +13,7 @@ import { NameModal } from "@/components/settings/NameModal";
 import { ProfileModal } from "@/components/settings/ProfileModal";
 import { ChatHeader } from "@/components/header/ChatHeader";
 import { AppSidebar } from "@/components/sidebar/AppSidebar";
+import { VoiceChatModal } from "@/components/chat/VoiceChatModal";
 import { OnboardingTutorial } from "@/components/onboarding/OnboardingTutorial";
 import { useChatStore } from "@/lib/store";
 import { useToast } from "@/hooks/use-toast";
@@ -85,6 +86,7 @@ export default function Chat() {
   const [showOnboarding, setShowOnboarding] = useState(false);
   const [showNameModal, setShowNameModal] = useState(false);
   const [showProfileModal, setShowProfileModal] = useState(false);
+  const [showVoiceChat, setShowVoiceChat] = useState(false);
 
   // Load user profile and conversations from Firestore on mount
   useEffect(() => {
@@ -631,7 +633,7 @@ export default function Chat() {
           <ChatHeader
             currentModel={currentModel}
             voiceEnabled={voiceEnabled}
-            onToggleVoice={() => setVoiceEnabled(!voiceEnabled)}
+            onToggleVoice={() => setShowVoiceChat(true)}
             onToggleSidebar={() => setSidebarOpen(!sidebarOpen)}
           />
         </div>
@@ -710,6 +712,61 @@ export default function Chat() {
           />
         </div>
       </div>
+
+      <ChatContent 
+        showOnboarding={showOnboarding}
+        handleCloseOnboarding={handleCloseOnboarding}
+        showNameModal={showNameModal}
+        setShowNameModal={setShowNameModal}
+        showProfileModal={showProfileModal}
+        setShowProfileModal={setShowProfileModal}
+        handleSaveProfile={handleSaveProfile}
+        showVoiceChat={showVoiceChat}
+        setShowVoiceChat={setShowVoiceChat}
+        isRecording={isRecording}
+        handleToggleRecording={handleToggleRecording}
+      />
     </div>
+  );
+}
+
+function ChatContent({ 
+  showOnboarding, 
+  handleCloseOnboarding, 
+  showNameModal, 
+  setShowNameModal, 
+  showProfileModal, 
+  setShowProfileModal, 
+  handleSaveProfile,
+  showVoiceChat,
+  setShowVoiceChat,
+  isRecording,
+  handleToggleRecording
+}: any) {
+  return (
+    <>
+      <OnboardingModal
+        isOpen={showOnboarding}
+        onClose={handleCloseOnboarding}
+      />
+
+      <NameModal
+        isOpen={showNameModal}
+        onClose={() => setShowNameModal(false)}
+      />
+
+      <ProfileModal
+        isOpen={showProfileModal}
+        onClose={() => setShowProfileModal(false)}
+        onSave={handleSaveProfile}
+      />
+
+      <VoiceChatModal
+        isOpen={showVoiceChat}
+        onClose={() => setShowVoiceChat(false)}
+        isRecording={isRecording}
+        onToggleRecording={handleToggleRecording}
+      />
+    </>
   );
 }
