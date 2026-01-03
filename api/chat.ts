@@ -70,18 +70,57 @@ RESPONSE STYLE:
       body: JSON.stringify({
         model: model || 'meta-llama/llama-3.3-70b-instruct:free',
         messages: messagesWithSystem,
+        stream: true,
       }),
     });
 
-    const data = await response.json();
-
-    if (data.error) {
-      return res.status(500).json({ error: data.error.message || 'API Error' });
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({}));
+      return res.status(response.status).json({ error: errorData.error?.message || 'API Error' });
     }
 
-    return res.json({
-      content: data.choices?.[0]?.message?.content || 'No response generated',
-    });
+    res.setHeader('Content-Type', 'text/event-stream');
+    res.setHeader('Cache-Control', 'no-cache, no-transform');
+    res.setHeader('Connection', 'keep-alive');
+    res.setHeader('X-Accel-Buffering', 'no');
+
+    const reader = response.body!.getReader();
+    const decoder = new TextDecoder();
+
+    try {
+      let buffer = "";
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+
+        buffer += decoder.decode(value, { stream: true });
+        const lines = buffer.split("\n");
+
+        for (let i = 0; i < lines.length - 1; i++) {
+          const line = lines[i].trim();
+          if (!line) continue;
+
+          if (line.startsWith("data: ")) {
+            const data = line.slice(6).trim();
+            if (data === "[DONE]") {
+              res.write("data: [DONE]\n\n");
+              continue;
+            }
+            try {
+              const parsed = JSON.parse(data);
+              const content = parsed.choices?.[0]?.delta?.content || "";
+              if (content) {
+                res.write(`data: ${JSON.stringify({ content })}\n\n`);
+              }
+            } catch (e) {}
+          }
+        }
+        buffer = lines[lines.length - 1];
+      }
+    } finally {
+      res.write("data: [DONE]\n\n");
+      res.end();
+    }
   } catch (error: any) {
     console.error('Chat API error:', error);
     return res.status(500).json({ error: 'Failed to process request' });
