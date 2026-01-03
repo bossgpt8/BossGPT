@@ -725,6 +725,7 @@ export default function Chat() {
         setShowVoiceChat={setShowVoiceChat}
         isRecording={isRecording}
         handleToggleRecording={handleToggleRecording}
+        setUserName={setUserName}
       />
     </div>
   );
@@ -741,7 +742,8 @@ function ChatContent({
   showVoiceChat,
   setShowVoiceChat,
   isRecording,
-  handleToggleRecording
+  handleToggleRecording,
+  setUserName
 }: any) {
   return (
     <>
