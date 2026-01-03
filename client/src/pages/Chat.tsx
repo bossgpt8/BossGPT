@@ -457,7 +457,10 @@ export default function Chat() {
           const decoder = new TextDecoder();
 
           try {
+            const reader = response.body.getReader();
+            const decoder = new TextDecoder();
             let buffer = "";
+
             while (true) {
               const { done, value } = await reader.read();
               if (done) break;
@@ -465,27 +468,30 @@ export default function Chat() {
               buffer += decoder.decode(value, { stream: true });
               const lines = buffer.split("\n");
               
+              // Process all lines except the last one (which might be incomplete)
               for (let i = 0; i < lines.length - 1; i++) {
-                const line = lines[i];
-                if (line.startsWith("data: ")) {
-                  const data = line.slice(6).trim();
-                  if (data === "[DONE]") continue;
-                  if (!data) continue;
+                const line = lines[i].trim();
+                if (!line || !line.startsWith("data: ")) continue;
 
-                  try {
-                    const parsed = JSON.parse(data);
-                    const content = parsed.content || parsed.choices?.[0]?.delta?.content || "";
-                    if (content) {
-                      fullContent += content;
-                      updateMessage(assistantMessage.id, fullContent);
-                    }
-                  } catch {}
+                const data = line.slice(6).trim();
+                if (data === "[DONE]") continue;
+
+                try {
+                  const parsed = JSON.parse(data);
+                  const content = parsed.content || parsed.choices?.[0]?.delta?.content || "";
+                  if (content) {
+                    fullContent += content;
+                    updateMessage(assistantMessage.id, fullContent);
+                  }
+                } catch (e) {
+                  // Partial JSON, skip for now
                 }
               }
-              
+              // Keep the last partial line in the buffer
               buffer = lines[lines.length - 1];
             }
             
+            // Final check on remaining buffer
             if (buffer.trim().startsWith("data: ")) {
               const data = buffer.trim().slice(6).trim();
               if (data && data !== "[DONE]") {
@@ -496,7 +502,7 @@ export default function Chat() {
                     fullContent += content;
                     updateMessage(assistantMessage.id, fullContent);
                   }
-                } catch {}
+                } catch (e) {}
               }
             }
 

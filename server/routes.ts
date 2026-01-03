@@ -142,8 +142,9 @@ When using web search results, mention your sources.`;
       }
 
       res.setHeader("Content-Type", "text/event-stream");
-      res.setHeader("Cache-Control", "no-cache");
+      res.setHeader("Cache-Control", "no-cache, no-transform");
       res.setHeader("Connection", "keep-alive");
+      res.setHeader("X-Accel-Buffering", "no"); // Important for Vercel/Nginx proxying
 
       const reader = response.body!.getReader();
       const decoder = new TextDecoder();
@@ -168,21 +169,19 @@ When using web search results, mention your sources.`;
                 continue;
               }
               try {
+                // Relay exactly what we get from OpenRouter to maintain compatibility
                 const parsed = JSON.parse(data);
                 const content = parsed.choices?.[0]?.delta?.content || "";
                 if (content) {
                   res.write(`data: ${JSON.stringify({ content })}\n\n`);
-                  if ((res as any).flush) (res as any).flush();
                 }
-              } catch (e) {
-                // Ignore parsing errors for partial chunks
-              }
+              } catch (e) {}
             }
           }
           buffer = lines[lines.length - 1];
         }
         
-        // Handle remaining buffer
+        // Final buffer flush
         if (buffer.trim().startsWith("data: ")) {
           const data = buffer.trim().slice(6).trim();
           if (data && data !== "[DONE]") {
@@ -191,7 +190,6 @@ When using web search results, mention your sources.`;
               const content = parsed.choices?.[0]?.delta?.content || "";
               if (content) {
                 res.write(`data: ${JSON.stringify({ content })}\n\n`);
-                if ((res as any).flush) (res as any).flush();
               }
             } catch {}
           }
