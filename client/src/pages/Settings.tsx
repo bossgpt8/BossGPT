@@ -799,21 +799,21 @@ export default function Settings() {
                   <div className="space-y-3">
                     <button 
                       className="w-full flex items-center justify-between text-xs text-muted-foreground hover:text-foreground transition-colors group"
-                      onClick={() => window.open("#", "_blank")}
+                      onClick={() => window.open("/legal/terms.html", "_blank")}
                     >
                       <span>Terms of Service</span>
                       <ChevronRight className="w-3 h-3 group-hover:translate-x-0.5 transition-transform" />
                     </button>
                     <button 
                       className="w-full flex items-center justify-between text-xs text-muted-foreground hover:text-foreground transition-colors group"
-                      onClick={() => window.open("#", "_blank")}
+                      onClick={() => window.open("/legal/privacy.html", "_blank")}
                     >
                       <span>Privacy Policy</span>
                       <ChevronRight className="w-3 h-3 group-hover:translate-x-0.5 transition-transform" />
                     </button>
                     <button 
                       className="w-full flex items-center justify-between text-xs text-muted-foreground hover:text-foreground transition-colors group"
-                      onClick={() => window.open("#", "_blank")}
+                      onClick={() => window.open("/legal/licenses.html", "_blank")}
                     >
                       <span>Software Licenses</span>
                       <ChevronRight className="w-3 h-3 group-hover:translate-x-0.5 transition-transform" />
