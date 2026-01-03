@@ -1,6 +1,5 @@
-import { QuickGuide } from "../chat/QuickGuide";
 import zenoLogo from "@assets/image_1767364441563.png";
-import { Plus, User, LogOut, Search, Settings, X, Mail, Lock, Eye, EyeOff } from "lucide-react";
+import { Plus, User, LogOut, Search, Settings, X, Mail, Lock, Eye, EyeOff, Sparkles } from "lucide-react";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -27,9 +26,10 @@ import { Link } from "wouter";
 interface AppSidebarProps {
   isOpen: boolean;
   onClose: () => void;
+  onStartTutorial: () => void;
 }
 
-export function AppSidebar({ isOpen, onClose }: AppSidebarProps) {
+export function AppSidebar({ isOpen, onClose, onStartTutorial }: AppSidebarProps) {
   const {
     user,
     currentConversationId,
@@ -516,7 +516,15 @@ export function AppSidebar({ isOpen, onClose }: AppSidebarProps) {
             </Dialog>
             
             <div className="flex flex-col gap-2">
-              <QuickGuide />
+              <Button
+                variant="outline"
+                className="w-full gap-2 h-9 border-primary/20 hover:bg-primary/5 hover:border-primary/30 text-primary transition-all"
+                onClick={onStartTutorial}
+                data-testid="button-quick-guide"
+              >
+                <Sparkles className="w-4 h-4" />
+                Quick Guide
+              </Button>
               <Dialog open={settingsOpen} onOpenChange={setSettingsOpen}>
                 <DialogTrigger asChild>
                   <Button 

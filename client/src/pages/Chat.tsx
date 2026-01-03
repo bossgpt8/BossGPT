@@ -87,6 +87,7 @@ export default function Chat() {
   const [showNameModal, setShowNameModal] = useState(false);
   const [showProfileModal, setShowProfileModal] = useState(false);
   const [showVoiceChat, setShowVoiceChat] = useState(false);
+  const [forceShowTutorial, setForceShowTutorial] = useState(false);
 
   // Load user profile and conversations from Firestore on mount
   useEffect(() => {
@@ -623,11 +624,21 @@ export default function Chat() {
 
   return (
     <div className="flex h-screen w-full bg-background overflow-hidden relative">
-      <AppSidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
+      <AppSidebar 
+        isOpen={sidebarOpen} 
+        onClose={() => setSidebarOpen(false)} 
+        onStartTutorial={() => {
+          setForceShowTutorial(true);
+          setSidebarOpen(false);
+        }}
+      />
 
       <div className="flex flex-col flex-1 min-w-0 h-screen overflow-hidden">
-        {!hasSeenTutorial && hasSeenAuthPrompt && (
-          <OnboardingTutorial onComplete={() => setHasSeenTutorial(true)} />
+        {(!hasSeenTutorial || forceShowTutorial) && hasSeenAuthPrompt && (
+          <OnboardingTutorial onComplete={() => {
+            setHasSeenTutorial(true);
+            setForceShowTutorial(false);
+          }} />
         )}
         <div className="flex-shrink-0 sticky top-0 z-40 bg-background border-b border-border">
           <ChatHeader
@@ -726,6 +737,10 @@ export default function Chat() {
         isRecording={isRecording}
         handleToggleRecording={handleToggleRecording}
         setUserName={setUserName}
+        onStartTutorial={() => {
+          setForceShowTutorial(true);
+          setSidebarOpen(false);
+        }}
       />
     </div>
   );
@@ -743,7 +758,8 @@ function ChatContent({
   setShowVoiceChat,
   isRecording,
   handleToggleRecording,
-  setUserName
+  setUserName,
+  onStartTutorial
 }: any) {
   return (
     <>
@@ -769,6 +785,12 @@ function ChatContent({
         onClose={() => setShowVoiceChat(false)}
         isRecording={isRecording}
         onToggleRecording={handleToggleRecording}
+      />
+
+      <AppSidebar 
+        isOpen={false} 
+        onClose={() => {}} 
+        onStartTutorial={onStartTutorial}
       />
     </>
   );
