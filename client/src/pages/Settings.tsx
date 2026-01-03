@@ -797,18 +797,27 @@ export default function Settings() {
                   <Separator className="opacity-50" />
 
                   <div className="space-y-3">
-                    <div className="flex items-center justify-between text-xs text-muted-foreground cursor-pointer hover:text-foreground transition-colors">
+                    <button 
+                      className="w-full flex items-center justify-between text-xs text-muted-foreground hover:text-foreground transition-colors group"
+                      onClick={() => window.open("#", "_blank")}
+                    >
                       <span>Terms of Service</span>
-                      <ChevronRight className="w-3 h-3" />
-                    </div>
-                    <div className="flex items-center justify-between text-xs text-muted-foreground cursor-pointer hover:text-foreground transition-colors">
+                      <ChevronRight className="w-3 h-3 group-hover:translate-x-0.5 transition-transform" />
+                    </button>
+                    <button 
+                      className="w-full flex items-center justify-between text-xs text-muted-foreground hover:text-foreground transition-colors group"
+                      onClick={() => window.open("#", "_blank")}
+                    >
                       <span>Privacy Policy</span>
-                      <ChevronRight className="w-3 h-3" />
-                    </div>
-                    <div className="flex items-center justify-between text-xs text-muted-foreground cursor-pointer hover:text-foreground transition-colors">
+                      <ChevronRight className="w-3 h-3 group-hover:translate-x-0.5 transition-transform" />
+                    </button>
+                    <button 
+                      className="w-full flex items-center justify-between text-xs text-muted-foreground hover:text-foreground transition-colors group"
+                      onClick={() => window.open("#", "_blank")}
+                    >
                       <span>Software Licenses</span>
-                      <ChevronRight className="w-3 h-3" />
-                    </div>
+                      <ChevronRight className="w-3 h-3 group-hover:translate-x-0.5 transition-transform" />
+                    </button>
                   </div>
 
                   <div className="pt-8 text-center">
