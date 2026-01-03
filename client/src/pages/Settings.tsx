@@ -265,114 +265,76 @@ export default function Settings() {
               <h2 className="text-2xl font-bold">Models</h2>
 
               <Accordion type="single" collapsible className="w-full space-y-4">
-                <AccordionItem value="qwen3-max" className="border-none">
+                <AccordionItem value="qwen-vl" className="border-none">
                   <AccordionTrigger className="flex items-center gap-3 py-3 px-4 rounded-xl hover:bg-muted/50 transition-all hover:no-underline group data-[state=open]:bg-muted/30">
                     <div className="flex items-center gap-3">
                       <div className="w-2 h-2 rounded-full bg-primary" />
-                      <span className="font-semibold text-sm">Zeno-Max (Qwen3)</span>
+                      <span className="font-semibold text-sm">Qwen 2.5 VL 7B</span>
                     </div>
                   </AccordionTrigger>
                   <AccordionContent className="pt-4 px-4 pb-6 space-y-6">
                     <p className="text-sm text-muted-foreground leading-relaxed">
-                      Zeno-Max is our most advanced reasoning model, excelling in complex mathematics, coding, role-playing, and long-form creative writing.
+                      Our best-in-class vision model, excelling at understanding screenshots, UIs, diagrams, and complex visual information.
                     </p>
                     
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       <div className="bg-muted/40 p-5 rounded-2xl border border-border/50 space-y-2">
-                        <div className="text-[10px] uppercase tracking-wider font-bold text-muted-foreground">Maximum context length:</div>
-                        <div className="text-lg font-bold">262,144 tokens</div>
-                      </div>
-                      <div className="bg-muted/40 p-5 rounded-2xl border border-border/50 space-y-2">
-                        <div className="text-[10px] uppercase tracking-wider font-bold text-muted-foreground">Max generation length:</div>
-                        <div className="text-lg font-bold">32,768 tokens</div>
+                        <div className="text-[10px] uppercase tracking-wider font-bold text-muted-foreground">Capabilities:</div>
+                        <div className="text-lg font-bold">Vision + Text</div>
                       </div>
                       <div className="bg-muted/40 p-5 rounded-2xl border border-border/50 space-y-2">
                         <div className="text-[10px] uppercase tracking-wider font-bold text-muted-foreground">Intelligence Level:</div>
-                        <div className="text-lg font-bold">State-of-the-art</div>
-                      </div>
-                      <div className="bg-muted/40 p-5 rounded-2xl border border-border/50 space-y-2">
-                        <div className="text-[10px] uppercase tracking-wider font-bold text-muted-foreground">Modality:</div>
-                        <div className="text-lg font-bold">Text + Vision</div>
+                        <div className="text-lg font-bold">Advanced VL</div>
                       </div>
                     </div>
                   </AccordionContent>
                 </AccordionItem>
 
-                <AccordionItem value="zeno-coder" className="border-none">
+                <AccordionItem value="llama-70b" className="border-none">
                   <AccordionTrigger className="flex items-center gap-3 py-3 px-4 rounded-xl hover:bg-muted/50 transition-all hover:no-underline group">
                     <div className="flex items-center gap-3">
                       <div className="w-2 h-2 rounded-full bg-blue-500" />
-                      <span className="font-semibold text-sm">Zeno-Coder</span>
+                      <span className="font-semibold text-sm">Llama 3.3 70B</span>
                     </div>
                   </AccordionTrigger>
                   <AccordionContent className="pt-4 px-4 pb-6">
-                    <p className="text-sm text-muted-foreground">Specialized for high-performance software engineering and technical documentation.</p>
+                    <p className="text-sm text-muted-foreground">A highly smart and efficient model for complex reasoning and everyday conversation.</p>
                   </AccordionContent>
                 </AccordionItem>
 
-                <AccordionItem value="zeno-vl" className="border-none">
+                <AccordionItem value="deepseek-r1" className="border-none">
                   <AccordionTrigger className="flex items-center gap-3 py-3 px-4 rounded-xl hover:bg-muted/50 transition-all hover:no-underline group">
                     <div className="flex items-center gap-3">
                       <div className="w-2 h-2 rounded-full bg-green-500" />
-                      <span className="font-semibold text-sm">Zeno-Vision (VL)</span>
+                      <span className="font-semibold text-sm">DeepSeek R1</span>
                     </div>
                   </AccordionTrigger>
-                  <AccordionContent className="pt-4 px-4 pb-6 space-y-6">
-                    <p className="text-sm text-muted-foreground">Our flagship multi-modal model capable of deep visual analysis and image understanding.</p>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                      <div className="bg-muted/40 p-5 rounded-2xl border border-border/50 space-y-2">
-                        <div className="text-[10px] uppercase tracking-wider font-bold text-muted-foreground">Modality:</div>
-                        <div className="text-lg font-bold">Text + Vision</div>
-                      </div>
-                    </div>
+                  <AccordionContent className="pt-4 px-4 pb-6">
+                    <p className="text-sm text-muted-foreground">Our flagship reasoning model, optimized for advanced logical tasks and problem solving.</p>
                   </AccordionContent>
                 </AccordionItem>
 
-                <AccordionItem value="zeno-lite" className="border-none">
+                <AccordionItem value="qwen-coder" className="border-none">
                   <AccordionTrigger className="flex items-center gap-3 py-3 px-4 rounded-xl hover:bg-muted/50 transition-all hover:no-underline group">
                     <div className="flex items-center gap-3">
                       <div className="w-2 h-2 rounded-full bg-orange-500" />
-                      <span className="font-semibold text-sm">Zeno-Lite</span>
+                      <span className="font-semibold text-sm">Qwen 3 Coder</span>
                     </div>
                   </AccordionTrigger>
-                  <AccordionContent className="pt-4 px-4 pb-6 space-y-6">
-                    <p className="text-sm text-muted-foreground leading-relaxed">
-                      A lightweight, lightning-fast model optimized for quick responses and everyday tasks.
-                    </p>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                      <div className="bg-muted/40 p-5 rounded-2xl border border-border/50 space-y-2">
-                        <div className="text-[10px] uppercase tracking-wider font-bold text-muted-foreground">Maximum context length:</div>
-                        <div className="text-lg font-bold">128,000 tokens</div>
-                      </div>
-                      <div className="bg-muted/40 p-5 rounded-2xl border border-border/50 space-y-2">
-                        <div className="text-[10px] uppercase tracking-wider font-bold text-muted-foreground">Optimized for:</div>
-                        <div className="text-lg font-bold">Speed</div>
-                      </div>
-                    </div>
+                  <AccordionContent className="pt-4 px-4 pb-6">
+                    <p className="text-sm text-muted-foreground">Specialized for modern software engineering projects and technical documentation.</p>
                   </AccordionContent>
                 </AccordionItem>
 
-                <AccordionItem value="zeno-pro" className="border-none">
+                <AccordionItem value="flux" className="border-none">
                   <AccordionTrigger className="flex items-center gap-3 py-3 px-4 rounded-xl hover:bg-muted/50 transition-all hover:no-underline group">
                     <div className="flex items-center gap-3">
                       <div className="w-2 h-2 rounded-full bg-purple-500" />
-                      <span className="font-semibold text-sm">Zeno-Pro</span>
+                      <span className="font-semibold text-sm">FLUX.1 Schnell</span>
                     </div>
                   </AccordionTrigger>
-                  <AccordionContent className="pt-4 px-4 pb-6 space-y-6">
-                    <p className="text-sm text-muted-foreground leading-relaxed">
-                      Our balanced professional model, perfect for deep analysis and nuanced conversation.
-                    </p>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                      <div className="bg-muted/40 p-5 rounded-2xl border border-border/50 space-y-2">
-                        <div className="text-[10px] uppercase tracking-wider font-bold text-muted-foreground">Maximum context length:</div>
-                        <div className="text-lg font-bold">200,000 tokens</div>
-                      </div>
-                      <div className="bg-muted/40 p-5 rounded-2xl border border-border/50 space-y-2">
-                        <div className="text-[10px] uppercase tracking-wider font-bold text-muted-foreground">Intelligence Level:</div>
-                        <div className="text-lg font-bold">Advanced</div>
-                      </div>
-                    </div>
+                  <AccordionContent className="pt-4 px-4 pb-6">
+                    <p className="text-sm text-muted-foreground">Our fastest high-quality image generation model.</p>
                   </AccordionContent>
                 </AccordionItem>
               </Accordion>
