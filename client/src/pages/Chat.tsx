@@ -474,7 +474,7 @@ export default function Chat() {
 
                   try {
                     const parsed = JSON.parse(data);
-                    const content = parsed.content || "";
+                    const content = parsed.content || parsed.choices?.[0]?.delta?.content || "";
                     if (content) {
                       fullContent += content;
                       updateMessage(assistantMessage.id, fullContent);
@@ -491,7 +491,7 @@ export default function Chat() {
               if (data && data !== "[DONE]") {
                 try {
                   const parsed = JSON.parse(data);
-                  const content = parsed.content || "";
+                  const content = parsed.content || parsed.choices?.[0]?.delta?.content || "";
                   if (content) {
                     fullContent += content;
                     updateMessage(assistantMessage.id, fullContent);

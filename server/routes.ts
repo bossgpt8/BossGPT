@@ -149,16 +149,20 @@ When using web search results, mention your sources.`;
       const decoder = new TextDecoder();
 
       try {
+        let buffer = "";
         while (true) {
           const { done, value } = await reader.read();
           if (done) break;
 
-          const chunk = decoder.decode(value);
-          const lines = chunk.split("\n");
+          buffer += decoder.decode(value, { stream: true });
+          const lines = buffer.split("\n");
 
-          for (const line of lines) {
+          for (let i = 0; i < lines.length - 1; i++) {
+            const line = lines[i].trim();
+            if (!line) continue;
+            
             if (line.startsWith("data: ")) {
-              const data = line.slice(6);
+              const data = line.slice(6).trim();
               if (data === "[DONE]") {
                 res.write("data: [DONE]\n\n");
                 continue;
@@ -167,12 +171,29 @@ When using web search results, mention your sources.`;
                 const parsed = JSON.parse(data);
                 const content = parsed.choices?.[0]?.delta?.content || "";
                 if (content) {
-                  // Ensure immediate flush for "small small" sending
                   res.write(`data: ${JSON.stringify({ content })}\n\n`);
                   if ((res as any).flush) (res as any).flush();
                 }
-              } catch {}
+              } catch (e) {
+                // Ignore parsing errors for partial chunks
+              }
             }
+          }
+          buffer = lines[lines.length - 1];
+        }
+        
+        // Handle remaining buffer
+        if (buffer.trim().startsWith("data: ")) {
+          const data = buffer.trim().slice(6).trim();
+          if (data && data !== "[DONE]") {
+            try {
+              const parsed = JSON.parse(data);
+              const content = parsed.choices?.[0]?.delta?.content || "";
+              if (content) {
+                res.write(`data: ${JSON.stringify({ content })}\n\n`);
+                if ((res as any).flush) (res as any).flush();
+              }
+            } catch {}
           }
         }
       } finally {
