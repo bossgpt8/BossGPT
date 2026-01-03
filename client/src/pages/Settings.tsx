@@ -229,7 +229,7 @@ export default function Settings() {
               </Card>
 
               <div className="flex items-center justify-between pt-4">
-                <Button variant="link" onClick={() => setLocation("/")} className="text-muted-foreground hover:text-foreground font-semibold px-0">Discard changes</Button>
+                <Button variant="ghost" onClick={() => setLocation("/")} className="text-muted-foreground hover:text-foreground font-semibold px-0">Discard changes</Button>
                 <Button onClick={handleSave} disabled={isSaving} className="rounded-2xl px-8 h-12 font-bold shadow-xl shadow-primary/20 hover:scale-[1.02] active:scale-[0.98] transition-all">
                   {isSaving ? "Syncing..." : "Save Changes"}
                 </Button>
@@ -277,7 +277,7 @@ export default function Settings() {
               </Card>
 
               <div className="flex items-center justify-between pt-4">
-                <Button variant="link" onClick={() => setLocation("/")} className="text-muted-foreground hover:text-foreground font-semibold px-0">Discard changes</Button>
+                <Button variant="ghost" onClick={() => setLocation("/")} className="text-muted-foreground hover:text-foreground font-semibold px-0">Discard changes</Button>
                 <Button onClick={handleSave} disabled={isSaving} className="rounded-2xl px-8 h-12 font-bold shadow-xl shadow-primary/20 hover:scale-[1.02] active:scale-[0.98] transition-all">
                   {isSaving ? "Syncing..." : "Save Changes"}
                 </Button>
