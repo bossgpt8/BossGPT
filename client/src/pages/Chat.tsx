@@ -751,12 +751,12 @@ function ChatContent({
       />
 
       <NameModal
-        isOpen={showNameModal}
+        open={showNameModal}
         onClose={() => setShowNameModal(false)}
       />
 
       <ProfileModal
-        isOpen={showProfileModal}
+        open={showProfileModal}
         onClose={() => setShowProfileModal(false)}
         onSave={handleSaveProfile}
       />
