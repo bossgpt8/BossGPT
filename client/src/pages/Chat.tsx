@@ -466,35 +466,34 @@ export default function Chat() {
               buffer += decoder.decode(value, { stream: true });
               const lines = buffer.split("\n");
               
-              // Process all lines except the last one (which might be incomplete)
               for (let i = 0; i < lines.length - 1; i++) {
                 const line = lines[i].trim();
                 if (!line || !line.startsWith("data: ")) continue;
 
-                const data = line.slice(6).trim();
-                if (data === "[DONE]") continue;
+                const dataString = line.slice(6).trim();
+                if (dataString === "[DONE]") continue;
 
                 try {
-                  const parsed = JSON.parse(data);
+                  const parsed = JSON.parse(dataString);
                   const content = parsed.content || parsed.choices?.[0]?.delta?.content || "";
                   if (content) {
                     fullContent += content;
                     updateMessage(assistantMessage.id, fullContent);
                   }
                 } catch (e) {
-                  // Partial JSON, skip for now
+                  // If it's not valid JSON, it might be the raw content if OpenRouter relayed it differently
+                  // but we should stick to the data: JSON format
                 }
               }
-              // Keep the last partial line in the buffer
               buffer = lines[lines.length - 1];
             }
             
-            // Final check on remaining buffer
+            // Handle last bit of buffer
             if (buffer.trim().startsWith("data: ")) {
-              const data = buffer.trim().slice(6).trim();
-              if (data && data !== "[DONE]") {
+              const dataString = buffer.trim().slice(6).trim();
+              if (dataString && dataString !== "[DONE]") {
                 try {
-                  const parsed = JSON.parse(data);
+                  const parsed = JSON.parse(dataString);
                   const content = parsed.content || parsed.choices?.[0]?.delta?.content || "";
                   if (content) {
                     fullContent += content;

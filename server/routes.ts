@@ -144,8 +144,8 @@ When using web search results, mention your sources.`;
       res.setHeader("Content-Type", "text/event-stream");
       res.setHeader("Cache-Control", "no-cache, no-transform");
       res.setHeader("Connection", "keep-alive");
-      res.setHeader("X-Accel-Buffering", "no"); // Important for Vercel/Nginx proxying
-      res.flushHeaders(); // Explicitly flush headers to bypass some proxies
+      res.setHeader("X-Accel-Buffering", "no");
+      res.flushHeaders();
 
       const reader = response.body!.getReader();
       const decoder = new TextDecoder();
@@ -170,30 +170,17 @@ When using web search results, mention your sources.`;
                 continue;
               }
               try {
-                // Relay exactly what we get from OpenRouter to maintain compatibility
                 const parsed = JSON.parse(data);
                 const content = parsed.choices?.[0]?.delta?.content || "";
                 if (content) {
+                  // Direct write and flush for real-time delivery
                   res.write(`data: ${JSON.stringify({ content })}\n\n`);
+                  if ((res as any).flush) (res as any).flush();
                 }
               } catch (e) {}
             }
           }
           buffer = lines[lines.length - 1];
-        }
-        
-        // Final buffer flush
-        if (buffer.trim().startsWith("data: ")) {
-          const data = buffer.trim().slice(6).trim();
-          if (data && data !== "[DONE]") {
-            try {
-              const parsed = JSON.parse(data);
-              const content = parsed.choices?.[0]?.delta?.content || "";
-              if (content) {
-                res.write(`data: ${JSON.stringify({ content })}\n\n`);
-              }
-            } catch {}
-          }
         }
       } finally {
         res.write("data: [DONE]\n\n");
