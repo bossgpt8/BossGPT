@@ -769,9 +769,9 @@ export default function Settings() {
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <Button variant="outline" className="justify-start gap-3 h-12 px-4 rounded-xl bg-muted/20 border-border/50" asChild>
-                      <a href="#" target="_blank">
-                        <MessageSquare className="w-4 h-4 text-purple-500" />
-                        <span className="text-xs font-medium">Community Forum</span>
+                      <a href="https://discord.gg/zenoai" target="_blank">
+                        <SiDiscord className="w-4 h-4 text-[#5865F2]" />
+                        <span className="text-xs font-medium">Join Discord</span>
                       </a>
                     </Button>
                     <Button variant="outline" className="justify-start gap-3 h-12 px-4 rounded-xl bg-muted/20 border-border/50" asChild>
