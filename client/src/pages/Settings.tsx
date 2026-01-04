@@ -520,13 +520,13 @@ export default function Settings() {
                           <Sliders className="w-3 h-3" /> Manage ({memories.length})
                         </Button>
                       </DialogTrigger>
-                      <DialogContent className="max-w-2xl bg-[#1a1a1a] border-border/40 p-0 overflow-hidden rounded-2xl">
+                      <DialogContent className="max-w-2xl bg-card/95 backdrop-blur-3xl border-border/40 p-0 overflow-hidden rounded-[2.5rem] shadow-2xl">
                         <div className="p-8 space-y-6">
                           <DialogHeader>
-                            <DialogTitle className="text-2xl font-black tracking-tighter">Memory Bank</DialogTitle>
+                            <DialogTitle className="text-4xl font-black tracking-tighter bg-gradient-to-br from-foreground to-foreground/70 bg-clip-text text-transparent">Memory Bank</DialogTitle>
                           </DialogHeader>
                           
-                          <p className="text-sm text-muted-foreground">
+                          <p className="text-sm text-muted-foreground font-medium">
                             Zeno remembers these facts about you to personalize your experience.
                           </p>
 
@@ -537,22 +537,22 @@ export default function Settings() {
                                 value={newMemory}
                                 onChange={(e) => setNewMemory(e.target.value)}
                                 onKeyDown={(e) => e.key === "Enter" && handleAddMemory()}
-                                className="rounded-xl border-border/20 bg-muted/20 h-11"
+                                className="rounded-2xl border-border/20 bg-muted/20 h-12 font-medium focus:ring-2 focus:ring-primary/20 transition-all"
                               />
-                              <Button onClick={handleAddMemory} size="icon" className="rounded-xl flex-shrink-0 h-11 w-11">
-                                <Plus className="w-4 h-4" />
+                              <Button onClick={handleAddMemory} size="icon" className="rounded-2xl flex-shrink-0 h-12 w-12 shadow-lg shadow-primary/10 hover-elevate">
+                                <Plus className="w-5 h-5" />
                               </Button>
                             </div>
                             
-                            <div className="space-y-3 max-h-[400px] overflow-y-auto pr-2 custom-scrollbar">
+                            <div className="space-y-3 max-h-[400px] overflow-y-auto pr-2 no-scrollbar">
                               {memories.map((memory) => (
-                                <div key={memory.id} className="group relative bg-[#242424] hover:bg-[#2a2a2a] border border-border/20 rounded-2xl transition-all p-4">
+                                <div key={memory.id} className="group relative bg-muted/10 hover:bg-muted/20 border border-border/10 rounded-2xl transition-all p-4 backdrop-blur-sm">
                                   <div className="flex items-start justify-between gap-4">
-                                    <p className="text-sm leading-relaxed pr-8">{memory.content}</p>
+                                    <p className="text-sm font-bold leading-relaxed pr-8 text-foreground/90">{memory.content}</p>
                                     <Button 
                                       variant="ghost" 
                                       size="icon" 
-                                      className="h-8 w-8 text-muted-foreground hover:text-destructive hover:bg-destructive/10 opacity-0 group-hover:opacity-100 transition-all absolute right-2 top-2"
+                                      className="h-8 w-8 text-muted-foreground hover:text-destructive hover:bg-destructive/10 opacity-0 group-hover:opacity-100 transition-all absolute right-2 top-2 rounded-xl"
                                       onClick={() => deleteMemory(memory.id)}
                                     >
                                       <Trash2 className="w-4 h-4" />
@@ -562,16 +562,18 @@ export default function Settings() {
                               ))}
                               {memories.length === 0 && (
                                 <div className="text-center py-16 bg-muted/5 rounded-3xl border border-dashed border-border/20">
-                                  <Brain className="w-10 h-10 mx-auto mb-3 opacity-10" />
-                                  <p className="text-sm text-muted-foreground font-medium">Your memory bank is empty.</p>
+                                  <Brain className="w-12 h-12 mx-auto mb-3 opacity-20 text-primary" />
+                                  <p className="text-sm text-muted-foreground font-black uppercase tracking-widest opacity-50">Your memory bank is empty</p>
                                 </div>
                               )}
                             </div>
                           </div>
                         </div>
                         
-                        <div className="p-6 bg-muted/10 border-t border-border/20 flex justify-end">
-                          <Button variant="ghost" className="rounded-xl font-bold px-8">Close</Button>
+                        <div className="p-6 bg-muted/20 border-t border-border/10 flex justify-end backdrop-blur-md">
+                          <DialogTrigger asChild>
+                            <Button variant="ghost" className="rounded-2xl font-black px-10 h-12 text-foreground hover:bg-muted/50 transition-all uppercase tracking-widest text-xs">Close</Button>
+                          </DialogTrigger>
                         </div>
                       </DialogContent>
                     </Dialog>
