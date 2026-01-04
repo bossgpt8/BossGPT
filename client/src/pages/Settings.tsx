@@ -95,6 +95,17 @@ export default function Settings() {
   const [editingMemoryId, setEditingMemoryId] = useState<string | null>(null);
   const [editingMemoryContent, setEditingMemoryContent] = useState("");
 
+  const handleAddMemory = () => {
+    if (newMemory.trim()) {
+      addMemory(newMemory.trim());
+      setNewMemory("");
+      toast({
+        title: "Memory Added",
+        description: "Information has been successfully saved to Zeno's memory.",
+      });
+    }
+  };
+
   const handleSave = async () => {
     const cleanName = (name || "").trim().slice(0, 100);
     setUserName(cleanName || "User");

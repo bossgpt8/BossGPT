@@ -284,6 +284,28 @@ export default function Chat() {
       parentId: messages.length > 0 ? messages[messages.length - 1].id : null,
     };
     addMessage(userMessage);
+
+    // Simple heuristic to extract names from messages like "my name is Israel"
+    const nameMatch = content.match(/my name is ([a-zA-Z\s]+)/i);
+    if (nameMatch && nameMatch[1]) {
+      const detectedName = nameMatch[1].trim();
+      if (detectedName.length < 50) {
+        setUserName(detectedName);
+        addMemory(`The user's name is ${detectedName}`);
+        toast({
+          title: "Added to memory",
+          description: `I'll remember that your name is ${detectedName}.`,
+        });
+      }
+    } else if (content.toLowerCase().includes("i am") || content.toLowerCase().includes("remember that")) {
+      // General memory capture for other info
+      addMemory(content);
+      toast({
+        title: "Added to memory",
+        description: "I've saved this information to my memory.",
+      });
+    }
+
     clearImages();
 
     // Sync to Firestore if signed in
