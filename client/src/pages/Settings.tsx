@@ -404,77 +404,159 @@ export default function Settings() {
           )}
 
           {activeTab === "personalization" && (
-            <div className="space-y-12 animate-in fade-in slide-in-from-bottom-4 duration-500">
+            <div className="space-y-12 animate-in fade-in slide-in-from-bottom-4 duration-500 pb-20">
               <div className="space-y-2">
                 <h2 className="text-4xl font-black tracking-tighter">Personalization</h2>
-                <p className="text-muted-foreground">Manage Zeno's unique identity and your preferences.</p>
+                <p className="text-muted-foreground">Tailor Zeno's behavior and remember your preferences.</p>
               </div>
 
-              <div className="space-y-6">
-                <div className="flex items-center justify-between">
-                  <h3 className="text-lg font-semibold">Memory</h3>
-                  <Dialog>
-                    <DialogTrigger asChild>
-                      <Button variant="outline" size="sm" className="h-8 gap-2 text-xs font-semibold px-4 rounded-lg bg-muted/30">
-                        <Sliders className="w-3 h-3" /> Manage
-                      </Button>
-                    </DialogTrigger>
-                    <DialogContent className="max-w-2xl bg-[#1a1a1a] border-border/40 p-0 overflow-hidden rounded-2xl">
-                      <div className="p-6 space-y-6">
-                        <DialogHeader className="flex flex-row items-center justify-between space-y-0">
-                          <DialogTitle className="text-xl font-bold">Saved Memory</DialogTitle>
-                        </DialogHeader>
-                        
-                        <p className="text-[13px] text-muted-foreground">
-                          Memory storage can hold up to 50 items. If this limit is exceeded, the oldest memories will be removed.
-                        </p>
+              <Card className="p-8 border-border/40 bg-card/50 backdrop-blur-md shadow-2xl shadow-foreground/5 rounded-3xl space-y-10">
+                {/* Profile Section */}
+                <div className="space-y-6">
+                  <div className="flex items-center gap-2 mb-2">
+                    <User className="w-5 h-5 text-primary" />
+                    <h3 className="text-xl font-bold tracking-tight">Your Profile</h3>
+                  </div>
+                  
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div className="space-y-3">
+                      <label className="text-sm font-bold ml-1">Display Name</label>
+                      <Input 
+                        value={name} 
+                        onChange={(e) => setName(e.target.value)}
+                        placeholder="What should Zeno call you?"
+                        className="rounded-xl bg-muted/20 border-border/20 h-11"
+                      />
+                    </div>
+                    <div className="space-y-3">
+                      <label className="text-sm font-bold ml-1">Gender / Identity</label>
+                      <Select value={gender} onValueChange={setGender}>
+                        <SelectTrigger className="rounded-xl bg-muted/20 border-border/20 h-11">
+                          <SelectValue placeholder="Select identity" />
+                        </SelectTrigger>
+                        <SelectContent className="rounded-xl">
+                          <SelectItem value="not-specified">Not specified</SelectItem>
+                          <SelectItem value="male">Male</SelectItem>
+                          <SelectItem value="female">Female</SelectItem>
+                          <SelectItem value="non-binary">Non-binary</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                  </div>
+                </div>
 
-                        <div className="space-y-4">
-                          <div className="flex gap-2">
-                            <Input
-                              placeholder="Add something to remember..."
-                              value={newMemory}
-                              onChange={(e) => setNewMemory(e.target.value)}
-                              onKeyDown={(e) => e.key === "Enter" && handleAddMemory()}
-                              className="rounded-xl border-border/20 bg-muted/20"
-                            />
-                            <Button onClick={handleAddMemory} size="icon" className="rounded-xl flex-shrink-0">
-                              <Plus className="w-4 h-4" />
-                            </Button>
-                          </div>
+                <Separator className="bg-border/10" />
+
+                {/* Response Style Section */}
+                <div className="space-y-6">
+                  <div className="flex items-center gap-2 mb-2">
+                    <MessageSquare className="w-5 h-5 text-primary" />
+                    <h3 className="text-xl font-bold tracking-tight">Response Style</h3>
+                  </div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    {RESPONDER_STYLES.map((style) => (
+                      <button
+                        key={style.id}
+                        onClick={() => setPersonality(style.id)}
+                        className={`p-5 rounded-2xl border transition-all text-left space-y-2 group ${
+                          personality === style.id
+                            ? "bg-primary/10 border-primary shadow-lg shadow-primary/10"
+                            : "bg-muted/10 border-border/20 hover:border-primary/30"
+                        }`}
+                      >
+                        <div className="font-bold flex items-center justify-between">
+                          {style.label}
+                          {personality === style.id && <div className="w-2 h-2 rounded-full bg-primary animate-pulse" />}
+                        </div>
+                        <div className="text-xs text-muted-foreground leading-relaxed">{style.description}</div>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                <Separator className="bg-border/10" />
+
+                {/* Memory Section */}
+                <div className="space-y-6">
+                  <div className="flex items-center justify-between mb-2">
+                    <div className="flex items-center gap-2">
+                      <Brain className="w-5 h-5 text-primary" />
+                      <h3 className="text-xl font-bold tracking-tight">Memory</h3>
+                    </div>
+                    <Dialog>
+                      <DialogTrigger asChild>
+                        <Button variant="outline" size="sm" className="h-9 gap-2 font-bold px-4 rounded-xl border-border/20 hover:bg-muted/30">
+                          <Sliders className="w-3 h-3" /> Manage ({memories.length})
+                        </Button>
+                      </DialogTrigger>
+                      <DialogContent className="max-w-2xl bg-[#1a1a1a] border-border/40 p-0 overflow-hidden rounded-2xl">
+                        <div className="p-8 space-y-6">
+                          <DialogHeader>
+                            <DialogTitle className="text-2xl font-black tracking-tighter">Memory Bank</DialogTitle>
+                          </DialogHeader>
                           
-                          <div className="space-y-3 max-h-[400px] overflow-y-auto pr-2 custom-scrollbar">
-                            {memories.map((memory) => (
-                              <div key={memory.id} className="group relative bg-[#242424] hover:bg-[#2a2a2a] border border-border/20 rounded-xl transition-colors p-4">
-                                <div className="flex items-start justify-between gap-4">
-                                  <p className="text-sm leading-relaxed pr-8">{memory.content}</p>
-                                  <Button 
-                                    variant="ghost" 
-                                    size="icon" 
-                                    className="h-8 w-8 text-muted-foreground hover:text-destructive hover:bg-destructive/10 opacity-0 group-hover:opacity-100 transition-opacity absolute right-2 top-2"
-                                    onClick={() => deleteMemory(memory.id)}
-                                  >
-                                    <Trash2 className="w-4 h-4" />
-                                  </Button>
+                          <p className="text-sm text-muted-foreground">
+                            Zeno remembers these facts about you to personalize your experience.
+                          </p>
+
+                          <div className="space-y-4">
+                            <div className="flex gap-2">
+                              <Input
+                                placeholder="Add something for Zeno to remember..."
+                                value={newMemory}
+                                onChange={(e) => setNewMemory(e.target.value)}
+                                onKeyDown={(e) => e.key === "Enter" && handleAddMemory()}
+                                className="rounded-xl border-border/20 bg-muted/20 h-11"
+                              />
+                              <Button onClick={handleAddMemory} size="icon" className="rounded-xl flex-shrink-0 h-11 w-11">
+                                <Plus className="w-4 h-4" />
+                              </Button>
+                            </div>
+                            
+                            <div className="space-y-3 max-h-[400px] overflow-y-auto pr-2 custom-scrollbar">
+                              {memories.map((memory) => (
+                                <div key={memory.id} className="group relative bg-[#242424] hover:bg-[#2a2a2a] border border-border/20 rounded-2xl transition-all p-4">
+                                  <div className="flex items-start justify-between gap-4">
+                                    <p className="text-sm leading-relaxed pr-8">{memory.content}</p>
+                                    <Button 
+                                      variant="ghost" 
+                                      size="icon" 
+                                      className="h-8 w-8 text-muted-foreground hover:text-destructive hover:bg-destructive/10 opacity-0 group-hover:opacity-100 transition-all absolute right-2 top-2"
+                                      onClick={() => deleteMemory(memory.id)}
+                                    >
+                                      <Trash2 className="w-4 h-4" />
+                                    </Button>
+                                  </div>
                                 </div>
-                              </div>
-                            ))}
-                            {memories.length === 0 && (
-                              <div className="text-center py-20 bg-muted/5 rounded-2xl border border-dashed border-border/20">
-                                <Brain className="w-8 h-8 mx-auto mb-3 opacity-10" />
-                                <p className="text-sm text-muted-foreground">No memories saved yet.</p>
-                              </div>
-                            )}
+                              ))}
+                              {memories.length === 0 && (
+                                <div className="text-center py-16 bg-muted/5 rounded-3xl border border-dashed border-border/20">
+                                  <Brain className="w-10 h-10 mx-auto mb-3 opacity-10" />
+                                  <p className="text-sm text-muted-foreground font-medium">Your memory bank is empty.</p>
+                                </div>
+                              )}
+                            </div>
                           </div>
                         </div>
-                      </div>
-                      
-                      <div className="p-6 bg-[#242424] border-t border-border/40 flex justify-end gap-3">
-                        <Button variant="outline" className="rounded-xl px-6 h-9 text-xs font-bold border-border/40">Close</Button>
-                      </div>
-                    </DialogContent>
-                  </Dialog>
+                        
+                        <div className="p-6 bg-muted/10 border-t border-border/20 flex justify-end">
+                          <Button variant="ghost" className="rounded-xl font-bold px-8">Close</Button>
+                        </div>
+                      </DialogContent>
+                    </Dialog>
+                  </div>
+                  <p className="text-sm text-muted-foreground">
+                    Zeno automatically saves important facts from your conversations.
+                  </p>
                 </div>
+              </Card>
+
+              <div className="flex items-center justify-between pt-4">
+                <Button variant="ghost" onClick={() => setLocation("/")} className="text-muted-foreground hover:text-foreground font-semibold px-0">Discard changes</Button>
+                <Button onClick={handleSave} disabled={isSaving} className="rounded-2xl px-10 h-12 font-black shadow-xl shadow-primary/20 hover:scale-[1.05] transition-all">
+                  {isSaving ? "Saving..." : "Apply Changes"}
+                </Button>
               </div>
             </div>
           )}
