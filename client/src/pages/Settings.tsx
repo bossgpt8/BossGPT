@@ -6,13 +6,6 @@ import { Switch } from "@/components/ui/switch";
 import { ArrowLeft, Trash2, Edit2, Save, Plus, User, Sliders, Brain, Info, Monitor, Layout, Globe, Volume2, ChevronRight, ChevronDown, MessageSquare, Download, Upload, Archive, Github, Twitter, Linkedin, MessageCircle, X, HelpCircle } from "lucide-react";
 import { SiDiscord, SiX, SiGithub, SiLinkedin } from "react-icons/si";
 import { Textarea } from "@/components/ui/textarea";
-
-const RESPONDER_STYLES = [
-  { id: "default", label: "Default", description: "Balances professionalism and friendliness." },
-  { id: "concise", label: "Concise", description: "Short, direct, to the point." },
-  { id: "socratic", label: "Socratic", description: "Guides with probing questions." },
-  { id: "formal", label: "Formal", description: "Uses academic/professional tone." },
-];
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -28,6 +21,13 @@ import avatar3 from "@assets/image_1767059124279.png";
 import avatar4 from "@assets/image_1767059177424.png";
 import avatar5 from "@assets/image_1767059193731.png";
 import avatar6 from "@assets/image_1767059240340.png";
+
+const RESPONDER_STYLES = [
+  { id: "default", label: "Default", description: "Balances professionalism and friendliness." },
+  { id: "concise", label: "Concise", description: "Short, direct, to the point." },
+  { id: "socratic", label: "Socratic", description: "Guides with probing questions." },
+  { id: "formal", label: "Formal", description: "Uses academic/professional tone." },
+];
 
 const TABS = [
   { id: "general", label: "General", icon: Sliders },
@@ -73,7 +73,7 @@ export default function Settings() {
   const { theme, setTheme } = useTheme();
 
   const handleArchiveAll = () => {
-    const updated = conversations.map(c => ({ ...c, pinned: false })); // Logic for archive can be refined if there's an actual 'archived' state, for now we'll mock success
+    const updated = conversations.map(c => ({ ...c, pinned: false }));
     setConversations(updated);
     toast({ title: "Chats Archived", description: "All conversations have been moved to archive." });
   };
@@ -318,7 +318,6 @@ export default function Settings() {
                       <p className="text-sm text-muted-foreground leading-relaxed font-medium">Understands the world through images, code, and documents with incredible precision.</p>
                     </AccordionContent>
                   </AccordionItem>
-                  {/* ... other accordion items similarly styled ... */}
                 </div>
               </Accordion>
 
@@ -405,10 +404,12 @@ export default function Settings() {
           )}
 
           {activeTab === "personalization" && (
-            <div className="space-y-10 animate-in fade-in slide-in-from-right-4 duration-300 pb-20">
-              <h2 className="text-2xl font-bold">Personalization</h2>
+            <div className="space-y-12 animate-in fade-in slide-in-from-bottom-4 duration-500">
+              <div className="space-y-2">
+                <h2 className="text-4xl font-black tracking-tighter">Personalization</h2>
+                <p className="text-muted-foreground">Manage Zeno's unique identity and your preferences.</p>
+              </div>
 
-              {/* Memory Section */}
               <div className="space-y-6">
                 <div className="flex items-center justify-between">
                   <h3 className="text-lg font-semibold">Memory</h3>
@@ -428,315 +429,103 @@ export default function Settings() {
                           Memory storage can hold up to 50 items. If this limit is exceeded, the oldest memories will be removed.
                         </p>
 
-                        <div className="space-y-3 max-h-[400px] overflow-y-auto pr-2 custom-scrollbar">
-                          {memories.map((memory) => (
-                            <div key={memory.id} className="group relative bg-[#242424] hover:bg-[#2a2a2a] border border-border/20 rounded-xl transition-colors p-4">
-                              <div className="flex items-start justify-between gap-4">
-                                <p className="text-sm leading-relaxed pr-8">{memory.content}</p>
-                                <Button 
-                                  variant="ghost" 
-                                  size="icon" 
-                                  className="h-8 w-8 text-muted-foreground hover:text-destructive hover:bg-destructive/10 opacity-0 group-hover:opacity-100 transition-opacity absolute right-2 top-2"
-                                  onClick={() => deleteMemory(memory.id)}
-                                >
-                                  <Trash2 className="w-4 h-4" />
-                                </Button>
-                              </div>
-                            </div>
-                          ))}
-                          {memories.length === 0 && (
-                            <div className="text-center py-20 bg-muted/5 rounded-2xl border border-dashed border-border/20">
-                              <Brain className="w-8 h-8 mx-auto mb-3 opacity-10" />
-                              <p className="text-sm text-muted-foreground">No memories saved yet.</p>
-                            </div>
-                          )}
-                        </div>
-
-                        <div className="flex justify-end pt-4 border-t border-border/10">
-                          <Button 
-                            variant="outline" 
-                            size="sm" 
-                            className="rounded-full border-destructive/40 text-destructive hover:bg-destructive/10 h-9 px-6 text-xs font-bold"
-                            onClick={() => {
-                              if (confirm("Forget all memories? This cannot be undone.")) {
-                                memories.forEach(m => deleteMemory(m.id));
-                              }
-                            }}
-                          >
-                            Forget All
-                          </Button>
-                        </div>
-                      </div>
-                    </DialogContent>
-                  </Dialog>
-                </div>
-                
-                <div className="space-y-6 pt-2">
-                  <div className="flex items-center justify-between py-2">
-                    <div className="space-y-0.5">
-                      <div className="font-medium text-sm">Reference saved memories</div>
-                      <div className="text-[12px] text-muted-foreground">Zeno will save and reference memories when generating replies.</div>
-                    </div>
-                    <Switch defaultChecked className="data-[state=checked]:bg-primary" />
-                  </div>
-
-                  <Separator className="opacity-50" />
-
-                  <div className="flex items-center justify-between py-2">
-                    <div className="space-y-0.5">
-                      <div className="font-medium text-sm">Reference the chat history</div>
-                      <div className="text-[12px] text-muted-foreground">Zeno will reference saved memory when generating responses.</div>
-                    </div>
-                    <Switch defaultChecked className="data-[state=checked]:bg-primary" />
-                  </div>
-                </div>
-              </div>
-
-              {/* Customize Section */}
-              <div className="space-y-6 pt-4">
-                <div className="flex items-center justify-between">
-                  <h3 className="text-lg font-semibold">Customize Zeno</h3>
-                  <Dialog>
-                    <DialogTrigger asChild>
-                      <Button variant="outline" size="sm" className="h-8 gap-2 text-xs font-semibold px-4 rounded-lg bg-muted/30">
-                        <Sliders className="w-3 h-3" /> Settings
-                      </Button>
-                    </DialogTrigger>
-                    <DialogContent className="max-w-2xl bg-[#1a1a1a] border-border/40 p-0 overflow-hidden rounded-2xl">
-                      <div className="p-8 space-y-8">
-                        <DialogHeader className="flex flex-row items-center justify-between space-y-0">
-                          <DialogTitle className="text-xl font-bold">Customize Zeno</DialogTitle>
-                        </DialogHeader>
-
-                        <div className="space-y-8 overflow-y-auto max-h-[70vh] pr-2 custom-scrollbar">
-                          {/* Nickname */}
-                          <div className="space-y-3">
-                            <label className="text-sm font-semibold">What would you like Zeno to call you?</label>
-                            <div className="relative">
-                              <Input 
-                                placeholder="Nickname" 
-                                className="bg-[#242424] border-border/20 h-12 rounded-xl text-sm px-4 focus-visible:ring-primary/30"
-                                maxLength={128}
-                                value={name}
-                                onChange={(e) => setName(e.target.value)}
-                              />
-                              <div className="absolute right-3 top-1/2 -translate-y-1/2 text-[10px] text-muted-foreground font-medium">
-                                {name.length}/128
-                              </div>
-                            </div>
-                          </div>
-
-                          {/* Context */}
-                          <div className="space-y-3">
-                            <label className="text-sm font-semibold">What would you like Zeno to know about you to better tailor its responses to your needs?</label>
-                            <div className="relative">
-                              <Textarea 
-                                placeholder="For example: Preparing for high school students; Python developers or Little Red Book creators"
-                                className="bg-[#242424] border-border/20 min-h-[80px] rounded-xl text-sm p-4 focus-visible:ring-primary/30 resize-none"
-                                maxLength={500}
-                              />
-                              <div className="absolute right-3 bottom-3 text-[10px] text-muted-foreground font-medium">
-                                0/500
-                              </div>
-                            </div>
-                          </div>
-
-                          {/* Response Style */}
-                          <div className="space-y-3">
-                            <label className="text-sm font-semibold">How would you like Zeno to respond?</label>
-                            <div className="grid grid-cols-2 gap-3">
-                              {RESPONDER_STYLES.map((style) => (
-                                <button
-                                  key={style.id}
-                                  className="flex flex-col items-start p-4 rounded-xl border border-border/20 bg-[#242424] hover:bg-[#2a2a2a] transition-colors text-left group"
-                                >
-                                  <div className="font-bold text-sm mb-1">{style.label}</div>
-                                  <div className="text-[11px] text-muted-foreground leading-tight">{style.description}</div>
-                                </button>
-                              ))}
-                            </div>
-                          </div>
-
-                          {/* Custom Instructions */}
-                          <div className="space-y-3">
-                            <div className="flex items-center gap-1.5">
-                              <label className="text-sm font-semibold">Custom instruction: How should Zeno behave?</label>
-                              <HelpCircle className="w-3.5 h-3.5 text-muted-foreground" />
-                            </div>
-                            <Textarea 
-                              placeholder="Please specify the rules, roles you expect Zeno to follow, or the specific response format you would like to be used."
-                              className="bg-[#242424] border-border/20 min-h-[100px] rounded-xl text-sm p-4 focus-visible:ring-primary/30 resize-none"
+                        <div className="space-y-4">
+                          <div className="flex gap-2">
+                            <Input
+                              placeholder="Add something to remember..."
+                              value={newMemory}
+                              onChange={(e) => setNewMemory(e.target.value)}
+                              onKeyDown={(e) => e.key === "Enter" && handleAddMemory()}
+                              className="rounded-xl border-border/20 bg-muted/20"
                             />
+                            <Button onClick={handleAddMemory} size="icon" className="rounded-xl flex-shrink-0">
+                              <Plus className="w-4 h-4" />
+                            </Button>
+                          </div>
+                          
+                          <div className="space-y-3 max-h-[400px] overflow-y-auto pr-2 custom-scrollbar">
+                            {memories.map((memory) => (
+                              <div key={memory.id} className="group relative bg-[#242424] hover:bg-[#2a2a2a] border border-border/20 rounded-xl transition-colors p-4">
+                                <div className="flex items-start justify-between gap-4">
+                                  <p className="text-sm leading-relaxed pr-8">{memory.content}</p>
+                                  <Button 
+                                    variant="ghost" 
+                                    size="icon" 
+                                    className="h-8 w-8 text-muted-foreground hover:text-destructive hover:bg-destructive/10 opacity-0 group-hover:opacity-100 transition-opacity absolute right-2 top-2"
+                                    onClick={() => deleteMemory(memory.id)}
+                                  >
+                                    <Trash2 className="w-4 h-4" />
+                                  </Button>
+                                </div>
+                              </div>
+                            ))}
+                            {memories.length === 0 && (
+                              <div className="text-center py-20 bg-muted/5 rounded-2xl border border-dashed border-border/20">
+                                <Brain className="w-8 h-8 mx-auto mb-3 opacity-10" />
+                                <p className="text-sm text-muted-foreground">No memories saved yet.</p>
+                              </div>
+                            )}
                           </div>
                         </div>
-
-                        <div className="flex items-center justify-between pt-6 border-t border-border/10">
-                          <div className="flex items-center gap-3">
-                            <Switch defaultChecked className="data-[state=checked]:bg-primary" />
-                            <span className="text-sm font-medium">Enable in new chat</span>
-                          </div>
-                          <div className="flex items-center gap-3">
-                            <DialogTrigger asChild>
-                              <Button variant="ghost" className="rounded-xl px-6 h-11 text-sm font-medium hover:bg-muted/10">Cancel</Button>
-                            </DialogTrigger>
-                            <Button className="rounded-xl px-8 h-11 text-sm font-bold bg-primary hover:bg-primary/90">Save</Button>
-                          </div>
-                        </div>
+                      </div>
+                      
+                      <div className="p-6 bg-[#242424] border-t border-border/40 flex justify-end gap-3">
+                        <Button variant="outline" className="rounded-xl px-6 h-9 text-xs font-bold border-border/40">Close</Button>
                       </div>
                     </DialogContent>
                   </Dialog>
                 </div>
-              </div>
-
-              <div className="flex justify-end gap-3 pt-8 border-t border-border/50">
-                <Button variant="ghost" onClick={() => setLocation("/")} className="text-sm">Cancel</Button>
-                <Button onClick={handleSave} disabled={isSaving} className="text-sm">
-                  {isSaving ? "Saving..." : "Save Changes"}
-                </Button>
               </div>
             </div>
           )}
 
           {activeTab === "account" && (
-            <div className="space-y-10 animate-in fade-in slide-in-from-right-4 duration-300">
-              <h2 className="text-2xl font-bold">Account</h2>
-
-              <div className="space-y-8">
-                <div className="flex items-center justify-between py-2">
-                  <div className="flex items-center gap-4">
-                    <div className="w-12 h-12 rounded-full overflow-hidden border border-border/50">
-                      <img 
-                        src={AVATAR_OPTIONS.find(a => a.id === userAvatar)?.image || avatar1} 
-                        alt="Profile" 
-                        className="w-full h-full object-cover"
-                      />
-                    </div>
-                    <div className="space-y-1">
-                      <div className="font-bold text-lg">{userName || "User"}</div>
-                      <div className="text-xs text-muted-foreground">{user?.email || "osanisrael2@gmail.com"}</div>
-                    </div>
-                  </div>
-                  <Button variant="outline" size="sm" onClick={() => setActiveTab("personalization")} className="h-8 text-xs font-semibold px-4 rounded-lg bg-muted/30">
-                    Edit account
-                  </Button>
-                </div>
-
-                <Separator className="opacity-50" />
-
-                <div className="flex items-center justify-between py-2">
-                  <div className="font-medium text-sm">Password management</div>
-                  <Button variant="outline" size="sm" className="h-8 text-xs font-semibold px-4 rounded-lg bg-muted/30">
-                    Change password
-                  </Button>
-                </div>
-
-                <Separator className="opacity-50" />
-
-                <div className="flex items-center justify-between py-2">
-                  <div className="font-medium text-sm">Account Management</div>
-                  <Button 
-                    variant="outline" 
-                    size="sm" 
-                    onClick={() => {
-                      if (confirm("Are you sure you want to delete your account? This action is irreversible.")) {
-                        toast({ title: "Request Sent", description: "Your account deletion request is being processed.", variant: "destructive" });
-                      }
-                    }}
-                    className="h-8 text-xs font-semibold px-4 rounded-lg border-destructive/30 text-destructive hover:bg-destructive/10 hover:text-destructive"
-                  >
-                    Delete Account
-                  </Button>
-                </div>
+            <div className="space-y-12 animate-in fade-in slide-in-from-bottom-4 duration-500">
+              <div className="space-y-2">
+                <h2 className="text-4xl font-black tracking-tighter">Account</h2>
+                <p className="text-muted-foreground">Manage your profile and authentication status.</p>
               </div>
 
-              <div className="flex justify-end gap-3 pt-8 border-t border-border/50">
-                <Button variant="ghost" onClick={() => setLocation("/")} className="text-sm">Cancel</Button>
-                <Button onClick={handleSave} disabled={isSaving} className="text-sm">
-                  {isSaving ? "Saving..." : "Save Changes"}
+              <Card className="p-8 border-border/40 bg-card/50 backdrop-blur-md shadow-2xl shadow-foreground/5 rounded-3xl">
+                <div className="flex items-center gap-6">
+                  <div className="w-20 h-20 rounded-3xl bg-primary/10 flex items-center justify-center text-primary">
+                    <User className="w-10 h-10" />
+                  </div>
+                  <div className="space-y-1">
+                    <div className="text-2xl font-black tracking-tight">{user?.displayName || userName || "Zeno User"}</div>
+                    <div className="text-sm text-muted-foreground">{user?.email || "No email connected"}</div>
+                  </div>
+                </div>
+              </Card>
+
+              <div className="flex justify-end pt-8">
+                <Button variant="outline" className="rounded-2xl border-destructive/40 text-destructive hover:bg-destructive/10 h-12 px-8 font-black">
+                  Sign Out
                 </Button>
               </div>
             </div>
           )}
 
           {activeTab === "about" && (
-            <div className="space-y-10 animate-in fade-in slide-in-from-right-4 duration-300 pb-20">
-              <h2 className="text-2xl font-bold">About</h2>
-
-              <div className="space-y-8">
-                <div className="flex flex-col items-center justify-center py-10 space-y-4 bg-muted/30 rounded-3xl border border-border/50">
-                  <div className="w-20 h-20 rounded-2xl bg-primary flex items-center justify-center text-primary-foreground shadow-lg shadow-primary/20">
-                    <Brain className="w-10 h-10" />
-                  </div>
-                  <div className="text-center space-y-1">
-                    <h3 className="text-2xl font-bold tracking-tight">Zeno AI</h3>
-                    <p className="text-sm text-muted-foreground">Version 2.4.0 (Stable Build)</p>
-                  </div>
-                </div>
-
-                <div className="space-y-6">
-                  <div className="space-y-2">
-                    <h4 className="text-sm font-semibold">Our Mission</h4>
-                    <p className="text-sm text-muted-foreground leading-relaxed text-justify">
-                      Zeno is a next-generation AI platform designed to empower creativity and productivity through advanced language and vision intelligence. Built for individuals and teams who demand high-performance reasoning and seamless interaction, Zeno provides a diverse portfolio of models including Zeno-Max for complex reasoning and Zeno-Coder for specialized programming tasks. Our mission is to make intelligent, responsible models accessible to everyone.
-                    </p>
-                  </div>
-
-                  <Separator className="opacity-50" />
-
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <Button variant="outline" className="justify-start gap-3 h-12 px-4 rounded-xl bg-muted/20 border-border/50" asChild>
-                      <a href="https://discord.gg/zenoai" target="_blank">
-                        <SiDiscord className="w-4 h-4 text-[#5865F2]" />
-                        <span className="text-xs font-medium">Join Discord</span>
-                      </a>
-                    </Button>
-                    <Button variant="outline" className="justify-start gap-3 h-12 px-4 rounded-xl bg-muted/20 border-border/50" asChild>
-                      <a href="mailto:osanisrael2@gmail.com">
-                        <HelpCircle className="w-4 h-4 text-orange-500" />
-                        <span className="text-xs font-medium">Contact Support</span>
-                      </a>
-                    </Button>
-                  </div>
-
-                  <Separator className="opacity-50" />
-
-                  <div className="space-y-3">
-                    <button 
-                      className="w-full flex items-center justify-between text-xs text-muted-foreground hover:text-foreground transition-colors group"
-                      onClick={() => window.open("/legal/terms.html", "_blank")}
-                    >
-                      <span>Terms of Service</span>
-                      <ChevronRight className="w-3 h-3 group-hover:translate-x-0.5 transition-transform" />
-                    </button>
-                    <button 
-                      className="w-full flex items-center justify-between text-xs text-muted-foreground hover:text-foreground transition-colors group"
-                      onClick={() => window.open("/legal/privacy.html", "_blank")}
-                    >
-                      <span>Privacy Policy</span>
-                      <ChevronRight className="w-3 h-3 group-hover:translate-x-0.5 transition-transform" />
-                    </button>
-                    <button 
-                      className="w-full flex items-center justify-between text-xs text-muted-foreground hover:text-foreground transition-colors group"
-                      onClick={() => window.open("/legal/licenses.html", "_blank")}
-                    >
-                      <span>Software Licenses</span>
-                      <ChevronRight className="w-3 h-3 group-hover:translate-x-0.5 transition-transform" />
-                    </button>
-                  </div>
-
-                  <div className="pt-8 text-center">
-                    <p className="text-[10px] text-muted-foreground uppercase tracking-widest font-bold">
-                      © 2026 Zeno Intelligence Systems. All Rights Reserved.
-                    </p>
-                  </div>
-                </div>
+            <div className="space-y-12 animate-in fade-in slide-in-from-bottom-4 duration-500">
+              <div className="space-y-2">
+                <h2 className="text-4xl font-black tracking-tighter">About</h2>
+                <p className="text-muted-foreground">Learn more about the Zeno AI ecosystem.</p>
               </div>
 
-              <div className="flex justify-end gap-3 pt-8 border-t border-border/50">
-                <Button variant="ghost" onClick={() => setLocation("/")} className="text-sm">Cancel</Button>
-                <Button onClick={handleSave} disabled={isSaving} className="text-sm">
-                  {isSaving ? "Saving..." : "Save Changes"}
-                </Button>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div className="space-y-4">
+                  <div className="font-black text-xl tracking-tight">Version 1.2.0</div>
+                  <p className="text-sm text-muted-foreground leading-relaxed">Zeno is built to provide high-performance intelligence with a focus on speed, privacy, and beautiful design.</p>
+                </div>
+                <div className="space-y-4">
+                  <div className="font-black text-xl tracking-tight">Connect</div>
+                  <div className="flex gap-4">
+                    <Button variant="ghost" size="icon" className="rounded-xl bg-muted/20"><Github className="w-4 h-4" /></Button>
+                    <Button variant="ghost" size="icon" className="rounded-xl bg-muted/20"><Twitter className="w-4 h-4" /></Button>
+                    <Button variant="ghost" size="icon" className="rounded-xl bg-muted/20"><Linkedin className="w-4 h-4" /></Button>
+                  </div>
+                </div>
               </div>
             </div>
           )}

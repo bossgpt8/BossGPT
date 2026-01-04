@@ -67,6 +67,7 @@ export default function Chat() {
     setConversations,
     addMessage,
     updateMessage,
+    addMemory,
     addImage,
     removeImage,
     clearImages,
