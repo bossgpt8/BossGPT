@@ -91,11 +91,19 @@ function App() {
     };
   }, []);
 
-  // Show offline screen if no internet connection on initial launch
-  if (!isOnline && !isInitialized) {
+  // Show offline screen if no internet connection
+  if (!isOnline) {
     return (
       <ThemeProvider>
         <OfflineScreen isOnline={false} />
+      </ThemeProvider>
+    );
+  }
+
+  if (!isInitialized) {
+    return (
+      <ThemeProvider>
+        <OfflineScreen isOnline={true} isLoading={true} />
       </ThemeProvider>
     );
   }
