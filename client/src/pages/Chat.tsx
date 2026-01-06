@@ -665,6 +665,17 @@ export default function Chat() {
     }
   };
 
+  const handleEditMessage = (id: string, content: string) => {
+    updateMessage(id, content);
+  };
+
+  const handleImageEdit = (imageUrl: string) => {
+    addImage(imageUrl);
+    toast({
+      description: "Image added to your next message for editing.",
+    });
+  };
+
   const handleRegenerate = () => {
     if (messages.length < 2) return;
 
@@ -737,6 +748,7 @@ export default function Chat() {
                                 useChatStore.getState().updateMessage(id, content)
                             : undefined
                         }
+                        onImageEdit={handleImageEdit}
                       />
                     ))}
                     {isGenerating && (

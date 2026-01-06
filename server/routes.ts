@@ -77,13 +77,13 @@ KNOWLEDGE & SEARCH:
 
 ONLY mention your name/identity when specifically asked (e.g., "what is your name", "who are you", "who made you")`;
 
+      // Filter out any messages with invalid content to prevent API errors
+      const validMessages = messages.filter(m => m && (typeof m.content === 'string' || Array.isArray(m.content)));
+
       if (thinkingEnabled) {
         systemContent += `\n\nTHINKING MODE ENABLED:
 Please provide extremely detailed, well-reasoned, and thoughtful responses. Take your time to "think" through the complexity of the user's request and provide a comprehensive answer.`;
       }
-
-      // Filter out any messages with invalid content to prevent API errors
-      const validMessages = messages.filter(m => m && (typeof m.content === 'string' || Array.isArray(m.content)));
 
       if (enableWebSearch && process.env.TAVILY_API_KEY) {
         try {

@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import { Copy, Check, Volume2, ChevronLeft, ChevronRight, RotateCcw, Pencil, X } from "lucide-react";
+import { Copy, Check, Volume2, ChevronLeft, ChevronRight, RotateCcw, Pencil, X, Download, Image as ImageIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Textarea } from "@/components/ui/textarea";
@@ -25,6 +25,7 @@ interface MessageBubbleProps {
   onSpeak?: (text: string) => void;
   onRegenerate?: () => void;
   onEdit?: (id: string, content: string) => void;
+  onImageEdit?: (imageUrl: string) => void;
   branchCount?: number;
   currentBranch?: number;
   onBranchChange?: (index: number) => void;
@@ -48,6 +49,7 @@ export function MessageBubble({
   onSpeak,
   onRegenerate,
   onEdit,
+  onImageEdit,
   branchCount = 1,
   currentBranch = 0,
   onBranchChange,
@@ -56,11 +58,21 @@ export function MessageBubble({
   const [renderedContent, setRenderedContent] = useState("");
   const [isEditing, setIsEditing] = useState(false);
   const [editContent, setEditContent] = useState(message.content);
+  const [imageUrls, setImageUrls] = useState<string[]>([]);
   const contentRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   useEffect(() => {
     const renderMarkdown = async () => {
+      // Extract images from markdown
+      const imgRegex = /!\[.*?\]\((.*?)\)/g;
+      const urls: string[] = [];
+      let match;
+      while ((match = imgRegex.exec(message.content)) !== null) {
+        urls.push(match[1]);
+      }
+      setImageUrls(urls);
+
       if (isUser) {
         setRenderedContent(DOMPurify.sanitize(message.content));
         return;
@@ -85,6 +97,15 @@ export function MessageBubble({
 
     renderMarkdown();
   }, [message.content, isUser]);
+
+  const handleDownload = (url: string) => {
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = `zeno-image-${Date.now()}.png`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
 
   const handleCopy = async () => {
     try {
@@ -206,14 +227,41 @@ export function MessageBubble({
             {message.images && message.images.length > 0 && (
               <div className="flex flex-wrap gap-2 mb-2">
                 {message.images.map((img, i) => (
-                  <img
-                    key={i}
-                    src={img}
-                    alt={`Attached ${i + 1}`}
-                    className="max-w-[150px] max-h-[150px] rounded-lg object-cover cursor-pointer border-2 border-current"
-                    onClick={() => window.open(img, "_blank")}
-                    data-testid={`image-attachment-${i}`}
-                  />
+                  <div key={i} className="relative group/img">
+                    <img
+                      src={img}
+                      alt={`Attached ${i + 1}`}
+                      className="max-w-[150px] max-h-[150px] rounded-lg object-cover cursor-pointer border-2 border-current"
+                      onClick={() => window.open(img, "_blank")}
+                      data-testid={`image-attachment-${i}`}
+                    />
+                    <div className="absolute top-1 right-1 flex gap-1 opacity-0 group-hover/img:opacity-100 transition-opacity">
+                      <Button
+                        size="icon"
+                        variant="secondary"
+                        className="h-6 w-6 rounded-full shadow-sm"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleDownload(img);
+                        }}
+                        title="Download"
+                      >
+                        <Download className="w-3 h-3" />
+                      </Button>
+                      <Button
+                        size="icon"
+                        variant="secondary"
+                        className="h-6 w-6 rounded-full shadow-sm"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          onImageEdit?.(img);
+                        }}
+                        title="Edit"
+                      >
+                        <ImageIcon className="w-3 h-3" />
+                      </Button>
+                    </div>
+                  </div>
                 ))}
               </div>
             )}
@@ -248,12 +296,40 @@ export function MessageBubble({
                 </div>
               </div>
             ) : (
-              <div
-                ref={contentRef}
-                className="prose prose-base dark:prose-invert max-w-none break-words text-base leading-relaxed"
-                dangerouslySetInnerHTML={{ __html: renderedContent }}
-                data-testid="div-message-content"
-              />
+              <div className="space-y-4">
+                <div
+                  ref={contentRef}
+                  className="prose prose-base dark:prose-invert max-w-none break-words text-base leading-relaxed"
+                  dangerouslySetInnerHTML={{ __html: renderedContent }}
+                  data-testid="div-message-content"
+                />
+                {!isUser && imageUrls.length > 0 && (
+                  <div className="flex flex-wrap gap-2 mt-2">
+                    {imageUrls.map((url, i) => (
+                      <div key={i} className="flex gap-2">
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          className="h-7 px-2 text-[10px] rounded-full font-bold bg-background/50 backdrop-blur-sm"
+                          onClick={() => handleDownload(url)}
+                        >
+                          <Download className="w-3 h-3 mr-1" />
+                          Download
+                        </Button>
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          className="h-7 px-2 text-[10px] rounded-full font-bold bg-background/50 backdrop-blur-sm"
+                          onClick={() => onImageEdit?.(url)}
+                        >
+                          <ImageIcon className="w-3 h-3 mr-1" />
+                          Edit
+                        </Button>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
             )}
           </div>
 
