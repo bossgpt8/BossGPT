@@ -374,196 +374,220 @@ export default function Chat() {
       updateConversationTitle(conversationId, title);
     }
 
-    setIsGenerating(true);
+    const maxRetries = 3;
+    let attempt = 1;
+    let success = false;
 
-    try {
-      // Check if using image generation model
-      if (isImageModel(currentModel)) {
-        const response = await fetchWithTimeout("/api/generate-image", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ prompt: content, modelId: currentModel }),
-        }, 60000);
-
-        const data = await response.json();
-
-        if (data.error) {
-          throw new Error(data.error);
+    while (attempt <= maxRetries && !success) {
+      setIsGenerating(true);
+      try {
+        if (attempt > 1) {
+          toast({
+            title: `Retry Attempt ${attempt - 1}`,
+            description: `Retrying to get a response (Attempt ${attempt}/${maxRetries})...`,
+          });
         }
 
-        const assistantMessage: Message = {
-          id: nanoid(),
-          role: "assistant",
-          content: `Here's your generated image:\n\n![Generated Image](${data.imageUrl})`,
-          timestamp: Date.now(),
-          parentId: userMessage.id,
-        };
-        addMessage(assistantMessage);
+        // Check if using image generation model
+        if (isImageModel(currentModel)) {
+          const response = await fetchWithTimeout("/api/generate-image", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ prompt: content, modelId: currentModel }),
+          }, 60000);
 
-        // Sync assistant response to Firestore
-        if (user?.uid && conversationId) {
-          const currentConversation = useChatStore.getState().conversations.find(c => c.id === conversationId);
-          if (currentConversation) {
-            saveConversation(user.uid, conversationId, currentConversation).catch(console.error);
+          const data = await response.json();
+
+          if (data.error) {
+            throw new Error(data.error);
           }
-        }
 
-        if (voiceEnabled) {
-          speakText("I've generated an image for you!");
-        }
-      } else {
-        // Chat completion with streaming
-        const chatMessages = [
-          ...messages.map((m) => ({
-            role: m.role,
-            content: m.images?.length
-              ? [
-                  { type: "text", text: m.content },
-                  ...m.images.map((img) => ({
-                    type: "image_url",
-                    image_url: { url: img },
-                  })),
-                ]
-              : m.content,
-          })),
-          {
-            role: "user",
-            content: userMessage.images?.length
-              ? [
-                  { type: "text", text: content },
-                  ...userMessage.images.map((img) => ({
-                    type: "image_url",
-                    image_url: { url: img },
-                  })),
-                ]
-              : content,
-          },
-        ];
+          const assistantMessage: Message = {
+            id: nanoid(),
+            role: "assistant",
+            content: `Here's your generated image:\n\n![Generated Image](${data.imageUrl})`,
+            timestamp: Date.now(),
+            parentId: userMessage.id,
+          };
+          addMessage(assistantMessage);
 
-        const response = await fetchWithTimeout("/api/chat", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            messages: chatMessages,
-            model: currentModel,
-            customPrompt: customSystemPrompt,
-            userName,
-            userGender,
-            enableWebSearch: searchEnabled,
-            thinkingEnabled: thinkingEnabled,
-            memories: useChatStore.getState().memories.map(m => m.content),
-          }),
-        }, 180000);
-
-        if (!response.ok) {
-          const errorData = await response.json();
-          throw new Error(errorData.error || "Failed to get response");
-        }
-
-        let fullContent = "";
-        const assistantMessage: Message = {
-          id: nanoid(),
-          role: "assistant",
-          content: "",
-          timestamp: Date.now(),
-          parentId: userMessage.id,
-        };
-
-        addMessage(assistantMessage);
-
-        // Sync assistant message skeleton to Firestore
-        if (user?.uid && conversationId) {
-          const currentConversation = useChatStore.getState().conversations.find(c => c.id === conversationId);
-          if (currentConversation) {
-            saveConversation(user.uid, conversationId, currentConversation).catch(console.error);
+          // Sync assistant response to Firestore
+          if (user?.uid && conversationId) {
+            const currentConversation = useChatStore.getState().conversations.find(c => c.id === conversationId);
+            if (currentConversation) {
+              saveConversation(user.uid, conversationId, currentConversation).catch(console.error);
+            }
           }
-        }
 
-        if (response.body) {
-          const reader = response.body.getReader();
-          const decoder = new TextDecoder();
+          if (voiceEnabled) {
+            speakText("I've generated an image for you!");
+          }
+          success = true;
+        } else {
+          // Chat completion with streaming
+          const chatMessages = [
+            ...messages.map((m) => ({
+              role: m.role,
+              content: m.images?.length
+                ? [
+                    { type: "text", text: m.content },
+                    ...m.images.map((img) => ({
+                      type: "image_url",
+                      image_url: { url: img },
+                    })),
+                  ]
+                : m.content,
+            })),
+            {
+              role: "user",
+              content: userMessage.images?.length
+                ? [
+                    { type: "text", text: content },
+                    ...userMessage.images.map((img) => ({
+                      type: "image_url",
+                      image_url: { url: img },
+                    })),
+                  ]
+                : content,
+            },
+          ];
 
-          try {
-            let buffer = "";
+          const response = await fetchWithTimeout("/api/chat", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              messages: chatMessages,
+              model: currentModel,
+              customPrompt: customSystemPrompt,
+              userName,
+              userGender,
+              enableWebSearch: searchEnabled,
+              thinkingEnabled: thinkingEnabled,
+              memories: useChatStore.getState().memories.map(m => m.content),
+            }),
+          }, 180000);
 
-            while (true) {
-              const { done, value } = await reader.read();
-              if (done) break;
+          if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.error || "Failed to get response");
+          }
 
-              buffer += decoder.decode(value, { stream: true });
-              const lines = buffer.split("\n");
-              
-              for (let i = 0; i < lines.length - 1; i++) {
-                const line = lines[i].trim();
-                if (!line || !line.startsWith("data: ")) continue;
+          let fullContent = "";
+          const assistantMessage: Message = {
+            id: nanoid(),
+            role: "assistant",
+            content: "",
+            timestamp: Date.now(),
+            parentId: userMessage.id,
+          };
 
-                const dataString = line.slice(6).trim();
-                if (dataString === "[DONE]") continue;
+          addMessage(assistantMessage);
 
-                try {
-                  const parsed = JSON.parse(dataString);
-                  const content = parsed.content || parsed.choices?.[0]?.delta?.content || "";
-                  if (content) {
-                    fullContent += content;
-                    updateMessage(assistantMessage.id, fullContent);
+          // Sync assistant message skeleton to Firestore
+          if (user?.uid && conversationId) {
+            const currentConversation = useChatStore.getState().conversations.find(c => c.id === conversationId);
+            if (currentConversation) {
+              saveConversation(user.uid, conversationId, currentConversation).catch(console.error);
+            }
+          }
+
+          if (response.body) {
+            const reader = response.body.getReader();
+            const decoder = new TextDecoder();
+
+            try {
+              let buffer = "";
+
+              while (true) {
+                const { done, value } = await reader.read();
+                if (done) break;
+
+                buffer += decoder.decode(value, { stream: true });
+                const lines = buffer.split("\n");
+                
+                for (let i = 0; i < lines.length - 1; i++) {
+                  const line = lines[i].trim();
+                  if (!line || !line.startsWith("data: ")) continue;
+
+                  const dataString = line.slice(6).trim();
+                  if (dataString === "[DONE]") continue;
+
+                  try {
+                    const parsed = JSON.parse(dataString);
+                    const content = parsed.content || parsed.choices?.[0]?.delta?.content || "";
+                    if (content) {
+                      fullContent += content;
+                      updateMessage(assistantMessage.id, fullContent);
+                    }
+                  } catch (e) {
+                    // If it's not valid JSON, it might be the raw content if OpenRouter relayed it differently
+                    // but we should stick to the data: JSON format
                   }
-                } catch (e) {
-                  // If it's not valid JSON, it might be the raw content if OpenRouter relayed it differently
-                  // but we should stick to the data: JSON format
+                }
+                buffer = lines[lines.length - 1];
+              }
+              
+              // Handle last bit of buffer
+              if (buffer.trim().startsWith("data: ")) {
+                const dataString = buffer.trim().slice(6).trim();
+                if (dataString && dataString !== "[DONE]") {
+                  try {
+                    const parsed = JSON.parse(dataString);
+                    const content = parsed.content || parsed.choices?.[0]?.delta?.content || "";
+                    if (content) {
+                      fullContent += content;
+                      updateMessage(assistantMessage.id, fullContent);
+                    }
+                  } catch (e) {}
                 }
               }
-              buffer = lines[lines.length - 1];
-            }
-            
-            // Handle last bit of buffer
-            if (buffer.trim().startsWith("data: ")) {
-              const dataString = buffer.trim().slice(6).trim();
-              if (dataString && dataString !== "[DONE]") {
-                try {
-                  const parsed = JSON.parse(dataString);
-                  const content = parsed.content || parsed.choices?.[0]?.delta?.content || "";
-                  if (content) {
-                    fullContent += content;
-                    updateMessage(assistantMessage.id, fullContent);
-                  }
-                } catch (e) {}
-              }
-            }
 
-            // Sync full streaming content to Firestore
-            if (user?.uid && conversationId) {
-              const currentConversation = useChatStore.getState().conversations.find(c => c.id === conversationId);
-              if (currentConversation) {
-                saveConversation(user.uid, conversationId, currentConversation).catch(console.error);
+              // Sync full streaming content to Firestore
+              if (user?.uid && conversationId) {
+                const currentConversation = useChatStore.getState().conversations.find(c => c.id === conversationId);
+                if (currentConversation) {
+                  saveConversation(user.uid, conversationId, currentConversation).catch(console.error);
+                }
               }
+            } catch (error) {
+              console.error("Stream reading error:", error);
+              if (!fullContent) throw error;
             }
-          } catch (error) {
-            console.error("Stream reading error:", error);
-            if (!fullContent) throw error;
           }
-        }
 
-        if (voiceEnabled && fullContent) {
-          speakText(fullContent);
+          if (voiceEnabled && fullContent) {
+            speakText(fullContent);
+          }
+          success = true;
+        }
+      } catch (error: any) {
+        console.error(`Attempt ${attempt} failed:`, error);
+        
+        if (attempt === maxRetries) {
+          let errorTitle = "Connection error";
+          let errorDescription = "I've tried 3 times but still can't get a response. Please check your internet connection and try again later.";
+          
+          if (error.message.includes("timeout")) {
+            errorTitle = "Request timed out";
+          }
+          
+          toast({
+            title: errorTitle,
+            description: errorDescription,
+            variant: "destructive",
+          });
+        }
+        
+        attempt++;
+        if (attempt <= maxRetries) {
+          // Wait a bit before retrying
+          await new Promise(resolve => setTimeout(resolve, 2000));
+        }
+      } finally {
+        if (success || attempt > maxRetries) {
+          setIsGenerating(false);
         }
       }
-    } catch (error: any) {
-      let errorTitle = "Something went wrong";
-      let errorDescription = "I ran into a bit of trouble getting that response for you. Let's try again?";
-      
-      // Handle timeout errors
-      if (error.message.includes("timeout") || error.message.includes("no internet")) {
-        errorTitle = "Connection lost";
-        errorDescription = "It looks like your internet connection dropped or the server is a bit slow. Please check your connection and try again!";
-      }
-      
-      toast({
-        title: errorTitle,
-        description: errorDescription,
-        variant: "destructive",
-      });
-    } finally {
-      setIsGenerating(false);
     }
   };
 

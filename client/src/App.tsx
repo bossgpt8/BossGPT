@@ -91,8 +91,8 @@ function App() {
     };
   }, []);
 
-  // Show offline screen if no internet connection
-  if (!isOnline) {
+  // Show offline screen ONLY if no internet connection on startup
+  if (!isOnline && !isInitialized) {
     return (
       <ThemeProvider>
         <OfflineScreen isOnline={false} />
