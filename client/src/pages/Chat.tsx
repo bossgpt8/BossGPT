@@ -276,11 +276,11 @@ export default function Chat() {
     // Check for image generation keywords
     const isImageRequest = /generate (an )?image|create (an )?image|draw|paint/i.test(content);
     
-    if (isImageRequest && currentModel !== "Tongyi-MAI/Z-Image-Turbo") {
+    if (isImageRequest && currentModel !== "stabilityai/stable-diffusion-xl-base-1.0") {
       // Find the image generation model
-      const imageModel = AI_MODELS.image.find(m => m.id === "Tongyi-MAI/Z-Image-Turbo");
+      const imageModel = AI_MODELS.image.find(m => m.id === "stabilityai/stable-diffusion-xl-base-1.0") || AI_MODELS.image[0];
       if (imageModel) {
-        useChatStore.getState().setModel(imageModel.id);
+        useChatStore.getState().setCurrentModel(imageModel.id);
         toast({
           description: `Switched to ${imageModel.name} for image generation.`,
         });
