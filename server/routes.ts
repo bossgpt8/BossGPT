@@ -82,9 +82,12 @@ ONLY mention your name/identity when specifically asked (e.g., "what is your nam
 Please provide extremely detailed, well-reasoned, and thoughtful responses. Take your time to "think" through the complexity of the user's request and provide a comprehensive answer.`;
       }
 
+      // Filter out any messages with invalid content to prevent API errors
+      const validMessages = messages.filter(m => m && (typeof m.content === 'string' || Array.isArray(m.content)));
+
       if (enableWebSearch && process.env.TAVILY_API_KEY) {
         try {
-          const lastUserMessage = messages.filter(m => m.role === "user").pop();
+          const lastUserMessage = validMessages.filter(m => m.role === "user").pop();
           const searchQuery = typeof lastUserMessage?.content === 'string' 
             ? lastUserMessage.content 
             : "latest news and current events";
@@ -127,9 +130,7 @@ Please provide extremely detailed, well-reasoned, and thoughtful responses. Take
         content: systemContent
       };
 
-      // Filter out any messages with invalid content to prevent API errors
-      const validMessages = messages.filter(m => m && (typeof m.content === 'string' || Array.isArray(m.content)));
-    const messagesWithSystem = [systemMessage, ...validMessages];
+      const messagesWithSystem = [systemMessage, ...validMessages];
 
       // Add a specific instruction if the last message is about identity
       const lastMessage = validMessages[validMessages.length - 1];

@@ -230,7 +230,7 @@ export function ChatInput({
                 <Button
                   variant="ghost"
                   size="sm"
-                  className={`h-6 md:h-7 px-2 md:px-3 rounded-full text-[10px] md:text-xs font-bold transition-all ${thinkingEnabled ? "bg-background text-foreground shadow-sm" : "text-muted-foreground hover:text-foreground"}`}
+                  className={`h-6 md:h-7 px-2 md:px-3 rounded-full text-[10px] md:text-xs font-bold transition-all ${thinkingEnabled ? "bg-primary text-primary-foreground shadow-sm" : "text-muted-foreground hover:text-foreground"}`}
                   onClick={() => setThinkingEnabled(!thinkingEnabled)}
                 >
                   <Brain className="w-3 md:w-3.5 h-3 md:h-3.5 mr-1 md:mr-1.5" />
@@ -240,7 +240,7 @@ export function ChatInput({
                 <Button
                   variant="ghost"
                   size="sm"
-                  className={`h-6 md:h-7 px-2 md:px-3 rounded-full text-[10px] md:text-xs font-bold transition-all ${searchEnabled ? "bg-background text-foreground shadow-sm" : "text-muted-foreground hover:text-foreground"}`}
+                  className={`h-6 md:h-7 px-2 md:px-3 rounded-full text-[10px] md:text-xs font-bold transition-all ${searchEnabled ? "bg-primary text-primary-foreground shadow-sm" : "text-muted-foreground hover:text-foreground"}`}
                   onClick={() => setSearchEnabled(!searchEnabled)}
                 >
                   <Search className="w-3 md:w-3.5 h-3 md:h-3.5 mr-1 md:mr-1.5" />
