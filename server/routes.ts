@@ -83,13 +83,39 @@ Please provide extremely detailed, well-reasoned, and thoughtful responses. Take
       }
 
       if (enableWebSearch && process.env.TAVILY_API_KEY) {
-        systemContent += `\n\nWEB SEARCH CAPABILITY:
-You have access to real-time web search. Use it when:
-- Users ask about current events, news, or recent information
-- You need to verify recent data or statistics
-- Users ask about specific products, prices, or availability
-- You need current information to provide accurate answers
-When using web search results, mention your sources.`;
+        try {
+          const lastUserMessage = messages.filter(m => m.role === "user").pop();
+          const searchQuery = typeof lastUserMessage?.content === 'string' 
+            ? lastUserMessage.content 
+            : "latest news and current events";
+
+          const searchResponse = await fetch("https://api.tavily.com/search", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              api_key: process.env.TAVILY_API_KEY,
+              query: searchQuery,
+              max_results: 5,
+              search_depth: "advanced",
+              include_answer: true,
+            }),
+          });
+
+          if (searchResponse.ok) {
+            const searchData = await searchResponse.json();
+            const searchResults = searchData.results.map((r: any) => `- ${r.title}: ${r.content} (Source: ${r.url})`).join("\n");
+            
+            systemContent += `\n\nREAL-TIME SEARCH RESULTS for "${searchQuery}":\n${searchResults}\n\nINSTRUCTIONS: Use the search results above to provide a factually accurate and up-to-date response. If the results contain news from today or very recently, prioritize that information. Always cite your sources from the provided URLs.`;
+            
+            // Add search results as a system message to ensure visibility in context
+            validMessages.push({
+              role: "system",
+              content: `Context from web search: ${searchResults}`
+            });
+          }
+        } catch (error) {
+          console.error("Auto-search error:", error);
+        }
       }
 
       if (customPrompt) {
