@@ -267,19 +267,20 @@ export function MessageBubble({
             )}
             
             {isEditing ? (
-              <div className="space-y-2">
+              <div className="space-y-2 w-full min-w-[300px] md:min-w-[450px]">
                 <Textarea
                   ref={textareaRef}
                   value={editContent}
                   onChange={(e) => setEditContent(e.target.value)}
                   onKeyDown={handleKeyDown}
-                  className="min-h-[100px] text-base border-2"
+                  className="min-h-[150px] w-full text-base border-2 p-4 font-black rounded-3xl backdrop-blur-md bg-background/20"
                   data-testid="textarea-edit-message"
                 />
                 <div className="flex gap-2 justify-end">
                   <Button
                     size="sm"
                     variant="ghost"
+                    className="rounded-full hover:bg-background/40"
                     onClick={handleCancelEdit}
                     data-testid="button-cancel-edit"
                   >
@@ -287,6 +288,7 @@ export function MessageBubble({
                   </Button>
                   <Button
                     size="sm"
+                    className="font-black rounded-full px-6"
                     onClick={handleSaveEdit}
                     disabled={!editContent.trim() || editContent === message.content}
                     data-testid="button-save-edit"
