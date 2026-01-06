@@ -273,6 +273,20 @@ export default function Chat() {
   const handleSendMessage = async (content: string, images: string[]) => {
     if (!content.trim() && images.length === 0) return;
 
+    // Check for image generation keywords
+    const isImageRequest = /generate (an )?image|create (an )?image|draw|paint/i.test(content);
+    
+    if (isImageRequest && currentModel !== "Tongyi-MAI/Z-Image-Turbo") {
+      // Find the image generation model
+      const imageModel = AI_MODELS.image.find(m => m.id === "Tongyi-MAI/Z-Image-Turbo");
+      if (imageModel) {
+        useChatStore.getState().setModel(imageModel.id);
+        toast({
+          description: `Switched to ${imageModel.name} for image generation.`,
+        });
+      }
+    }
+
     // Create conversation if none exists
     let conversationId = currentConversationId;
     if (!conversationId) {
