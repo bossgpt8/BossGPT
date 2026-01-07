@@ -222,7 +222,7 @@ export function MessageBubble({
         <div className={`flex flex-col flex-1 min-w-0 ${isUser ? "items-end" : "items-start"}`}>
           <div className={isUser 
             ? "rounded-2xl px-5 py-3 border bg-muted/50 text-foreground rounded-br-none border-border/50 shadow-sm max-w-[85%]" 
-            : "rounded-2xl px-5 py-3 border bg-muted/30 text-foreground rounded-bl-none border-border/50 w-full"
+            : "rounded-2xl px-5 py-3 border bg-muted/30 text-foreground rounded-bl-none border-border/50 w-full overflow-hidden"
           }>
             {message.images && message.images.length > 0 && (
               <div className="flex flex-wrap gap-2 mb-2">
