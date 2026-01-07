@@ -119,10 +119,16 @@ export default function Settings() {
 
   const handleSave = async () => {
     const cleanName = (name || "").trim().slice(0, 100);
+    const oldName = useChatStore.getState().userName;
     setUserName(cleanName || "User");
     setUserAvatar(avatar);
     setUserPersonality(personality);
     setUserGender(gender);
+    
+    // Explicitly update memory if name changed to ensure AI uses it
+    if (cleanName && cleanName !== oldName) {
+      addMemory(`My name is ${cleanName}. Please call me by this name.`);
+    }
     
     if (user?.uid) {
       setIsSaving(true);
@@ -133,12 +139,20 @@ export default function Settings() {
           userPersonality: personality,
           userGender: gender,
         });
-        toast({ title: "Success", description: "Your profile has been saved!" });
+        toast({ 
+          title: "Settings Saved", 
+          description: "Your profile and preferences have been updated successfully!",
+        });
       } catch (error) {
         toast({ title: "Error", description: "Failed to save profile.", variant: "destructive" });
       } finally {
         setIsSaving(false);
       }
+    } else {
+      toast({ 
+        title: "Settings Saved", 
+        description: "Your local preferences have been updated!",
+      });
     }
   };
 

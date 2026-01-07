@@ -11,6 +11,7 @@ const chatRequestSchema = z.object({
   userGender: z.string().optional(),
   enableWebSearch: z.boolean().optional(),
   thinkingEnabled: z.boolean().optional(),
+  memories: z.array(z.string()).optional(),
 });
 
 const imageGenerationRequestSchema = z.object({
@@ -41,7 +42,7 @@ export async function registerRoutes(
         return res.status(400).json({ error: "Invalid request body" });
       }
 
-      const { messages, model, customPrompt, userName = "Friend", userGender = "", enableWebSearch, thinkingEnabled } = parseResult.data;
+      const { messages, model, customPrompt, userName = "Friend", userGender = "", enableWebSearch, thinkingEnabled, memories = [] } = parseResult.data;
       const apiKey = process.env.OPENROUTER_API_KEY;
 
       if (!apiKey) {
@@ -55,6 +56,7 @@ export async function registerRoutes(
 ABOUT THE USER:
 - Their name is ${userName}
 ${userGender && userGender !== "not-specified" ? `- They identify as: ${userGender}` : ""}
+${memories.length > 0 ? `- IMPORTANT MEMORIES ABOUT THE USER:\n${memories.map(m => `  * ${m}`).join("\n")}` : ""}
 - Use their name naturally in conversation when it feels appropriate to add a personal touch
 
 IDENTITY & PERSONALITY:

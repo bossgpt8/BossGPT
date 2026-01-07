@@ -181,6 +181,18 @@
   }
 }
 
+@layer base {
+  * {
+    @apply border-border font-black;
+  }
+}
+
+@layer utilities {
+  .font-black {
+    font-weight: 900 !important;
+  }
+}
+
 @layer components {
   .copy-btn {
     @apply absolute top-3 right-3 px-3 py-1.5 bg-card border border-border rounded-md text-xs font-medium text-muted-foreground cursor-pointer opacity-0 transition-all duration-200;

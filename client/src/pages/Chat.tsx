@@ -713,7 +713,22 @@ export default function Chat() {
       />
 
       <div className="flex flex-col flex-1 min-w-0 h-screen overflow-hidden">
-        {(!hasSeenTutorial || forceShowTutorial) && hasSeenAuthPrompt && (
+        {/* Sequential Onboarding/Auth Logic */}
+        {!user && !hasSeenAuthPrompt && messages.length >= 3 && (
+          <AuthPrompt 
+            onClose={() => setHasSeenAuthPrompt(true)} 
+            onSignIn={() => setHasSeenAuthPrompt(true)}
+          />
+        )}
+
+        {user && !hasSeenOnboarding && (
+          <OnboardingModal 
+            isOpen={true} 
+            onClose={() => setHasSeenOnboarding(true)} 
+          />
+        )}
+
+        {user && hasSeenOnboarding && (!hasSeenTutorial || forceShowTutorial) && (
           <OnboardingTutorial onComplete={() => {
             setHasSeenTutorial(true);
             setForceShowTutorial(false);
