@@ -1,4 +1,4 @@
-import { Menu, Moon, Sun, Palette, Settings, PanelLeftClose, PanelLeftOpen } from "lucide-react";
+import { Menu, Moon, Sun, Palette, Settings, PanelLeftOpen } from "lucide-react";
 import { Button as BaseButton } from "@/components/ui/button";
 import {
   Popover,
@@ -32,20 +32,18 @@ export function ChatHeader({
     <header className="px-4 md:px-6 py-3 md:py-4 border-b border-border bg-background/80 backdrop-blur-md sticky top-0 z-50">
       <div className="w-full flex items-center justify-between gap-2">
         <div className="flex items-center gap-3 md:gap-4">
-          <BaseButton
-            size="icon"
-            variant="ghost"
-            onClick={onToggleSidebar}
-            data-testid="button-toggle-sidebar"
-            className="flex"
-            title={sidebarOpen ? "Hide sidebar" : "Show sidebar"}
-          >
-            {sidebarOpen ? (
-              <PanelLeftClose className="w-5 h-5" />
-            ) : (
+          {!sidebarOpen && (
+            <BaseButton
+              size="icon"
+              variant="ghost"
+              onClick={onToggleSidebar}
+              data-testid="button-toggle-sidebar"
+              className="flex"
+              title="Show sidebar"
+            >
               <PanelLeftOpen className="w-5 h-5" />
-            )}
-          </BaseButton>
+            </BaseButton>
+          )}
           
           <div className="flex items-center gap-2">
             <img 

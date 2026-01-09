@@ -1,5 +1,5 @@
 import zenoLogo from "@assets/image_1767364441563.png";
-import { Plus, User, LogOut, Search, Settings, X, Mail, Lock, Eye, EyeOff, Sparkles } from "lucide-react";
+import { Plus, User, LogOut, Search, Settings, X, Mail, Lock, Eye, EyeOff, Sparkles, PanelLeftClose } from "lucide-react";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -197,11 +197,22 @@ export function AppSidebar({ isOpen, onClose, onStartTutorial }: AppSidebarProps
       >
         <div className={`flex flex-col h-full w-72 ${!isOpen && "hidden"}`}>
           <div className="p-4 md:p-5 border-b border-sidebar-border flex-shrink-0">
-            <div className="flex items-center gap-3 mb-4 md:mb-5">
-              <div className="w-9 h-9 md:w-10 md:h-10 rounded-xl flex items-center justify-center overflow-hidden border border-border/50 bg-muted">
-                <img src={zenoLogo} alt="Zeno" className="w-full h-full object-cover" />
+            <div className="flex items-center justify-between mb-4 md:mb-5">
+              <div className="flex items-center gap-3">
+                <div className="w-9 h-9 md:w-10 md:h-10 rounded-xl flex items-center justify-center overflow-hidden border border-border/50 bg-muted">
+                  <img src={zenoLogo} alt="Zeno" className="w-full h-full object-cover" />
+                </div>
+                <span className="text-base md:text-lg font-bold text-sidebar-foreground">Zeno</span>
               </div>
-              <span className="text-base md:text-lg font-bold text-sidebar-foreground">Zeno</span>
+              <Button
+                size="icon"
+                variant="ghost"
+                onClick={onClose}
+                className="lg:hidden"
+                data-testid="button-close-sidebar"
+              >
+                <PanelLeftClose className="w-5 h-5" />
+              </Button>
             </div>
             
             <Button
