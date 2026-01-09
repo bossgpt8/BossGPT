@@ -183,11 +183,15 @@
 
 @layer base {
   * {
-    @apply border-border font-black;
+    @apply border-border font-black tracking-tight;
   }
 }
 
 @layer utilities {
+  .glass-morphism {
+    @apply bg-background/40 backdrop-blur-2xl border border-white/10 shadow-[0_8px_32px_0_rgba(0,0,0,0.37)] rounded-[2.5rem];
+  }
+
   .font-black {
     font-weight: 900 !important;
   }

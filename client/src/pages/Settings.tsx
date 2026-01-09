@@ -140,8 +140,8 @@ export default function Settings() {
           userGender: gender,
         });
         toast({ 
-          title: "Settings Saved", 
-          description: "Your profile and preferences have been updated successfully!",
+          title: "Profile Synchronized", 
+          description: "Zeno has updated its understanding of you.",
         });
       } catch (error) {
         toast({ title: "Error", description: "Failed to save profile.", variant: "destructive" });
@@ -150,8 +150,8 @@ export default function Settings() {
       }
     } else {
       toast({ 
-        title: "Settings Saved", 
-        description: "Your local preferences have been updated!",
+        title: "Preferences Updated", 
+        description: "Your settings have been applied locally.",
       });
     }
   };
