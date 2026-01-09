@@ -58,7 +58,7 @@ const featureTags = [
 ];
 
 export function WelcomeScreen({ onSuggestionClick }: WelcomeScreenProps) {
-  const { setCurrentModel } = useChatStore();
+  const { setCurrentModel, userName } = useChatStore();
   const [greeting, setGreeting] = useState("");
 
   useEffect(() => {
@@ -91,7 +91,7 @@ export function WelcomeScreen({ onSuggestionClick }: WelcomeScreenProps) {
             className="text-3xl md:text-4xl font-bold text-center mb-2"
             data-testid="text-welcome-title"
           >
-            {greeting}, Boss
+            {greeting}, {userName || "Friend"}
           </h1>
           
           <h2 
