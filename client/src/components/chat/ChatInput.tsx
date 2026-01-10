@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from "react";
-import { Send, ImagePlus, X, Loader2, Brain, Search, Plus, AudioLines, Image as ImageIcon, Code, BookOpen, GraduationCap, Video, MoreHorizontal } from "lucide-react";
+import { Send, ImagePlus, X, Loader2, Brain, Search, Plus, AudioLines, Image as ImageIcon, Code, BookOpen, GraduationCap, Video, MoreHorizontal, Smile } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { useChatStore } from "@/lib/store";
@@ -9,6 +9,9 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { Puzzle, Plane, Code as CodeIcon, Calendar, Newspaper, Search as SearchIcon, FileText, GraduationCap as GraduationCapIcon, PenTool, Lightbulb } from "lucide-react";
 
 import zenoLogo from "@assets/image_1767364441563.png";
+
+// Common emojis for quick access
+const QUICK_EMOJIS = ["😀", "😂", "😍", "🙌", "🔥", "✨", "🚀", "💡", "💯", "✅", "❌", "❓", "👍", "❤️", "🎉", "🌟", "🧠", "💎", "🎨", "🌈"];
 
 interface ChatInputProps {
   onSend: (message: string, images: string[]) => void;
@@ -222,6 +225,35 @@ export function ChatInput({
               </Button>
               <input ref={fileInputRef} type="file" accept="image/*" multiple className="hidden" onChange={handleFileChange} />
               
+              <Popover>
+                <PopoverTrigger asChild>
+                  <Button
+                    size="icon"
+                    variant="outline"
+                    className="h-8 w-8 rounded-full border-border/40 hover:bg-muted/50"
+                    title="Insert emoji"
+                  >
+                    <Smile className="w-4 h-4 text-muted-foreground" />
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="w-64 p-2 bg-background/95 backdrop-blur-xl border-border/50 shadow-2xl rounded-2xl" side="top" align="start">
+                  <div className="grid grid-cols-5 gap-1">
+                    {QUICK_EMOJIS.map((emoji) => (
+                      <button
+                        key={emoji}
+                        onClick={() => {
+                          setMessage(prev => prev + emoji);
+                          textareaRef.current?.focus();
+                        }}
+                        className="h-10 w-10 flex items-center justify-center text-xl hover:bg-muted rounded-xl transition-colors"
+                      >
+                        {emoji}
+                      </button>
+                    ))}
+                  </div>
+                </PopoverContent>
+              </Popover>
+
               <div className="flex items-center bg-muted/60 rounded-full p-0.5 border border-border/40 shadow-inner">
                 <div className="w-6 h-6 md:w-7 md:h-7 flex items-center justify-center p-1 md:p-1.5 bg-background rounded-full shadow-sm ml-0.5">
                   <img src={zenoLogo} alt="Zeno" className="w-full h-full object-contain" />
