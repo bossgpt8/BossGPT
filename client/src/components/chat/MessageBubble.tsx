@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import { Copy, Check, Volume2, ChevronLeft, ChevronRight, RotateCcw, Pencil, X, Download, Image as ImageIcon } from "lucide-react";
+import { Copy, Check, Volume2, ChevronLeft, ChevronRight, RotateCcw, Pencil, X, Download, Image as ImageIcon, ThumbsUp, ThumbsDown, Share2, MoreHorizontal } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Textarea } from "@/components/ui/textarea";
@@ -335,45 +335,113 @@ export function MessageBubble({
             )}
           </div>
 
-          <div className="flex items-center gap-1 mt-1 opacity-0 group-hover:opacity-100 transition-opacity">
-            {!isEditing && isUser && (
-              <Button
-                size="icon"
-                variant="ghost"
-                className="h-6 w-6"
-                onClick={handleEdit}
-                title="Edit message"
-                data-testid="button-edit-message"
-              >
-                <Pencil className="w-3 h-3" />
-              </Button>
-            )}
-            {!isEditing && (
-              <Button
-                size="icon"
-                variant="ghost"
-                className="h-6 w-6"
-                onClick={handleCopy}
-                title={copied ? "Copied!" : "Copy message"}
-                data-testid="button-copy-message"
-              >
-                {copied ? (
-                  <Check className="w-3 h-3 text-green-500" />
-                ) : (
-                  <Copy className="w-3 h-3" />
+          <div className="flex items-center gap-1 mt-2 opacity-0 group-hover:opacity-100 transition-opacity">
+            {!isEditing && !isUser && (
+              <>
+                <Button
+                  size="icon"
+                  variant="ghost"
+                  className="h-7 w-7 text-muted-foreground hover:text-foreground transition-colors"
+                  onClick={handleCopy}
+                  title={copied ? "Copied!" : "Copy message"}
+                  data-testid="button-copy-message"
+                >
+                  {copied ? (
+                    <Check className="w-3.5 h-3.5 text-green-500" />
+                  ) : (
+                    <Copy className="w-3.5 h-3.5" />
+                  )}
+                </Button>
+                <Button
+                  size="icon"
+                  variant="ghost"
+                  className="h-7 w-7 text-muted-foreground hover:text-foreground transition-colors"
+                  title="Good response"
+                  data-testid="button-like-message"
+                >
+                  <ThumbsUp className="w-3.5 h-3.5" />
+                </Button>
+                <Button
+                  size="icon"
+                  variant="ghost"
+                  className="h-7 w-7 text-muted-foreground hover:text-foreground transition-colors"
+                  title="Bad response"
+                  data-testid="button-dislike-message"
+                >
+                  <ThumbsDown className="w-3.5 h-3.5" />
+                </Button>
+                <Button
+                  size="icon"
+                  variant="ghost"
+                  className="h-7 w-7 text-muted-foreground hover:text-foreground transition-colors"
+                  title="Share"
+                  data-testid="button-share-message"
+                >
+                  <Share2 className="w-3.5 h-3.5" />
+                </Button>
+                {onRegenerate && (
+                  <Button
+                    size="icon"
+                    variant="ghost"
+                    className="h-7 w-7 text-muted-foreground hover:text-foreground transition-colors"
+                    onClick={onRegenerate}
+                    title="Regenerate"
+                    data-testid="button-regenerate-icon"
+                  >
+                    <RotateCcw className="w-3.5 h-3.5" />
+                  </Button>
                 )}
-              </Button>
+                <Button
+                  size="icon"
+                  variant="ghost"
+                  className="h-7 w-7 text-muted-foreground hover:text-foreground transition-colors"
+                  title="More"
+                  data-testid="button-more-actions"
+                >
+                  <MoreHorizontal className="w-3.5 h-3.5" />
+                </Button>
+              </>
             )}
+
+            {!isEditing && isUser && (
+              <div className="flex items-center gap-1">
+                <Button
+                  size="icon"
+                  variant="ghost"
+                  className="h-7 w-7 text-muted-foreground hover:text-foreground transition-colors"
+                  onClick={handleEdit}
+                  title="Edit message"
+                  data-testid="button-edit-message"
+                >
+                  <Pencil className="w-3.5 h-3.5" />
+                </Button>
+                <Button
+                  size="icon"
+                  variant="ghost"
+                  className="h-7 w-7 text-muted-foreground hover:text-foreground transition-colors"
+                  onClick={handleCopy}
+                  title={copied ? "Copied!" : "Copy message"}
+                  data-testid="button-copy-message-user"
+                >
+                  {copied ? (
+                    <Check className="w-3.5 h-3.5 text-green-500" />
+                  ) : (
+                    <Copy className="w-3.5 h-3.5" />
+                  )}
+                </Button>
+              </div>
+            )}
+            
             {!isEditing && onSpeak && !isUser && (
               <Button
                 size="icon"
                 variant="ghost"
-                className="h-6 w-6"
+                className="h-7 w-7 text-muted-foreground hover:text-foreground transition-colors"
                 onClick={() => onSpeak(message.content)}
                 title="Speak message"
                 data-testid="button-speak-message"
               >
-                <Volume2 className="w-3 h-3" />
+                <Volume2 className="w-3.5 h-3.5" />
               </Button>
             )}
           </div>
@@ -408,18 +476,6 @@ export function MessageBubble({
             </div>
           )}
 
-          {!isEditing && onRegenerate && !isUser && (
-            <Button
-              size="sm"
-              variant="outline"
-              className="mt-2"
-              onClick={onRegenerate}
-              data-testid="button-regenerate"
-            >
-              <RotateCcw className="w-3 h-3 mr-1" />
-              Regenerate
-            </Button>
-          )}
         </div>
       </div>
     </div>
