@@ -41,7 +41,7 @@ function AuthProvider({ children }: { children: React.ReactNode }) {
   return <>{children}</>;
 }
 
-function App() {
+function AppContent() {
   const [isOnline, setIsOnline] = useState(navigator.onLine);
   const [isInitialized, setIsInitialized] = useState(false);
   const { currentModel, setCurrentModel } = useChatStore();
@@ -109,14 +109,20 @@ function App() {
   }
 
   return (
+    <TooltipProvider>
+      <AuthProvider>
+        <Router />
+      </AuthProvider>
+      <Toaster />
+    </TooltipProvider>
+  );
+}
+
+function App() {
+  return (
     <QueryClientProvider client={queryClient}>
       <ThemeProvider>
-        <TooltipProvider>
-          <AuthProvider>
-            <Router />
-          </AuthProvider>
-          <Toaster />
-        </TooltipProvider>
+        <AppContent />
       </ThemeProvider>
       <Analytics />
     </QueryClientProvider>
