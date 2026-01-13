@@ -1,6 +1,6 @@
 import zenoLogo from "@assets/image_1767364441563.png";
 import { Plus, User, LogOut, Search, Settings, X, Mail, Lock, Eye, EyeOff, Sparkles, PanelLeftClose } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -67,12 +67,12 @@ export function AppSidebar({ isOpen, onClose, onStartTutorial }: AppSidebarProps
   const conversations = getFilteredConversations();
 
   // Auto-open auth dialog for new users
-  useState(() => {
+  useEffect(() => {
     if (!user && !hasSeenAuthPrompt && !authOpen) {
       setAuthOpen(true);
       setHasSeenAuthPrompt(true);
     }
-  });
+  }, [user, hasSeenAuthPrompt, authOpen, setAuthOpen, setHasSeenAuthPrompt]);
 
   const handleNewChat = () => {
     createNewConversation();

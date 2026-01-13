@@ -141,10 +141,11 @@ export default function Chat() {
   useEffect(() => {
     if (!user && !hasSeenAuthPrompt && hasSeenOnboarding && hasSeenProfile) {
       const timer = setTimeout(() => {
-        setSidebarOpen(true);
-        // We'll need a way to trigger the auth modal from here
-        // For now, opening the sidebar will show the "Sign In" button
-        // But we can improve this by adding a state to open the auth modal directly
+        // Only set sidebar open if it's not already open to avoid potential loops
+        setSidebarOpen(prev => {
+          if (!prev) return true;
+          return prev;
+        });
       }, 1500);
       return () => clearTimeout(timer);
     }
