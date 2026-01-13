@@ -68,7 +68,10 @@ export function OnboardingModal({ isOpen, onClose }: OnboardingModalProps) {
   const isLastStep = currentStep === ONBOARDING_STEPS.length - 1;
   
   return (
-    <Dialog open={isOpen} onOpenChange={onClose}>
+    <Dialog open={isOpen} onOpenChange={(open) => {
+      if (!open) return; // Prevent closing via outside click/esc
+      onClose();
+    }}>
       <DialogContent className="sm:max-w-md" data-testid="onboarding-modal">
         <DialogHeader>
           <DialogTitle className="text-lg font-semibold text-center md:text-left">Let's get started!</DialogTitle>

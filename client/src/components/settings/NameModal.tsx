@@ -28,7 +28,10 @@ export function NameModal({ open, onClose, onSetName, currentName = "User" }: Na
   };
 
   return (
-    <Dialog open={open} onOpenChange={onClose}>
+    <Dialog open={open} onOpenChange={(o) => {
+      if (!o) return; // Prevent closing via outside click/esc
+      onClose();
+    }}>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
           <DialogTitle>What should I call you?</DialogTitle>

@@ -88,7 +88,10 @@ export function ProfileModal({
   };
 
   return (
-    <Dialog open={open} onOpenChange={onClose}>
+    <Dialog open={open} onOpenChange={(o) => {
+      if (!o) return; // Prevent closing via outside click/esc
+      onClose();
+    }}>
       <DialogContent className="sm:max-w-[500px]">
         <DialogHeader>
           <DialogTitle>Make it your own</DialogTitle>
