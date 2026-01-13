@@ -298,18 +298,24 @@ export default function Chat() {
   const handleSendMessage = async (content: string, images: string[]) => {
     if (!content.trim() && images.length === 0) return;
 
-    // Check for image generation keywords
-    const isImageRequest = /generate (an )?image|create (an )?image|draw|paint/i.test(content);
+    // Smart Model Switching
+    let modelToUse = currentModel;
     
-    if (isImageRequest && currentModel !== "stabilityai/stable-diffusion-xl-base-1.0") {
-      // Find the image generation model
-      const imageModel = AI_MODELS.image.find(m => m.id === "stabilityai/stable-diffusion-xl-base-1.0") || AI_MODELS.image[0];
-      if (imageModel) {
-        useChatStore.getState().setCurrentModel(imageModel.id);
-        toast({
-          description: `Switched to ${imageModel.name} for image generation.`,
-        });
-      }
+    // 1. If images are attached, switch to Qwen 2.5 VL for analysis
+    if (images.length > 0) {
+      modelToUse = "qwen/qwen-2.5-vl-7b-instruct:free";
+      useChatStore.getState().setCurrentModel(modelToUse);
+      toast({
+        description: "Switched to Qwen 2.5 VL for image analysis. 👁️✨",
+      });
+    } 
+    // 2. If keywords like "create image" or "generate image" are used, switch to FLUX
+    else if (content.toLowerCase().match(/generate (an )?image|create (an )?image|draw|paint|make an image/i)) {
+      modelToUse = "black-forest-labs/FLUX.1-schnell";
+      useChatStore.getState().setCurrentModel(modelToUse);
+      toast({
+        description: "Switched to FLUX.1 for image generation. 🎨✨",
+      });
     }
 
     // Create conversation if none exists
