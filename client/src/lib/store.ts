@@ -216,7 +216,7 @@ export const useChatStore = create<ChatState>()(
         return result;
       },
       
-      currentModel: "qwen/qwen-2.5-vl-7b-instruct:free",
+      currentModel: "meta-llama/llama-3.3-70b-instruct:free",
       setCurrentModel: (model) => set({ currentModel: model }),
       
       thinkingEnabled: false,
