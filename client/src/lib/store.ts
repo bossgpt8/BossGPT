@@ -216,7 +216,7 @@ export const useChatStore = create<ChatState>()(
         return result;
       },
       
-      currentModel: "meta-llama/llama-3.3-70b-instruct:free",
+      currentModel: "google/gemma-3-27b-it:free",
       setCurrentModel: (model) => set({ currentModel: model }),
       
       thinkingEnabled: false,

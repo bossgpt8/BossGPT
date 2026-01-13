@@ -49,7 +49,7 @@ export const conversations = pgTable("conversations", {
   userId: varchar("user_id", { length: 128 }),
   title: text("title").notNull().default("New Chat"),
   messages: jsonb("messages").$type<Message[]>().default([]),
-  model: text("model").default("meta-llama/llama-3.3-70b-instruct:free"),
+  model: text("model").default("google/gemma-3-27b-it:free"),
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at").defaultNow(),
 });
@@ -65,11 +65,11 @@ export type Conversation = typeof conversations.$inferSelect;
 // AI Models configuration
 export const AI_MODELS = {
   best: [
-    { id: "meta-llama/llama-3.3-70b-instruct:free", name: "Llama 3.3 70B", description: "Smart and efficient - Default" },
+    { id: "google/gemma-3-27b-it:free", name: "Gemma 3 27B", description: "Vision with 131K context - Default" },
+    { id: "meta-llama/llama-3.3-70b-instruct:free", name: "Llama 3.3 70B", description: "Smart and efficient" },
     { id: "qwen/qwen-2.5-vl-7b-instruct:free", name: "Qwen 2.5 VL 7B", description: "Best-in-class - understands screenshots, UIs, diagrams" },
     { id: "mistralai/mistral-small-3.1-24b-instruct:free", name: "Mistral Small 3.1", description: "Ultra-efficient with 128K context" },
     { id: "qwen/qwen3-coder:free", name: "Qwen 3 Coder", description: "Specialized for modern code projects" },
-    { id: "nvidia/nemotron-nano-12b-v2-vl:free", name: "Nemotron Nano 12B VL", description: "Multimodal - handles video & complex docs" },
   ],
   vision: [
     { id: "google/gemma-3-27b-it:free", name: "Gemma 3 27B", description: "Vision with 131K context" },
