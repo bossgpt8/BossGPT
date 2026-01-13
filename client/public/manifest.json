@@ -1,12 +1,12 @@
 {
-  "name": "Zeno - Intelligent AI Assistant",
+  "name": "Zeno AI",
   "short_name": "Zeno",
-  "description": "Your intelligent assistant powered by multiple AI models. Chat, analyze images, generate images, and use voice commands.",
+  "description": "Your ultra-intelligent AI companion. 🚀",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#000000",
   "theme_color": "#000000",
-  "orientation": "portrait-primary",
+  "orientation": "portrait",
   "icons": [
     {
       "src": "/favicon.png",
@@ -22,11 +22,25 @@
     },
     {
       "src": "/favicon.png",
-      "sizes": "any",
+      "sizes": "1024x1024",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/favicon.png",
+      "sizes": "192x192",
       "type": "image/png",
       "purpose": "maskable"
     }
   ],
-  "categories": ["productivity", "utilities"],
-  "lang": "en"
+  "categories": ["productivity", "utilities", "ai"],
+  "lang": "en",
+  "prefer_related_applications": false,
+  "shortcuts": [
+    {
+      "name": "New Chat",
+      "url": "/",
+      "description": "Start a fresh conversation"
+    }
+  ]
 }
