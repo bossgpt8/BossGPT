@@ -142,10 +142,7 @@ export default function Chat() {
     if (!user && !hasSeenAuthPrompt && hasSeenOnboarding && hasSeenProfile) {
       const timer = setTimeout(() => {
         // Only set sidebar open if it's not already open to avoid potential loops
-        setSidebarOpen(prev => {
-          if (!prev) return true;
-          return prev;
-        });
+        setSidebarOpen(true);
       }, 1500);
       return () => clearTimeout(timer);
     }
@@ -714,21 +711,6 @@ export default function Chat() {
       />
 
       <div className="flex flex-col flex-1 min-w-0 h-screen overflow-hidden">
-        {/* Sequential Onboarding/Auth Logic */}
-        {!user && !hasSeenAuthPrompt && messages.length >= 3 && (
-          <AuthPrompt 
-            onClose={() => setHasSeenAuthPrompt(true)} 
-            onSignIn={() => setHasSeenAuthPrompt(true)}
-          />
-        )}
-
-        {user && !hasSeenOnboarding && (
-          <OnboardingModal 
-            isOpen={true} 
-            onClose={() => setHasSeenOnboarding(true)} 
-          />
-        )}
-
         {user && hasSeenOnboarding && (!hasSeenTutorial || forceShowTutorial) && (
           <OnboardingTutorial onComplete={() => {
             setHasSeenTutorial(true);
