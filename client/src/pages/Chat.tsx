@@ -637,8 +637,9 @@ export default function Chat() {
         
         attempt++;
         if (attempt <= maxRetries) {
-          // Wait a bit before retrying
-          await new Promise(resolve => setTimeout(resolve, 2000));
+          // Add a progressively longer delay between retries
+          const delay = attempt * 2000; // 4s, 6s, 8s...
+          await new Promise(resolve => setTimeout(resolve, delay));
         }
       } finally {
         if (success || attempt > maxRetries) {
